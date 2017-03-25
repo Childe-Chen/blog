@@ -1,0 +1,1096 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="MAT Memory Analyzer Tool 基本使用简介分析和理解我们应用中内存的分布是一件极具挑战的事情。一个逻辑错误就有可能导致OutOfMemory。dump内存的方式很单：jmap -dump:format=b,file=path pid注意操作时要有正确的用户权限。本篇旨在介绍分析中涉及到的一些概念和操作方法，实际案例分析放在下篇介绍。
+内存泄漏指由于疏忽或错误造成程序未能释放已经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MAT(Memory Analyzer Tool)基本使用">
+<meta property="og:url" content="http://yoursite.com/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="MAT Memory Analyzer Tool 基本使用简介分析和理解我们应用中内存的分布是一件极具挑战的事情。一个逻辑错误就有可能导致OutOfMemory。dump内存的方式很单：jmap -dump:format=b,file=path pid注意操作时要有正确的用户权限。本篇旨在介绍分析中涉及到的一些概念和操作方法，实际案例分析放在下篇介绍。
+内存泄漏指由于疏忽或错误造成程序未能释放已经">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210248494?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210352948?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210418713?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210506511?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210607965?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210636012?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210703731?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210729372?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210752966?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210821106?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210847122?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324210950529?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211016049?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211037066?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211107779?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211137004?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211200598?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170324211218974?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-03-25T04:34:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MAT(Memory Analyzer Tool)基本使用">
+<meta name="twitter:description" content="MAT Memory Analyzer Tool 基本使用简介分析和理解我们应用中内存的分布是一件极具挑战的事情。一个逻辑错误就有可能导致OutOfMemory。dump内存的方式很单：jmap -dump:format=b,file=path pid注意操作时要有正确的用户权限。本篇旨在介绍分析中涉及到的一些概念和操作方法，实际案例分析放在下篇介绍。
+内存泄漏指由于疏忽或错误造成程序未能释放已经">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170324210248494?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/"/>
+
+
+
+
+
+  <title> MAT(Memory Analyzer Tool)基本使用 | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                MAT(Memory Analyzer Tool)基本使用
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-24T21:15:26+08:00">
+                2017-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/" class="leancloud_visitors" data-flag-title="MAT(Memory Analyzer Tool)基本使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="MAT-Memory-Analyzer-Tool-基本使用"><a href="#MAT-Memory-Analyzer-Tool-基本使用" class="headerlink" title="MAT Memory Analyzer Tool 基本使用"></a>MAT Memory Analyzer Tool 基本使用</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>分析和理解我们应用中内存的分布是一件极具挑战的事情。一个逻辑错误就有可能导致OutOfMemory。dump内存的方式很单：<code>jmap -dump:format=b,file=path pid</code><br>注意操作时要有正确的用户权限。本篇旨在介绍分析中涉及到的一些概念和操作方法，实际案例分析放在下篇介绍。</p>
+<p><strong>内存泄漏</strong>指由于疏忽或错误造成程序未能释放已经不再使用的内存。内存泄漏并非指内存在物理上的消失，而是应用程序分配某段内存后，由于设计错误，导致在释放该段内存之前就失去了对该段内存的控制，从而造成了内存的浪费。</p>
+<h4 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h4><a id="more"></a>
+<p>当我们用MAT工具(用的eclipse插件)打开dump文件，MAT首先给我们一个应用占用内存的预览。</p>
+<p><img src="http://img.blog.csdn.net/20170324210248494?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="概览"></p>
+<p>中间的饼图像我们直观展示了retained size最大的对象。这意味着如果可以处理好<code>com.cxd.jvm.mat.Controller$1 @ 0x7ffa741c8 allocator1</code>  这个对象，我们可以腾出6.6M的内存，它占用了应用总内存的90%以上。进一步查看这个对象的一些信息我们可以使用Histogram。</p>
+<p><img src="http://img.blog.csdn.net/20170324210352948?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="直方图"></p>
+<p>这个Histogram被实例化类的名字，数量，占用的内存，默认按照内存占用降序。像char[]，String，Object[]这些看不出来有什么问题，为了更好的组织Histogram，我们可以按照包或者classLoader分组查看。</p>
+<p><img src="http://img.blog.csdn.net/20170324210418713?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="直方图分组"></p>
+<p>直方图还可以使用正则表达式过滤，例如我们只关心自己包下的类：<code>.*com.cxd.jvm.*</code></p>
+<p><img src="http://img.blog.csdn.net/20170324210506511?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="直方图过滤"></p>
+<p>过滤后，清楚的看到有超过15W的Listener实例存活在应用中。同时我们看到了每个对象对内存的使用情况。有两个维度的计算，Shallow Heap 和 Retained Heap。Shallow Heap是一个对象持有引用占用的内存，并不包含其引用对象所占用的内存，可以理解成对象本身的大小，Shallow Heap对实际分析没有多大用处。常规对象（非数组）的Shallow Size由其成员变量的数量和类型决定。数组的Shallow Size由数组元素的类型（对象类型、基本类型）和数组长度决定。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//"Shallow size" of this obj == 24 Bytes</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span> </span>&#123;<span class="comment">//8 Bytes header </span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">char</span> value[]; <span class="comment">//4 Bytes </span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> offset; <span class="comment">//4 Bytes </span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count; <span class="comment">//4 Bytes </span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> hash = <span class="number">0</span>; <span class="comment">//4 Bytes</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Retained-Heap"><a href="#Retained-Heap" class="headerlink" title="Retained Heap"></a>Retained Heap</h4><p>Retained Heap是一个对象被GC回收时，能够释放其所有引用的Shallow Heap的总和。比如：一个ArrayList持有100,000个元素并且所有元素仅被这个ArrayList持有，每个元素16bytes，那么当该ArrayList被GC后将会释放16 x 100,000 + X，X是ArrayList的Shallow Heap。<br>Retained Heap是Retained Set中所有对象大小的总和，一个对象的Retained Set是当该对象被GC后所要释放对象的集合。</p>
+<p><img src="http://img.blog.csdn.net/20170324210607965?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="RetainedSet.png"></p>
+<p>Retained Heap有两种计算方式，一种是quick approximation（快速近似），一种是precise retained size（精确计算）。</p>
+<p><img src="http://img.blog.csdn.net/20170324210636012?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="RetainedSizeCal.png"></p>
+<p>通过精确计算可以看到各个Allocator占用了太多的内存，虽然它的Shallow Heap只有64bytes。那么我们只要管控好Controller，内存也就得到了控制。</p>
+<h4 id="Dominator-Tree"><a href="#Dominator-Tree" class="headerlink" title="Dominator Tree"></a>Dominator Tree</h4><p>Dominator Tree由对象的引用图转换而来，它可以让我们清楚的看出大块内存消耗和对象间的依赖保活关系。在对象图中，如果从某个节点（或者根节点）开始到达Y的路径都要经过X，那么X Dominator Y。另外，如果X是路径最短的Dominator，那么X Immediate Dominator Y。</p>
+<p><img src="http://img.blog.csdn.net/20170324210703731?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="objectGraph.png"></p>
+<p>通过Dominator来分析我们的项目。</p>
+<p><img src="http://img.blog.csdn.net/20170324210729372?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="dominatorTree.png"></p>
+<p>我们可以明确的看到Allocator便是罪魁祸首，它下面的ArrayList持有大量Listener。</p>
+<p><img src="http://img.blog.csdn.net/20170324210752966?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="ourDominatorTree.png"></p>
+<p>The objects belonging to the sub-tree of x (i.e. the objects dominated by x ) represent the retained set of x .<br>If x is the immediate dominator of y , then the immediate dominator of x also dominates y , and so on.<br>The edges in the dominator tree do not directly correspond to object references from the object graph.<br>注意：</p>
+<ul>
+<li>一个对象是X的子树（即：X Dominator 这个对象），那么，这个对象在X的retained set中；</li>
+<li>如果X（Allocator） immediate dominator Y（Listener），那么，X的dominator（Controller）也dominator Y。换句话说，dominator具有向上传递性。</li>
+<li>The edges in the dominator tree do not directly correspond to object references from the object graph.（dominator tree中的边不直接对应于对象图中的对象引用）</li>
+</ul>
+<h4 id="Path-to-GC-Roots"><a href="#Path-to-GC-Roots" class="headerlink" title="Path to GC Roots"></a>Path to GC Roots</h4><p>Dominator Tree对我们分析有帮助，但是它是向上找的一个过程，我们并不能知道Dominator的Dominator。Path to GC Roots这时候对我们会很有帮助。实操中需要结合使用。<br>我们看下例子中Listener的GC Root：</p>
+<p><img src="http://img.blog.csdn.net/20170324210821106?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="howGcRoot.png"></p>
+<p>通常在排查内存泄漏的时候，我们会选择<code>exclude all phantom/weak/soft etc.references</code>，意思是：查看排除虚引用/弱引用/软引用等的引用链。因为这些引用的对象可以直接被GC给回收，我们要看的就是某个对象否还存在Strong引用链（在导出HeapDump之前要手动出发GC来保证），如果有，则说明可能存在内存泄漏，然后再去排查具体引用。</p>
+<p><img src="http://img.blog.csdn.net/20170324210847122?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="GCRoot.png"></p>
+<p>查看的时候要和左边框中的一些信息结合起来，他提供了更加详细的介绍。</p>
+<p><a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.mat.ui.help%2Fconcepts%2Fshallowretainedheap.html" target="_blank" rel="external">GC Root 定义如下（官网摘录）：</a><br>A garbage collection root is an object that is accessible from outside the heap. The following reasons make an object a GC root:</p>
+<ul>
+<li>System Class<br>Class loaded by bootstrap/system class loader. For example, everything from the rt.jar like java.util.* .</li>
+<li>JNI Local<br>Local variable in native code, such as user defined JNI code or JVM internal code.</li>
+<li>JNI Global<br>Global variable in native code, such as user defined JNI code or JVM internal code.</li>
+<li>Thread Block<br>Object referred to from a currently active thread block.</li>
+<li>Thread<br>A started, but not stopped, thread.</li>
+<li>Busy Monitor<br>Everything that has called wait() or notify() or that is synchronized. For example, by calling synchronized(Object) or by entering a synchronized method. Static method means class, non-static method means object.</li>
+<li>Java Local<br>Local variable. For example, input parameters or locally created objects of methods that are still in the stack of a thread.</li>
+<li>Native Stack<br>In or out parameters in native code, such as user defined JNI code or JVM internal code. This is often the case as many methods have native parts and the objects handled as method parameters become GC roots. For example, parameters used for file/network I/O methods or reflection.</li>
+<li>Finalizable<br>An object which is in a queue awaiting its finalizer to be run.</li>
+<li>Unfinalized<br>An object which has a finalize method, but has not been finalized and is not yet on the finalizer queue.</li>
+<li>Unreachable<br>An object which is unreachable from any other root, but has been marked as a root by MAT to retain objects which otherwise would not be included in the analysis.</li>
+<li>Java Stack Frame<br>A Java stack frame, holding local variables. Only generated when the dump is parsed with the preference set to treat Java stack frames as objects.</li>
+<li>Unknown<br>An object of unknown root type. Some dumps, such as IBM Portable Heap Dump files, do not have root information. For these dumps the MAT parser marks objects which are have no inbound references or are unreachable from any other root as roots of this type. This ensures that MAT retains all the objects in the dump.</li>
+</ul>
+<h4 id="List-Object"><a href="#List-Object" class="headerlink" title="List Object"></a>List Object</h4><h5 id="List-objects-with-（以Dominator-Tree的方式查看）"><a href="#List-objects-with-（以Dominator-Tree的方式查看）" class="headerlink" title="List objects with （以Dominator Tree的方式查看）"></a>List objects with （以Dominator Tree的方式查看）</h5><p>incoming references 引用到该对象的对象<br>outcoming references 被该对象引用的对象</p>
+<h5 id="Show-objects-by-class-（以class的方式查看）"><a href="#Show-objects-by-class-（以class的方式查看）" class="headerlink" title="Show objects by class （以class的方式查看）"></a>Show objects by class （以class的方式查看）</h5><p>incoming references 引用到该对象的对象<br>outcoming references 被该对象引用的对象</p>
+<h5 id="Common-Memory-Anti-Patterns"><a href="#Common-Memory-Anti-Patterns" class="headerlink" title="Common Memory Anti-Patterns"></a>Common Memory Anti-Patterns</h5><p>MAT使用Anti-Patterns给我们提供报告。这些报告对我们排查内存泄漏、优化low hanging fruit非常有帮助。</p>
+<p><img src="http://img.blog.csdn.net/20170324210950529?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="antiPatterns.png"></p>
+<p><strong>Heap Dump Overview</strong>给我们提供了系统属性、内存消耗排行等信息</p>
+<p><img src="http://img.blog.csdn.net/20170324211016049?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="heapDumpOverview.png"></p>
+<p><strong>Leak Suspects</strong>分析出可能存在的内存泄漏，供我们参考，通常这个功能可以帮我们直接找到问题所在</p>
+<p><img src="http://img.blog.csdn.net/20170324211037066?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="leakSuspect.png"></p>
+<h4 id="Java-Collections"><a href="#Java-Collections" class="headerlink" title="Java Collections"></a>Java Collections</h4><p>我们可以通过Java Collections查看Map Collision Ratio(Map碰撞比率=碰撞的实体/Hash表中所有实体)、Collection Fill Ratio(集合填充率=size/capacity)、Array Fill Ratio(集合填充率)。但这种方式只能查看那些具有预分配内存能力的集合。</p>
+<p><img src="http://img.blog.csdn.net/20170324211107779?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="collectionRatio.png"></p>
+<p>填充率可以作为优化的一个参考，ArrayList填充率低说明我们当初对List的初始化大小预估有误，或者HashMap的冲突较大就说明我们的Key选的有问题或者hash算法需要改进等。<br>我们还可以通过Java Collections-&gt;Hash Entries查看key value。</p>
+<p><img src="http://img.blog.csdn.net/20170324211137004?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="collectionRatioEx.png"></p>
+<h4 id="Threads-and-Stacks"><a href="#Threads-and-Stacks" class="headerlink" title="Threads and Stacks"></a>Threads and Stacks</h4><p>dump出的文件包含了JVM运行时的所有信息，当然MAT也就可以帮我们分析出其中的线程和栈信息。</p>
+<p><img src="http://img.blog.csdn.net/20170324211200598?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="thread.png"></p>
+<h4 id="Exporting-your-results"><a href="#Exporting-your-results" class="headerlink" title="Exporting your results"></a>Exporting your results</h4><p>在我们分析完成之后，可以将我们的分析导出，分享给大家。导出有三种格式：html、cvs、txt。<br><strong>注意：</strong>导出的内容是你当前打开的分析窗口，如果你当前MAT没有任何分析窗口，导出的文件便为空。比如：下图中，我导出的内容就只有线程概览。</p>
+<p><img src="http://img.blog.csdn.net/20170324211218974?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="export.png"></p>
+<h4 id="Object-Query-Language"><a href="#Object-Query-Language" class="headerlink" title="Object Query Language"></a>Object Query Language</h4><p><em>TODO</em> 单独一篇来讲</p>
+<p>参考整理自<a href="http://eclipsesource.com/blogs/2013/01/21/10-tips-for-using-the-eclipse-memory-analyzer/" target="_blank" rel="external">http://eclipsesource.com/blogs/2013/01/21/10-tips-for-using-the-eclipse-memory-analyzer/</a></p>
+<p><a href="http://help.eclipse.org/kepler/index.jsp?topic=%2Forg.eclipse.mat.ui.help%2Fconcepts%2Fshallowretainedheap.html" target="_blank" rel="external">MAT官方文档</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/07/Dubbo源码-SPI实现之ExtensionLoader/" rel="next" title="Dubbo源码 SPI实现之ExtensionLoader">
+                <i class="fa fa-chevron-left"></i> Dubbo源码 SPI实现之ExtensionLoader
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MAT-Memory-Analyzer-Tool-基本使用"><span class="nav-number">1.</span> <span class="nav-text">MAT Memory Analyzer Tool 基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Histogram"><span class="nav-number">1.2.</span> <span class="nav-text">Histogram</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Retained-Heap"><span class="nav-number">1.3.</span> <span class="nav-text">Retained Heap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dominator-Tree"><span class="nav-number">1.4.</span> <span class="nav-text">Dominator Tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Path-to-GC-Roots"><span class="nav-number">1.5.</span> <span class="nav-text">Path to GC Roots</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#List-Object"><span class="nav-number">1.6.</span> <span class="nav-text">List Object</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#List-objects-with-（以Dominator-Tree的方式查看）"><span class="nav-number">1.6.1.</span> <span class="nav-text">List objects with （以Dominator Tree的方式查看）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Show-objects-by-class-（以class的方式查看）"><span class="nav-number">1.6.2.</span> <span class="nav-text">Show objects by class （以class的方式查看）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Common-Memory-Anti-Patterns"><span class="nav-number">1.6.3.</span> <span class="nav-text">Common Memory Anti-Patterns</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java-Collections"><span class="nav-number">1.7.</span> <span class="nav-text">Java Collections</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Threads-and-Stacks"><span class="nav-number">1.8.</span> <span class="nav-text">Threads and Stacks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Exporting-your-results"><span class="nav-number">1.9.</span> <span class="nav-text">Exporting your results</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object-Query-Language"><span class="nav-number">1.10.</span> <span class="nav-text">Object Query Language</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
