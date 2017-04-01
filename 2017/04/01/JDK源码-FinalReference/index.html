@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JDK,源码,JVM," />
+  <meta name="keywords" content="源码,JDK,JVM," />
 
 
 
@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="JAVA FinalReference引入使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？1234final class Finalizer extends FinalReference &amp;#123;	private static ReferenceQue">
 <meta property="og:image" content="http://img.blog.csdn.net/20170401121257443?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-04-01T04:20:11.000Z">
+<meta property="og:updated_time" content="2017-04-01T04:21:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码 FinalReference">
 <meta name="twitter:description" content="JAVA FinalReference引入使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？1234final class Finalizer extends FinalReference &amp;#123;	private static ReferenceQue">
@@ -401,7 +401,7 @@
 
       
         <h3 id="JAVA-FinalReference"><a href="#JAVA-FinalReference" class="headerlink" title="JAVA FinalReference"></a>JAVA FinalReference</h3><h4 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h4><p>使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Finalizer</span> <span class="keyword">extends</span> <span class="title">FinalReference</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ReferenceQueue queue = <span class="keyword">new</span> ReferenceQueue();</div><div class="line">	<span class="comment">//... ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>结合它的数据结构基本可以看出来，Finalizer中持有一个一个引用队列。猜测是这个队列吃掉了那些内存。</p>
+<p>结合它的数据结构基本可以看出来，Finalizer中持有一个一个引用队列。猜测是这个队列吃掉了那些内存。<br><a id="more"></a></p>
 <h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4><p>Java开发不必关心内存的释放、申请和垃圾回收，这些事情都有JVM代劳，但是JVM依然提供了一些方式，让我们能够在应用的层次利用内存或者GC特性，从而更好的使用内存。Reference(引用)就是其中一种。</p>
 <ul>
 <li>StrongReference（强引用）<br>我们平时开发中new一个对象出来，这种引用便是强引用。 JVM 系统采用 Finalizer 来管理每个强引用对象 , 并将其被标记要清理时加入 ReferenceQueue, 并逐一调用该对象的 finalize() 方法。</li>
@@ -457,9 +457,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JDK/" rel="tag"># JDK</a>
-          
             <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/JDK/" rel="tag"># JDK</a>
           
             <a href="/tags/JVM/" rel="tag"># JVM</a>
           
