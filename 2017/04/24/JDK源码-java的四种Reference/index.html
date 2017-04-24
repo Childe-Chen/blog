@@ -1,0 +1,1026 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="源码,JDK,JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="之前探讨过一次JAVA的FinalReference，这次我们来看下java.lang.ref包下对应的其他三种引用。
+走近引用Reference和ReferenceQueue在使用中一定是结伴出现的，当一个Reference确定要被GC回收，GC便会把Reference加入到与之关联的ReferenceQueue中。注意：在Reference的构造方法中，我们可以传入一个注册队列Referenc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK源码 java的四种Reference">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/JDK源码-java的四种Reference/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="之前探讨过一次JAVA的FinalReference，这次我们来看下java.lang.ref包下对应的其他三种引用。
+走近引用Reference和ReferenceQueue在使用中一定是结伴出现的，当一个Reference确定要被GC回收，GC便会把Reference加入到与之关联的ReferenceQueue中。注意：在Reference的构造方法中，我们可以传入一个注册队列Referenc">
+<meta property="og:updated_time" content="2017-04-24T15:03:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JDK源码 java的四种Reference">
+<meta name="twitter:description" content="之前探讨过一次JAVA的FinalReference，这次我们来看下java.lang.ref包下对应的其他三种引用。
+走近引用Reference和ReferenceQueue在使用中一定是结伴出现的，当一个Reference确定要被GC回收，GC便会把Reference加入到与之关联的ReferenceQueue中。注意：在Reference的构造方法中，我们可以传入一个注册队列Referenc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/24/JDK源码-java的四种Reference/"/>
+
+
+
+
+
+  <title> JDK源码 java的四种Reference | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/24/JDK源码-java的四种Reference/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                JDK源码 java的四种Reference
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T15:08:54+08:00">
+                2017-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/24/JDK源码-java的四种Reference/" class="leancloud_visitors" data-flag-title="JDK源码 java的四种Reference">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前探讨过一次JAVA的FinalReference，这次我们来看下java.lang.ref包下对应的其他三种引用。</p>
+<h4 id="走近引用"><a href="#走近引用" class="headerlink" title="走近引用"></a>走近引用</h4><p>Reference和ReferenceQueue在使用中一定是结伴出现的，当一个Reference确定要被GC回收，GC便会把Reference加入到与之关联的ReferenceQueue中。注意：在Reference的构造方法中，我们可以传入一个注册队列ReferenceQueue，这个队列我们稍后会具体看，需要主要的是，这个队列需要单独的线程去做消费，否则会存在OOM的隐患。</p>
+<p>这些引用可用来实现不同的缓存类型（内存敏感和内存不敏感），大名鼎鼎的Guava cache就是基于引用的这些特性来实现高速本地缓存。<br><a id="more"></a></p>
+<h5 id="StrongReference（强引用）"><a href="#StrongReference（强引用）" class="headerlink" title="StrongReference（强引用）"></a>StrongReference（强引用）</h5><p>我们平时开发中new一个对象出来，这种引用便是强引用。 JVM 系统采用 Finalizer 来管理每个强引用对象 , 并将其被标记要清理时加入 ReferenceQueue, 并逐一调用该对象的 finalize() 方法。具体详见我的前一篇博客：<a href="http://childe.net.cn/2017/04/01/JDK%E6%BA%90%E7%A0%81-FinalReference/" target="_blank" rel="external">JDK源码 FinalReference</a></p>
+<h5 id="SoftReference（软引用）"><a href="#SoftReference（软引用）" class="headerlink" title="SoftReference（软引用）"></a>SoftReference（软引用）</h5><p>当内存足够的时候，软引用所指向的对象没有其他强引用指向的话，GC的时候并不会被回收，当且只当<strong>内存不够</strong>时才会被GC回收（调用finalize方法）。强度仅次于强引用。GC回收前，会将那些已经向引用队列注册的新清除的软引用加入队列。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassSoft</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Referred</span> </span>&#123;</div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 不是必须实现，和Strong不同。</div><div class="line">         * 实现该方法是为了追踪GC，</div><div class="line">         * 实现后也会被当作Finalizer</div><div class="line">         * <span class="doctag">@throws</span> Throwable</div><div class="line">         */</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            System.out.println(<span class="string">"Referred对象被垃圾收集"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"I am Referred"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">collect</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.gc();</div><div class="line">        Thread.sleep(<span class="number">2000</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckRefQueueThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            Reference&lt;Referred&gt; obj = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                obj = (Reference&lt;Referred&gt;)softQueue.remove();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(obj != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    Field referent = Reference.class.getDeclaredField(<span class="string">"referent"</span>);</div><div class="line">                    referent.setAccessible(<span class="keyword">true</span>);</div><div class="line">                    Object result = referent.get(obj);</div><div class="line">                    <span class="comment">//此处异常可以说明，在被放入队列之前referent已经被JVM置为null</span></div><div class="line">                    System.out.println(<span class="string">"gc will collect: "</span> + result.getClass() + <span class="string">"@"</span> + result.hashCode());</div><div class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">                System.out.println(<span class="string">"Object for SoftReference is "</span> + obj.get());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="comment">//如果我们使用了自定义的注册队列，一定要启动一个线程来处理该队列</span></div><div class="line">	<span class="comment">//JVM只负责像队列中放入对象，不负责清理</span></div><div class="line">    <span class="keyword">static</span> ReferenceQueue&lt;Referred&gt; softQueue = <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * JVM配置</div><div class="line">     * -Xms4m -Xmx4m</div><div class="line">     * -XX:+PrintGCDetails -Xloggc:/Users/childe/logs/gc-f.log</div><div class="line">     * 务必加上该参数，以确定collect方法后GC被执行</div><div class="line">     * <span class="doctag">@param</span> args</div><div class="line">     * <span class="doctag">@throws</span> InterruptedException</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.out.println(<span class="string">"创建软引用"</span>);</div><div class="line"></div><div class="line">        Referred strong = <span class="keyword">new</span> Referred();</div><div class="line">        SoftReference&lt;Referred&gt; soft = <span class="keyword">new</span> SoftReference&lt;&gt;(strong,softQueue);</div><div class="line">        <span class="keyword">new</span> CheckRefQueueThread().start();</div><div class="line"></div><div class="line">        ClassSoft.collect();</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"切断强引用"</span>);</div><div class="line"></div><div class="line">        strong = <span class="keyword">null</span>;</div><div class="line">        ClassSoft.collect();</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"GC之前，软引用值："</span> + soft.get().toString());</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"开始堆占用"</span>);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            List&lt;<span class="keyword">byte</span>[]&gt; bytes = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                bytes.add(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>*<span class="number">1024</span>]);</div><div class="line">                ClassSoft.collect();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (OutOfMemoryError e) &#123;</div><div class="line">            <span class="comment">// 软引用对象应该在这个之前被收集</span></div><div class="line">            System.out.println(<span class="string">"内存溢出..."</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Done"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>程序输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">创建软引用</div><div class="line">切断强引用</div><div class="line">GC之前，软引用值：I am Referred</div><div class="line">开始堆占用</div><div class="line">java.lang.NullPointerException</div><div class="line">Referred对象被垃圾收集</div><div class="line">	at com.cxd.jvm.references.ref.ClassSoft$CheckRefQueueThread.run(ClassSoft.java:54)</div><div class="line">Object for SoftReference is null</div><div class="line">内存溢出...</div><div class="line">Done</div></pre></td></tr></table></figure></p>
+<p>我们可以看到，软引用在GC回收前，调用get方法是可以返回其关联的实际对象的，当其被GC加入ReferenceQueue前，JVM会将其关联的对象置为null。</p>
+<h5 id="WeakReference（弱引用）"><a href="#WeakReference（弱引用）" class="headerlink" title="WeakReference（弱引用）"></a>WeakReference（弱引用）</h5><p>弱引用指向的对象没有任何强引用指向的话，GC的时候会进行回收。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *</div><div class="line"> * Created by childe on 2017/3/31.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassWeak</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Referred</span> </span>&#123;</div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 不是必须实现，和Strong不同。</div><div class="line">         * 实现该方法是为了追踪GC</div><div class="line">         * 实现后也会被当作Finalizer</div><div class="line">         * <span class="doctag">@throws</span> Throwable</div><div class="line">         */</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            System.out.println(<span class="string">"Referred对象被垃圾收集"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"I am weak"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">collect</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.gc();</div><div class="line">        Thread.sleep(<span class="number">2000</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * JVM配置</div><div class="line">     * -XX:+PrintGCDetails -Xloggc:/Users/childe/logs/gc-f.log</div><div class="line">     * 务必加上该参数，以确定collect方法后GC被执行</div><div class="line">     * <span class="doctag">@param</span> args</div><div class="line">     * <span class="doctag">@throws</span> InterruptedException</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.out.println(<span class="string">"创建一个弱引用"</span>);</div><div class="line"></div><div class="line">        Referred strong = <span class="keyword">new</span> Referred();</div><div class="line">        WeakReference&lt;Referred&gt; weak = <span class="keyword">new</span> WeakReference&lt;&gt;(strong);</div><div class="line"></div><div class="line">        ClassWeak.collect();</div><div class="line">        System.out.println(<span class="string">"切断强引用"</span>);</div><div class="line"></div><div class="line">        strong = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"GC之前，弱引用值："</span> + weak.get().toString());</div><div class="line"></div><div class="line">        ClassWeak.collect();</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Done"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>程序输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">创建一个弱引用</div><div class="line">切断强引用</div><div class="line">GC之前，弱引用值：I am weak</div><div class="line">Referred对象被垃圾收集</div><div class="line">Done</div></pre></td></tr></table></figure></p>
+<h5 id="PhantomReference（虚引用）"><a href="#PhantomReference（虚引用）" class="headerlink" title="PhantomReference（虚引用）"></a>PhantomReference（虚引用）</h5><p>如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。这个特性，决定了他的get方法每次调用均会返回null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by childe on 2017/3/31.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassPhantom</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Referred</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            System.out.println(<span class="string">"Referred对象被垃圾收集"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"Referredqq"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">collect</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.gc();</div><div class="line">        Thread.sleep(<span class="number">2000</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckRefQueueThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            Reference&lt;Referred&gt; obj = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                obj = (Reference&lt;Referred&gt;) phantomQueue.remove();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(obj != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">//因为虚引用的指示对象总是不可到达的，所以此方法总是返回 null</span></div><div class="line">                System.out.println(<span class="string">"Object for phantomReference is "</span> + obj.get());</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    Field referent = Reference.class.getDeclaredField(<span class="string">"referent"</span>);</div><div class="line">                    referent.setAccessible(<span class="keyword">true</span>);</div><div class="line">                    Object result = referent.get(obj);</div><div class="line">                    System.out.println(<span class="string">"gc will collect: "</span> + result.getClass() + <span class="string">"@"</span> + result.toString());</div><div class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> ReferenceQueue&lt;Referred&gt; phantomQueue = <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * -Xms4m -Xmx4m</div><div class="line">     * <span class="doctag">@param</span> args</div><div class="line">     * <span class="doctag">@throws</span> InterruptedException</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.out.println(<span class="string">"创建一个软引用"</span>);</div><div class="line"></div><div class="line">        Referred strong = <span class="keyword">new</span> Referred();</div><div class="line">        PhantomReference&lt;Referred&gt; soft = <span class="keyword">new</span> PhantomReference&lt;&gt;(strong, phantomQueue);</div><div class="line">        <span class="keyword">new</span> CheckRefQueueThread().start();</div><div class="line"></div><div class="line">        collect();</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"切断强引用"</span>);</div><div class="line"></div><div class="line">        strong = <span class="keyword">null</span>;</div><div class="line">        collect();</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"开始堆占用"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            List&lt;<span class="keyword">byte</span>[]&gt; bytes = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                bytes.add(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>*<span class="number">1024</span>]);</div><div class="line">                collect();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (OutOfMemoryError e) &#123;</div><div class="line">            <span class="comment">// 软引用对象应该在这个之前被收集</span></div><div class="line">            System.out.println(<span class="string">"内存溢出..."</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Done"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">创建一个软引用</div><div class="line">切断强引用</div><div class="line">Referred对象被垃圾收集</div><div class="line">开始堆占用</div><div class="line">Object for phantomReference is null</div><div class="line">gc will collect: class com.cxd.jvm.references.ref.ClassPhantom$Referred@Referredqq</div><div class="line">内存溢出...</div><div class="line">Done</div></pre></td></tr></table></figure></p>
+<h4 id="引用间的差别"><a href="#引用间的差别" class="headerlink" title="引用间的差别"></a>引用间的差别</h4><p>我们注意到虚引用在被加入到ReferenceQueue中后，关联对象并没有被置为null，这点和弱引用及软引用不同。这也是我开头说的潜在OOM的最大风险。当然，这种现象只是加速了OOM问题的暴露，并不是根本原因。JVM GC的这个模型可以看作是生产-消费模型，GC是生产者，我们自己起的线程是消费者（Finalizer中JDK自带线程），当只有生产者时，OOM是迟早的事情。</p>
+<h4 id="ReferenceQueue"><a href="#ReferenceQueue" class="headerlink" title="ReferenceQueue"></a>ReferenceQueue</h4><p>我们介绍的这四种引用都从java.lang.ref.Reference继承，Reference是个单向链表，ReferenceQueue利用Reference的这个特性来维护先进后出单向队列（类似栈）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Reference</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="comment">//......</span></div><div class="line">	<span class="comment">//引用有4中概念上的状态：Active、Pending、 Enqueued 、Inactive</span></div><div class="line">	<span class="comment">//引用的初始态为Active或者Pending，它的生命后期为：（Active || Pending）-&gt; Enqueued -&gt; Inactive</span></div><div class="line">	<span class="keyword">private</span> T referent;         <span class="comment">/* Treated specially by GC 由GC专门处理*/</span></div><div class="line"></div><div class="line">    ReferenceQueue&lt;? <span class="keyword">super</span> T&gt; queue; <span class="comment">/* Reference 关联的引用队列 */</span></div><div class="line"></div><div class="line">    Reference next; <span class="comment">/* 指向下一个引用 */</span></div><div class="line">	<span class="comment">//......</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferenceQueue</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="comment">//......</span></div><div class="line">	<span class="comment">//如果我们构造Reference时，未传入自定义队列，默认使用此队列。</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Null</span> <span class="keyword">extends</span> <span class="title">ReferenceQueue</span> </span>&#123;</div><div class="line">		<span class="comment">//入队操作直接返回</span></div><div class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(Reference r)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> ReferenceQueue NULL = <span class="keyword">new</span> Null();</div><div class="line">    <span class="keyword">static</span> ReferenceQueue ENQUEUED = <span class="keyword">new</span> Null();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(Reference&lt;? extends T&gt; r)</span> </span>&#123; <span class="comment">/* Called only by Reference class 只会对Reference类调用该方法 */</span></div><div class="line">        <span class="keyword">synchronized</span> (r) &#123;</div><div class="line">        	<span class="comment">//以入队的引用不多次入队</span></div><div class="line">            <span class="keyword">if</span> (r.queue == ENQUEUED) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">            	<span class="comment">//修改引用入队状态为Enqueued</span></div><div class="line">                r.queue = ENQUEUED;</div><div class="line">                <span class="comment">//插入对头</span></div><div class="line">                r.next = (head == <span class="keyword">null</span>) ? r : head;</div><div class="line">                head = r;</div><div class="line">                queueLength++;</div><div class="line">                <span class="keyword">if</span> (r <span class="keyword">instanceof</span> FinalReference) &#123;</div><div class="line">                    sun.misc.VM.addFinalRefCount(<span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">                <span class="comment">//通知等待在锁上的线程ReferenceQueue.remove()</span></div><div class="line">                lock.notifyAll();</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Reference&lt;? extends T&gt; reallyPoll() &#123;       <span class="comment">/* Must hold lock 必须在持有lock锁的情况下执行，lock由其外层方法获取 */</span></div><div class="line">        <span class="keyword">if</span> (head != <span class="keyword">null</span>) &#123;</div><div class="line">        	<span class="comment">//获取队头</span></div><div class="line">            Reference&lt;? extends T&gt; r = head;</div><div class="line">            head = (r.next == r) ? <span class="keyword">null</span> : r.next;</div><div class="line">            <span class="comment">//将关联的队列置为NULL，此时r的状态为Inactive，处于此状态的引用不会再发生变化，等待被回收。</span></div><div class="line">            r.queue = NULL;</div><div class="line">            r.next = r;</div><div class="line">            queueLength--;</div><div class="line">            <span class="keyword">if</span> (r <span class="keyword">instanceof</span> FinalReference) &#123;</div><div class="line">                sun.misc.VM.addFinalRefCount(-<span class="number">1</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//......</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="扩展WeakHashMap"><a href="#扩展WeakHashMap" class="headerlink" title="扩展WeakHashMap"></a>扩展WeakHashMap</h4><p>JDK中有对引用的具体使用，当我们需要实现一个简单的本地内存敏感缓存时，可以考虑使用WeakHashMap，此处不再分析其源码。WeakHashMap的每个Entry都是WeakReference的子类，每次put或者get或者resize扩容时，都会调用WeakHashMap的expungeStaleEntries方法，清除那些被GC加入到ReferenceQueue的Entry。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/JDK/" rel="tag"># JDK</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/01/JDK源码-FinalReference/" rel="next" title="JDK源码 FinalReference">
+                <i class="fa fa-chevron-left"></i> JDK源码 FinalReference
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#走近引用"><span class="nav-number">1.</span> <span class="nav-text">走近引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#StrongReference（强引用）"><span class="nav-number">1.1.</span> <span class="nav-text">StrongReference（强引用）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SoftReference（软引用）"><span class="nav-number">1.2.</span> <span class="nav-text">SoftReference（软引用）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#WeakReference（弱引用）"><span class="nav-number">1.3.</span> <span class="nav-text">WeakReference（弱引用）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PhantomReference（虚引用）"><span class="nav-number">1.4.</span> <span class="nav-text">PhantomReference（虚引用）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用间的差别"><span class="nav-number">2.</span> <span class="nav-text">引用间的差别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReferenceQueue"><span class="nav-number">3.</span> <span class="nav-text">ReferenceQueue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#扩展WeakHashMap"><span class="nav-number">4.</span> <span class="nav-text">扩展WeakHashMap</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
