@@ -294,6 +294,180 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/11/JDK源码-hash杂记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/11/JDK源码-hash杂记/" itemprop="url">
+                  JDK源码 Hash杂记
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T19:29:30+08:00">
+                2017-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/杂记/" itemprop="url" rel="index">
+                    <span itemprop="name">杂记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/11/JDK源码-hash杂记/" class="leancloud_visitors" data-flag-title="JDK源码 Hash杂记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最早了解Hash的用法，是一次分表的经历，公司用户表数据有几千万，查询的效率已经比较低了，需要做拆分处理，之前系统中已经有分表的数据，处理方式比较简单，没有使用中间件，按照商家的ID（32位字符串）做Hash然后取模，算出其落在表的编号，然后加上前缀得到最终表名。</p>
+<p>最近在了解zk分布式锁时，为了避免一种实现方式的羊群效应，其改进思路类似一致性哈希算法。于是，便看了下Hash相关的知识，并用Java做了简单实现。</p>
+<h3 id="哈希简介"><a href="#哈希简介" class="headerlink" title="哈希简介"></a>哈希简介</h3><p>哈希算法将任意长度的二进制值映射为较短的固定长度的二进制值，这个小的二进制值称为哈希值。哈希值是一段数据唯一且极其紧凑的数值表示形式。如果散列一段明文而且哪怕只更改该段落的一个字母，随后的哈希都将产生不同的值。要找到散列为同一个值的两个不同的输入，在计算上是不可能的，所以数据的哈希值可以检验数据的完整性。一般用于快速查找和加密算法。</p>
+<h3 id="简单的Hash应用"><a href="#简单的Hash应用" class="headerlink" title="简单的Hash应用"></a>简单的Hash应用</h3><p>类似开头我们的场景，我们根据Hash的特性用代码来模拟下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 表，实际存储</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Table</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    Map&lt;String,Merchant&gt; merchantMap;</div><div class="line"></div><div class="line">    Table(String name) &#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        merchantMap = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Merchant merchant)</span> </span>&#123;</div><div class="line">        merchantMap.put(merchant.getId(),merchant);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Merchant <span class="title">select</span><span class="params">(String id)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> merchantMap.get(id);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 商家</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Merchant</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String id;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Merchant</span><span class="params">(String id)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getId</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> id;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(String id)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 表路由</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TableRoute</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TABLE_SIZE_MAX = <span class="number">512</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Table[] tables = <span class="keyword">new</span> Table[TABLE_SIZE_MAX];</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Merchant merchant)</span> </span>&#123;</div><div class="line">        <span class="comment">//以merchant的ID为key，其不能为空</span></div><div class="line">        <span class="keyword">if</span> (merchant == <span class="keyword">null</span> &amp;&amp; StringUtils.isEmpty(merchant.getId())) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> index = merchant.getId().hashCode() % size;</div><div class="line"></div><div class="line">        Table table = tables[index];</div><div class="line">        table.insert(merchant);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Merchant <span class="title">select</span><span class="params">(String id)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(id)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> index = id.hashCode() % size;</div><div class="line"></div><div class="line">        Table table = tables[index];</div><div class="line"></div><div class="line">        <span class="keyword">return</span> table.select(id);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addTable</span><span class="params">(Table table)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (table == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        tables[size++] = table;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> tableNum = <span class="number">3</span>;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> merchantNum = <span class="number">100</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">//初始化表</span></div><div class="line">        TableRoute tableRoute = creatTableRoute(tableNum);</div><div class="line"></div><div class="line">        <span class="comment">//插入数据</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; merchantNum; i++) &#123;</div><div class="line">            Merchant merchant = <span class="keyword">new</span> Merchant(String.valueOf(i));</div><div class="line">            tableRoute.insert(merchant);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//有效数据统计</span></div><div class="line">        validCount(tableRoute);</div><div class="line"></div><div class="line">        <span class="comment">//增加一个表</span></div><div class="line">        tableRoute.addTable(<span class="keyword">new</span> Table(<span class="string">"merchant_100"</span>));</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"after add a table"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//有效数据统计</span></div><div class="line">        validCount(tableRoute);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">validCount</span><span class="params">(TableRoute tableRoute)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> validNum = <span class="number">0</span>;</div><div class="line">        <span class="comment">//获取数据</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; merchantNum; i++) &#123;</div><div class="line">            Merchant merchant = tableRoute.select(String.valueOf(i));</div><div class="line">            <span class="keyword">if</span> (merchant != <span class="keyword">null</span>) &#123;</div><div class="line">                validNum++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"vaild merchant : "</span> + validNum + <span class="string">", total merchant : "</span> + merchantNum);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TableRoute <span class="title">creatTableRoute</span><span class="params">(<span class="keyword">int</span> tableNum)</span> </span>&#123;</div><div class="line">        TableRoute tableRoute = <span class="keyword">new</span> TableRoute();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tableNum; i++) &#123;</div><div class="line">            tableRoute.addTable(<span class="keyword">new</span> Table(<span class="string">"merchant_"</span> + String.valueOf(i)));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> tableRoute;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在上述代码中我们我们模拟了分表插入和查找的过程，最终输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vaild merchant : 100, total merchant : 100</div><div class="line">after add a table</div><div class="line">vaild merchant : 24, total merchant : 100</div></pre></td></tr></table></figure></p>
+<p>在Main中两次统计了表中有效的数据个数，两次差别还是比较大的，为什么新加入一个表会导致这么多数据实效呢？很简单，因为我们是以分表的个数取模的，当表的数量增加后，当然会造成数据失效。还以开篇的分表为例，如果商家的数据再次很快的增长，那么商家的用户数据当然会更多（商家:用户=1:n），当某个分表记录再次到达千万级别，此时就又面临分表的可能，那么此时就面临数据迁移的问题，否则就会出现我们模拟的状况，从实验上来看，失效的比例还是很高的，迁移就会比较头疼。当然，牵扯到实际问题需要我们对业务的增长有个大概的预测，来计算初次分表的数量。但是大量数据的迁移还是难以避免。</p>
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>上面我们看到一旦表的数量增加数据失效比例很高，就需要面临大量的数据迁移，这是难以忍受的。</p>
+<p>在应用中还有其他一些类似的场景，比如：缓存（假设我们缓存按照上述方式存放）。本来是为了减轻后方服务的压力，如果缓存的机器挂掉了一台或者我们需要新增加一台，那么，后端服务将面临大量缓存失效而带来的压力，甚至造成雪崩。</p>
+<p>一致性哈希很好的解决了这个问题，什么是一致性哈希呢？<br>一致性哈希将整个哈希值空间组织成一个虚拟的圆环，所有待落到该环上的节点（包括存储节点）均需要按照同一套Hash算法得出落点位置。节点落入到闭环后，按照顺时针的方向存储到离自己最近的一个存储节点。因为存储节点可能比较少，可能会导致存储节点存储数据不均衡，所以需要引入虚拟存储节点。比如：有A、B两台机器提供存储，我们一般使用机器的IP来计算机器的Hash，如果A、B两台机器的hash值比较靠近，数据存储就会出现倾斜，要尽可能保证数据的均匀分布，我们可以再做一层映射，在闭环上放置4个（A#0、A#1、B#0、B#1）或者更多存储节点（使得数据分布约趋于均匀）。</p>
+<p><img src="http://img.blog.csdn.net/20170514182427988?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="一致性Hash图示"></p>
+<p>我们简单模拟下一致性哈希的实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 模拟缓存机器</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> Map&lt;String, Entry&gt; entries;</div><div class="line"></div><div class="line">    Server(String name) &#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        entries = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Entry e)</span> </span>&#123;</div><div class="line">        entries.put(e.getKey(), e);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Entry <span class="title">get</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> entries.get(key);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name.hashCode();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 缓存集群</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cluster</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SERVER_SIZE_MAX = <span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> SortedMap&lt;Integer, Server&gt; servers = <span class="keyword">new</span> TreeMap&lt;&gt;();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Entry e)</span> </span>&#123;</div><div class="line">        routeServer(e.getKey().hashCode()).put(e);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Entry <span class="title">get</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> routeServer(key.hashCode()).get(key);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> Server <span class="title">routeServer</span><span class="params">(<span class="keyword">int</span> hash)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (servers.isEmpty())&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 顺时针找到离该hash最近的slot（server）</div><div class="line">         */</div><div class="line">        <span class="keyword">if</span> (!servers.containsKey(hash)) &#123;</div><div class="line">            SortedMap&lt;Integer, Server&gt; tailMap = servers.tailMap(hash);</div><div class="line">            hash = tailMap.isEmpty() ? servers.firstKey() : tailMap.firstKey();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> servers.get(hash);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addServer</span><span class="params">(Server s)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (size &gt;= SERVER_SIZE_MAX) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        servers.put(s.hashCode(), s);</div><div class="line"></div><div class="line">        size++;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 缓存实体</div><div class="line"> * Created by childe on 2017/5/14.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String key;</div><div class="line"></div><div class="line">    Entry(String key) &#123;</div><div class="line">        <span class="keyword">this</span>.key = key;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getKey</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> key;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setKey</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.key = key;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by childe on 2017/5/5.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> entryNum = <span class="number">100</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">//创建缓存集群</span></div><div class="line">        Cluster cluster = createCluster();</div><div class="line"></div><div class="line">        <span class="comment">//写入缓存实体</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; entryNum; i++) &#123;</div><div class="line">            cluster.put(<span class="keyword">new</span> Entry(String.valueOf(i)));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//有效数据统计</span></div><div class="line">        validCount(cluster);</div><div class="line"></div><div class="line">        <span class="comment">//新增缓存节点</span></div><div class="line">        cluster.addServer(<span class="keyword">new</span> Server(<span class="string">"C"</span>));</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"afer add a server"</span>);</div><div class="line"></div><div class="line">        <span class="comment">//有效数据统计</span></div><div class="line">        validCount(cluster);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Cluster <span class="title">createCluster</span><span class="params">()</span> </span>&#123;</div><div class="line">        Cluster c = <span class="keyword">new</span> Cluster();</div><div class="line">        c.addServer(<span class="keyword">new</span> Server(<span class="string">"A#1"</span>));</div><div class="line">        c.addServer(<span class="keyword">new</span> Server(<span class="string">"A#2"</span>));</div><div class="line">        c.addServer(<span class="keyword">new</span> Server(<span class="string">"B#1"</span>));</div><div class="line">        c.addServer(<span class="keyword">new</span> Server(<span class="string">"B#2"</span>));</div><div class="line">        <span class="keyword">return</span> c;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">validCount</span><span class="params">(Cluster cluster)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> validNum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; entryNum; i++) &#123;</div><div class="line">            Entry entry = cluster.get(String.valueOf(i));</div><div class="line">            <span class="keyword">if</span> (entry != <span class="keyword">null</span>) &#123;</div><div class="line">                validNum++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        System.out.println(<span class="string">"valid entry : "</span> + validNum + <span class="string">", total entry : "</span> + entryNum);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//输出如下</div><div class="line">valid entry : 100, total entry : 100</div><div class="line">afer add a server</div><div class="line">valid entry : 90, total entry : 100</div></pre></td></tr></table></figure>
+<p>从输出结果我们看到失效率明显降低。据了解，Memcahce中便采用了一致性哈希的算法。</p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>JDK中我们常用的HashMap也是基于哈希实现，JDK1.8以前采用数组和链表来组织数据，1.8中引入了红黑树对链表部分进行了优化。为什么HashMap要采用链表和红黑树呢？因为我们得到某个key的HashCode需要落到具体的桶中，而桶的数量是有限并且固定的，所以难免遇到不同的key却落到相同的桶中，于是就需要链表将这些数据链接起来，这也就是为什么当碰撞比较严重时，HashMap查询变慢的原因，在JDK1.8在处理冲突时采用链表加红黑树，当链表长度大于8时，就将链表转换为红黑树，从而达到加速查找的目的。</p>
+<p>JDK1.8中还对HashMap的扩容做了优化，在1.8以前扩容时，需要重新计算每个key的HashCode然后入桶，所以扩容是一个耗时的操作，在1.8中避免了重新计算Hash，加快了扩容操作。</p>
+<p>不管是JDK1.7还是1.8我们使用HashMap时最好对需要的容量进行评估，尽量避免扩容操作。JDK1.8对HashMap的优化，想深入了解的可参考美团点评团队的<a href="http://tech.meituan.com/java-hashmap.html" target="_blank" rel="external">这篇博客</a></p>
+<p>参考：<br><a href="http://wiki.mbalib.com/wiki/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95" target="_blank" rel="external">http://wiki.mbalib.com/wiki/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95</a><br><a href="http://www.berlinix.com/" target="_blank" rel="external">http://www.berlinix.com/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/24/JDK源码-java的四种Reference/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1698,168 +1872,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/10/17/IO模型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/17/IO模型/" itemprop="url">
-                  IO模型
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-17T17:58:03+08:00">
-                2016-10-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/10/17/IO模型/" class="leancloud_visitors" data-flag-title="IO模型">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h3><p>对IO的变成模型一直比较模糊，分不清楚什么同步阻塞，同步非阻塞等概念，对理解一些网络编程框架造成不少的困扰，花时间理了一下，有理解不到位的地方，烦请客官留言。</p>
-<p>Unix编程中将IO模型分为5种：</p>
-<ol>
-<li>阻塞IO</li>
-<li>非阻塞IO</li>
-<li>IO复用</li>
-<li>信号驱动IO</li>
-<li>异步IO
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/17/IO模型/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1909,7 +1921,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1920,7 +1932,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1931,7 +1943,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
