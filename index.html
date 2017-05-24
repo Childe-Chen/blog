@@ -405,7 +405,7 @@
         
           <p>原文链接：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html</a></p>
 <p>The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running. Typically applications that have a relatively large set of long-lived data (a large tenured generation) and run on machines with two or more processors tend to benefit from the use of this collector. However, this collector should be considered for any application with a low pause time requirement. The CMS collector is enabled with the command-line option -XX:+UseConcMarkSweepGC.</p>
-<p>CMS收集器特点：1.更短的垃圾回收暂停(stop the world) 2.垃圾收集器能够在应用运行时与其共享处理器资源。通常，一个运行在多处理器机器上并且其中有长期存活的大集合(较大的老生代)的应用可以考虑使用CMS收集器。当然，对于具有低暂停时间要求的应用，都可以考虑该收集器。使用-XX:+UseConcMarkSweepGC选项启用CMS收集器。</p>
+<p>CMS收集器特点：1.更短的垃圾回收暂停(stop the world) 2.垃圾收集器能够在应用运行时与其共享处理器资源。通常，一个运行在多处理器机器上并且其中有长期存活的大集合(较大的老生代)的应用可以考虑使用CMS收集器。当然，对于具有低暂停时间要求的应用，都可以考虑使用该收集器。使用-XX:+UseConcMarkSweepGC来启用CMS收集器。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/#more" rel="contents">

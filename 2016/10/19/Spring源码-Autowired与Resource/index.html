@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20161019205037446">
 <meta property="og:image" content="http://img.blog.csdn.net/20161019205922126">
 <meta property="og:image" content="http://img.blog.csdn.net/20161019210352127">
-<meta property="og:updated_time" content="2017-03-25T14:11:09.000Z">
+<meta property="og:updated_time" content="2017-05-24T07:52:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring源码 Autowired与Resource">
 <meta name="twitter:description" content="最近项目中发现对Spring中的Autowired和JSR-250 定义的Resource认知还是比较模糊，网上的大多的解释也比较笼统，没能解释清楚我的疑问，于是自己动手，丰衣足食，总结如下。">
@@ -402,9 +402,8 @@
       
 
       
-        <p>最近项目中发现对Spring中的Autowired和JSR-250 定义的Resource认知还是比较模糊，网上的大多的解释也比较笼统，没能解释清楚我的疑问，于是自己动手，丰衣足食，总结如下。<br><a id="more"></a><br>先来一段官方的解释，其实官方的解释意境很清楚了。<br><code>If you intend to express annotation-driven injection by name, do not primarily use @Autowired, even if is technically capable of referring to a bean name through @Qualifier values. Instead, use the JSR-250 @Resource annotation, which is semantically defined to identify a specific target component by its unique name, with the declared type being irrelevant for the matching process.
-As a specific consequence of this semantic difference, beans that are themselves defined as a collection or map type cannot be injected through @Autowired, because type matching is not properly applicable to them. Use @Resource for such beans, referring to the specific collection or map bean by unique name.
-@Autowired applies to fields, constructors, and multi-argument methods, allowing for narrowing through qualifier annotations at the parameter level. By contrast, @Resource is supported only for fields and bean property setter methods with a single argument. As a consequence, stick with qualifiers if your injection target is a constructor or a multi-argument method.</code><br>除了注解使用的地方不同外，比如：Autowired可以用在多参数的方法上等而Resource就只能用在变量、set方法上等，这个不再赘述。</p>
+        <p>最近项目中发现对Spring中的Autowired和JSR-250 定义的Resource认知还是比较模糊，网上的大多的解释也比较笼统，没能解释清楚我的疑问，于是自己动手，丰衣足食，总结如下。<br><a id="more"></a><br>先来一段官方的解释，其实官方的解释意境很清楚了。<br>If you intend to express annotation-driven injection by name, do not primarily use @Autowired, even if is technically capable of referring to a bean name through @Qualifier values. Instead, use the JSR-250 @Resource annotation, which is semantically defined to identify a specific target component by its unique name, with the declared type being irrelevant for the matching process.<br>As a specific consequence of this semantic difference, beans that are themselves defined as a collection or map type cannot be injected through @Autowired, because type matching is not properly applicable to them. Use @Resource for such beans, referring to the specific collection or map bean by unique name.<br>@Autowired applies to fields, constructors, and multi-argument methods, allowing for narrowing through qualifier annotations at the parameter level. By contrast, @Resource is supported only for fields and bean property setter methods with a single argument. As a consequence, stick with qualifiers if your injection target is a constructor or a multi-argument method.</p>
+<p>除了注解使用的地方不同外，比如：Autowired可以用在多参数的方法上等而Resource就只能用在变量、set方法上等，这个不再赘述。</p>
 <p>主要关注其实现的解释。</p>
 <p>Autowired网上大多解释是按照类型进行装配，给人一种只会按照类型匹配的误解，其实不然，当Autowired遇到候选类型有多个实例但实际需要注入的不是集合类型（List）或者Map的时候，默认会按照变量名称对候选类型进行筛选，此时如果没找到就会抛出异常。下图是Autowired确定候选的代码。</p>
 <p><img src="http://img.blog.csdn.net/20161019205037446" alt="这里写图片描述"></p>
