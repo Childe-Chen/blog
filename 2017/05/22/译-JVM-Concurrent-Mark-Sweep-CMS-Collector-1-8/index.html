@@ -1,0 +1,1059 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,GC,翻译," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原文链接：https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html
+The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(译)JVM Concurrent Mark Sweep (CMS) Collector 1.8">
+<meta property="og:url" content="http://yoursite.com/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="原文链接：https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html
+The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses an">
+<meta property="og:updated_time" content="2017-05-24T07:02:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="(译)JVM Concurrent Mark Sweep (CMS) Collector 1.8">
+<meta name="twitter:description" content="原文链接：https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html
+The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses an">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/"/>
+
+
+
+
+
+  <title> (译)JVM Concurrent Mark Sweep (CMS) Collector 1.8 | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                (译)JVM Concurrent Mark Sweep (CMS) Collector 1.8
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-22T15:48:01+08:00">
+                2017-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/" class="leancloud_visitors" data-flag-title="(译)JVM Concurrent Mark Sweep (CMS) Collector 1.8">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html" target="_blank" rel="external">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html</a></p>
+<p>The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running. Typically applications that have a relatively large set of long-lived data (a large tenured generation) and run on machines with two or more processors tend to benefit from the use of this collector. However, this collector should be considered for any application with a low pause time requirement. The CMS collector is enabled with the command-line option -XX:+UseConcMarkSweepGC.</p>
+<p>CMS收集器特点：1.更短的垃圾回收暂停(stop the world) 2.垃圾收集器能够在应用运行时与其共享处理器资源。通常，一个运行在多处理器机器上并且其中有长期存活的大集合(较大的老生代)的应用可以考虑使用CMS收集器。当然，对于具有低暂停时间要求的应用，都可以考虑该收集器。使用-XX:+UseConcMarkSweepGC选项启用CMS收集器。</p>
+<a id="more"></a>
+<p>Similar to the other available collectors, the CMS collector is generational; thus both minor and major collections occur. The CMS collector attempts to reduce pause times due to major collections by using separate garbage collector threads to trace the reachable objects concurrently with the execution of the application threads. During each major collection cycle, the CMS collector pauses all the application threads for a brief period at the beginning of the collection and again toward the middle of the collection. The second pause tends to be the longer of the two pauses. Multiple threads are used to do the collection work during both pauses. The remainder of the collection (including most of the tracing of live objects and sweeping of unreachable objects is done with one or more garbage collector threads that run concurrently with the application. Minor collections can interleave with an ongoing major cycle, and are done in a manner similar to the parallel collector (in particular, the application threads are stopped during minor collections).</p>
+<p>和其他收集器一样，CMS是分代的，新生代和老年代都会发生回收。CMS尝试通过多个跟踪对象的可达性的垃圾收集线程和应用线程并发的方式来减少老生代的收集时间。在老年代垃圾回收期间，CMS会发生两次STW：1.收集开始首次标记时（initial-mark）2.二次标记时（remark）。第二次暂停的时间往往比第一次要长。这两次标记均使用多线程。其余的收集（包括大多存活对象跟踪和不可大对象的清除）使用一个或多个回收线程和应用并发执行。新生代的回收可以和正在执行老年年代回收交错执行，以类似于并行收集器的方式完成（在新生代回收期间应用程序线程被停止STW）。</p>
+<h4 id="Concurrent-Mode-Failure"><a href="#Concurrent-Mode-Failure" class="headerlink" title="Concurrent Mode Failure"></a>Concurrent Mode Failure</h4><p>The CMS collector uses one or more garbage collector threads that run simultaneously with the application threads with the goal of completing the collection of the tenured generation before it becomes full. As described previously, in normal operation, the CMS collector does most of its tracing and sweeping work with the application threads still running, so only brief pauses are seen by the application threads. However, if the CMS collector is unable to finish reclaiming the unreachable objects before the tenured generation fills up, or if an allocation cannot be satisfied with the available free space blocks in the tenured generation, then the application is paused and the collection is completed with all the application threads stopped. The inability to complete a collection concurrently is referred to as concurrent mode failure and indicates the need to adjust the CMS collector parameters. If a concurrent collection is interrupted by an explicit garbage collection (System.gc()) or for a garbage collection needed to provide information for diagnostic tools, then a concurrent mode interruption is reported.</p>
+<p>CMS使用一个或多个线程和应用线程同时进行，目标是在老生代被消耗完之前完成回收。如前所述，在正常操作中，CMS收集器执行大部分追踪和清理工作时，应用程序线程仍在运行，因此应用线程只会短暂暂停。但是，如果在垃圾回收完成前，老生代被耗尽，或者老生代无法分配足够的空间，此时会暂停所有的应用线程直到垃圾回收完成。没有在并发期间完成收集工作称为<strong>concurrent mode failure</strong>，这个失败表明我们需要调整CMS收集器的参数。如果并发回收被显示调用(System.gc()) 或者为了给诊断工具提供信息而发生中断，则会报告并发模式中断。</p>
+<h4 id="Excessive-GC-Time-and-OutOfMemoryError"><a href="#Excessive-GC-Time-and-OutOfMemoryError" class="headerlink" title="Excessive GC Time and OutOfMemoryError"></a>Excessive GC Time and OutOfMemoryError</h4><p>Excessive GC Time and OutOfMemoryError<br>The CMS collector throws an OutOfMemoryError if too much time is being spent in garbage collection: if more than 98% of the total time is spent in garbage collection and less than 2% of the heap is recovered, then an OutOfMemoryError is thrown. This feature is designed to prevent applications from running for an extended period of time while making little or no progress because the heap is too small. If necessary, this feature can be disabled by adding the option -XX:-UseGCOverheadLimit to the command line.</p>
+<p>The policy is the same as that in the parallel collector, except that time spent performing concurrent collections is not counted toward the 98% time limit. In other words, only collections performed while the application is stopped count toward excessive GC time. Such collections are typically due to a concurrent mode failure or an explicit collection request (for example, a call to System.gc).</p>
+<p>当GC时间太久（垃圾收集花费时间，超过了总时间的98%，但是回收的堆少于2%,总时间究竟是相对哪个时间而言？在下还未找到解释。），CMS会抛出OutOfMemoryError。这个特性旨在避免由于对空间过小而导致应用程序业务处理缓慢或者无进展。这个特性可以用-XX:-UseGCOverheadLimit命令禁用。</p>
+<p>这个策略和并发收集器一致，只是并发回收垃圾的时间不计入98%的时间消耗中。换句话讲，只有发生了STW情况下的收集时间（两次标记的时间）会计入这98%的时间限制内。这种回收通常是由于<strong>concurrent mode failure</strong>或者回收请求（比如：显示调用System.gc）。</p>
+<h4 id="Floating-Garbage"><a href="#Floating-Garbage" class="headerlink" title="Floating Garbage"></a>Floating Garbage</h4><p>The CMS collector, like all the other collectors in Java HotSpot VM, is a tracing collector that identifies at least all the reachable objects in the heap. In the parlance of Richard Jones and Rafael D. Lins in their publication Garbage Collection: Algorithms for Automated Dynamic Memory, it is an incremental update collector. Because application threads and the garbage collector thread run concurrently during a major collection, objects that are traced by the garbage collector thread may subsequently become unreachable by the time collection process ends. Such unreachable objects that have not yet been reclaimed are referred to as floating garbage. The amount of floating garbage depends on the duration of the concurrent collection cycle and on the frequency of reference updates, also known as mutations, by the application. Furthermore, because the young generation and the tenured generation are collected independently, each acts a source of roots to the other. As a rough guideline, try increasing the size of the tenured generation by 20% to account for the floating garbage. Floating garbage in the heap at the end of one concurrent collection cycle is collected during the next collection cycle.<br>```</p>
+<p>CMS和其他Java HotSpot VM一样，是一个会标记堆中所有可达对象的追踪回收器。在《Algorithms for Automated Dynamic Memory》中CMS被称作增量收集器。因为应用线程和垃圾回收线程在老年代回收时是并发运行的，所以，那些被垃圾回收线程追踪的对象在会后结束时可能会变得不可达。像这些尚未被回收并且不可达的引用被称为浮动垃圾。浮动垃圾的数量取决于并发收集周期的持续时间以及应用程序的引用更新频率（也称为突变）。此外，因为新生代和老年代的垃圾回收是相互独立的，各自的根部相同，所以，根据经验建议将老年代的增加20%来承载浮动垃圾。一个并发回收周期节后产生的浮动垃圾会在下个垃圾回收中回收。</p>
+<h4 id="Pauses"><a href="#Pauses" class="headerlink" title="Pauses"></a>Pauses</h4><p>The CMS collector pauses an application twice during a concurrent collection cycle. The first pause is to mark as live the objects directly reachable from the roots (for example, object references from application thread stacks and registers, static objects and so on) and from elsewhere in the heap (for example, the young generation). This first pause is referred to as the initial mark pause. The second pause comes at the end of the concurrent tracing phase and finds objects that were missed by the concurrent tracing due to updates by the application threads of references in an object after the CMS collector had finished tracing that object. This second pause is referred to as the remark pause.</p>
+<p>CMS在一次回收的过程中会两次暂停（STW）应用。第一次是标记从GC root（比如：被应用线程栈引用的对象和registers，静态的对象等等）可以直接到达的对象和从堆的其他地方（比如：新生代）。第一次暂停叫做初始标记暂停（initial mark pause）。第二次暂停发生在并发追踪阶段结束后，这次暂停是为了标记那些在并发追踪期间因为被应用线程更新引用而错过的对象。第二次暂停叫做重新标记暂停（remark pause）。</p>
+<h4 id="Concurrent-Phases"><a href="#Concurrent-Phases" class="headerlink" title="Concurrent Phases"></a>Concurrent Phases</h4><p>The concurrent tracing of the reachable object graph occurs between the initial mark pause and the remark pause. During this concurrent tracing phase one or more concurrent garbage collector threads may be using processor resources that would otherwise have been available to the application. As a result, compute-bound applications may see a commensurate fall in application throughput during this and other concurrent phases even though the application threads are not paused. After the remark pause, a concurrent sweeping phase collects the objects identified as unreachable. Once a collection cycle completes, the CMS collector waits, consuming almost no computational resources, until the start of the next major collection cycle.</p>
+<p>并发追踪可达对象图发生在初始标记（initial mark）和重新标记（remark）之间。在并发标记阶段会有一个或者多个垃圾回收线程在使用处理器资源（？otherwise怎么译）。因此，在垃圾回收期间计算密集型应用吞吐量会下降，即使应用线程没有被暂停。在冲标记阶段后，会并发清理那些被被标记为不可达的对象。垃圾回收完成后，CMS进入等待，几乎不消耗任何计算资源，直到下一个老年代回收开始。</p>
+<h4 id="Starting-a-Concurrent-Collection-Cycle"><a href="#Starting-a-Concurrent-Collection-Cycle" class="headerlink" title="Starting a Concurrent Collection Cycle"></a>Starting a Concurrent Collection Cycle</h4><p>With the serial collector a major collection occurs whenever the tenured generation becomes full and all application threads are stopped while the collection is done. In contrast, the start of a concurrent collection must be timed such that the collection can finish before the tenured generation becomes full; otherwise, the application would observe longer pauses due to concurrent mode failure. There are several ways to start a concurrent collection.</p>
+<p>Based on recent history, the CMS collector maintains estimates of the time remaining before the tenured generation will be exhausted and of the time needed for a concurrent collection cycle. Using these dynamic estimates, a concurrent collection cycle is started with the aim of completing the collection cycle before the tenured generation is exhausted. These estimates are padded for safety, because concurrent mode failure can be very costly.</p>
+<p>A concurrent collection also starts if the occupancy of the tenured generation exceeds an initiating occupancy (a percentage of the tenured generation). The default value for this initiating occupancy threshold is approximately 92%, but the value is subject to change from release to release. This value can be manually adjusted using the command-line option -XX:CMSInitiatingOccupancyFraction=<n>, where <n> is an integral percentage (0 to 100) of the tenured generation size.</n></n></p>
+<p>老年代串行垃圾收集器在老年代即将耗尽时开始工作，此时所有应用线程都会暂停直到垃圾回收完成。相反，从开始并发回收时进行计时，以使收集在老年代耗尽之前完成，否则会因为<strong>concurrent mode failure</strong>使得应用暂停更长时间。有几种方式可以开始一个并发回收。</p>
+<p>基于最近的回收历史，CMS会维护两个预估时间：老年代多久会被耗尽；完成一次老年代的回收需要多久。依据这些动态估计值，在老年代耗尽前适时开始老年代的回收。这些预估值是为了避免耗时的<strong>concurrent mode failure</strong>。</p>
+<p>如果老年代占用的空间超过了启动设置的大小（一个老生代的占用比）。默认的启动设置的阀值是92%，但是这个值会随着版本发布改变。这个值可以通过命令行选项配置-XX:CMSInitiatingOccupancyFraction=<n>，N是占用老生代大小的百分比（0-100）。</n></p>
+<h4 id="Scheduling-Pauses"><a href="#Scheduling-Pauses" class="headerlink" title="Scheduling Pauses"></a>Scheduling Pauses</h4><p>The pauses for the young generation collection and the tenured generation collection occur independently. They do not overlap, but may occur in quick succession such that the pause from one collection, immediately followed by one from the other collection, can appear to be a single, longer pause. To avoid this, the CMS collector attempts to schedule the remark pause roughly midway between the previous and next young generation pauses. This scheduling is currently not done for the initial mark pause, which is usually much shorter than the remark pause.</p>
+<p>老年代和新生代垃圾回收引起的暂停是独立的。它们不会重叠，但是可能会快速连续发生，比如：一个回收暂停结束后另一个回收又立刻导致暂停，看起来就像单独一个很长的暂停。为了避免这种情况，CMS尝试规划将remark暂停放在两次新生代回收（Young GC）之间。这个规划尚未在初始标记暂停（initial mark pause）使用，因为初始标记暂停（initial mark pause）通常比remark pause要短。</p>
+<h4 id="Incremental-Mode"><a href="#Incremental-Mode" class="headerlink" title="Incremental Mode"></a>Incremental Mode</h4><p>Note that the incremental mode is being deprecated in Java SE 8 and may be removed in a future major release.</p>
+<p>请注意，增量模式在Java SE 8中已被弃用，并可能在将来的主要版本中被删除，所以不在翻译和i-cms有关部分。</p>
+<h4 id="Measurements"><a href="#Measurements" class="headerlink" title="Measurements"></a>Measurements</h4><p>Example 8-1, “Output from the CMS Collector” is the output from the CMS collector with the options -verbose:gc and -XX:+PrintGCDetails, with a few minor details removed. Note that the output for the CMS collector is interspersed with the output from the minor collections; typically many minor collections occur during a concurrent collection cycle. CMS-initial-mark indicates the start of the concurrent collection cycle, CMS-concurrent-mark indicates the end of the concurrent marking phase, and CMS-concurrent-sweep marks the end of the concurrent sweeping phase. Not discussed previously is the precleaning phase indicated by CMS-concurrent-preclean. Precleaning represents work that can be done concurrently in preparation for the remark phase CMS-remark. The final phase is indicated by CMS-concurrent-reset and is in preparation for the next concurrent collection.</p>
+<p>Example 8-1 Output from the CMS Collector</p>
+<pre><code>[GC [1 CMS-initial-mark: 13991K(20288K)] 14103K(22400K), 0.0023781 secs]
+[GC [DefNew: 2112K-&gt;64K(2112K), 0.0837052 secs] 16103K-&gt;15476K(22400K), 0.0838519 secs]
+...
+[GC [DefNew: 2077K-&gt;63K(2112K), 0.0126205 secs] 17552K-&gt;15855K(22400K), 0.0127482 secs]
+[CMS-concurrent-mark: 0.267/0.374 secs]
+[GC [DefNew: 2111K-&gt;64K(2112K), 0.0190851 secs] 17903K-&gt;16154K(22400K), 0.0191903 secs]
+[CMS-concurrent-preclean: 0.044/0.064 secs]
+[GC [1 CMS-remark: 16090K(20288K)] 17242K(22400K), 0.0210460 secs]
+[GC [DefNew: 2112K-&gt;63K(2112K), 0.0716116 secs] 18177K-&gt;17382K(22400K), 0.0718204 secs]
+[GC [DefNew: 2111K-&gt;63K(2112K), 0.0830392 secs] 19363K-&gt;18757K(22400K), 0.0832943 secs]
+...
+[GC [DefNew: 2111K-&gt;0K(2112K), 0.0035190 secs] 17527K-&gt;15479K(22400K), 0.0036052 secs]
+[CMS-concurrent-sweep: 0.291/0.662 secs]
+[GC [DefNew: 2048K-&gt;0K(2112K), 0.0013347 secs] 17527K-&gt;15479K(27912K), 0.0014231 secs]
+[CMS-concurrent-reset: 0.016/0.016 secs]
+[GC [DefNew: 2048K-&gt;1K(2112K), 0.0013936 secs] 17527K-&gt;15479K(27912K), 0.0014814 secs]
+</code></pre><p>The initial mark pause is typically short relative to the minor collection pause time. The concurrent phases (concurrent mark, concurrent preclean and concurrent sweep) normally last significantly longer than a minor collection pause, as indicated by Example 8-1, “Output from the CMS Collector”. Note, however, that the application is not paused during these concurrent phases. The remark pause is often comparable in length to a minor collection. The remark pause is affected by certain application characteristics (for example, a high rate of object modification can increase this pause) and the time since the last minor collection (for example, more objects in the young generation may increase this pause).</p>
+<p>例子8-1是打开-verbose:gc和-XX:+PrintGCDetails选项后的gc打印日志，例子中略去了一些新生代的收集细节。注意CMS收集器打印的日志和新生代回收打印的日志是穿插在一起的，通常在一个老年代回收周期中会发生多次新生代回收。CMS-initial-mark表明一个并发收集周期的开始，CMS-concurrent-mark表明并发标记阶段已经完成，CMS-concurrent-sweep说明并发清除阶段已经结束。CMS-concurrent-preclean是预清理阶段。预清理工作并发进行，是CMS-remark阶段的前置操作。CMS-concurrent-reset是老年代垃圾回收的最后一个阶段也是为下次回收做预备工作。</p>
+<p>初始标记阶段耗时通常比年轻代暂停时间短。从例8-1我们不难发现，并发阶段（并发标记，并发预清理和并发清除）通常耗时比新生代回收时间长。但是，应用在这些阶段中并没有暂停。重新标记耗时与新生代回收耗时差不多。重新标记的耗时会受某些应用特性（比如：高对象修改率会增加此阶段耗时）和距离上次老年代收集时间（比如：新生代有了更多的对象会增加此阶段耗时）的影响。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+            <a href="/tags/GC/" rel="tag"># GC</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/11/JDK源码-hash杂记/" rel="next" title="JDK源码 Hash杂记">
+                <i class="fa fa-chevron-left"></i> JDK源码 Hash杂记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Concurrent-Mode-Failure"><span class="nav-number">1.</span> <span class="nav-text">Concurrent Mode Failure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Excessive-GC-Time-and-OutOfMemoryError"><span class="nav-number">2.</span> <span class="nav-text">Excessive GC Time and OutOfMemoryError</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Floating-Garbage"><span class="nav-number">3.</span> <span class="nav-text">Floating Garbage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pauses"><span class="nav-number">4.</span> <span class="nav-text">Pauses</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Concurrent-Phases"><span class="nav-number">5.</span> <span class="nav-text">Concurrent Phases</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Starting-a-Concurrent-Collection-Cycle"><span class="nav-number">6.</span> <span class="nav-text">Starting a Concurrent Collection Cycle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scheduling-Pauses"><span class="nav-number">7.</span> <span class="nav-text">Scheduling Pauses</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Incremental-Mode"><span class="nav-number">8.</span> <span class="nav-text">Incremental Mode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Measurements"><span class="nav-number">9.</span> <span class="nav-text">Measurements</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
