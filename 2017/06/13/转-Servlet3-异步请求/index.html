@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Servlet3,callable,api,转载," />
 
 
 
@@ -87,15 +87,19 @@
 
 
 
-<meta name="description" content="少爷凡隐">
-<meta property="og:type" content="website">
-<meta property="og:title" content="凡隐的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="第22章 异步请求Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。
+异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="转-Servlet3-异步请求">
+<meta property="og:url" content="http://yoursite.com/2017/06/13/转-Servlet3-异步请求/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="少爷凡隐">
+<meta property="og:description" content="第22章 异步请求Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。
+异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，">
+<meta property="og:updated_time" content="2017-06-13T07:55:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="凡隐的博客">
-<meta name="twitter:description" content="少爷凡隐">
+<meta name="twitter:title" content="转-Servlet3-异步请求">
+<meta name="twitter:description" content="第22章 异步请求Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。
+异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，">
 
 
 
@@ -123,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/13/转-Servlet3-异步请求/"/>
 
 
 
 
 
-  <title> 凡隐的博客 </title>
+  <title> 转-Servlet3-异步请求 | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,9 +158,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -283,9 +285,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -315,10 +317,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2017/06/13/转-Servlet3-异步请求/" itemprop="url">
-                  转-Servlet3-异步请求
-                </a>
+                转-Servlet3-异步请求
               
             
           </h2>
@@ -402,9 +401,7 @@
       
 
       
-        
-          
-            <h1 id="第22章-异步请求"><a href="#第22章-异步请求" class="headerlink" title="第22章 异步请求"></a>第22章 异步请求</h1><p>Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。</p>
+        <h1 id="第22章-异步请求"><a href="#第22章-异步请求" class="headerlink" title="第22章 异步请求"></a>第22章 异步请求</h1><p>Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。</p>
 <p>异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，等处理完成后再将结果返回给用户。稍微扩展一下还可以实现订阅者模式的消息订阅功能，比如，当有异常情况发生时可以主动将相关信息发给运维人员，还有现在很多邮箱系统中收到新邮件的自动提示功能也是这种技术。甚至更进一步的使用方式是在浏览器上做即时通信的程序！</p>
 <p>HTTP协议是单向的，只能客户端自己拉不能服务器主动推，Servlet对异步请求的支持并没有修改HTTP协议，而是对Http的巧妙利用。异步请求的核心原理主要分为两大类，一类是轮询，另一类是长连接。轮询就是定时自动发起请求检查有没有需要返回的数据，这种方式对资源的浪费是比较大的；长连接的原理是在客户端发起请求，服务端处理并返回后并不结束连接，这样就可以在后面再次运回给客户端数据。Servlet对异步请求的支持其实采用的是长连接的方式，也就是说，异步请求中在原始的请求返回的时候并没有关闭连接，关闭的只是处理请求的那个线程（一般是回收的线程池里了），只有在异步请求全部处理完之后才会关闭连接。</p>
 <h2 id="22-1-Servlet3．O对异步请求的支持"><a href="#22-1-Servlet3．O对异步请求的支持" class="headerlink" title="22.1  Servlet3．O对异步请求的支持"></a>22.1  Servlet3．O对异步请求的支持</h2><p>在Servlet3.0规范巾使用异步处理请求非常简单，只需要在请求处理过程中调用request的startAsync方法即可，其返回值是AsyncContext类型。</p>
@@ -592,1459 +589,72 @@
 </code></pre><p>对异步请求的支持主要在RequestMappingHandlerAdapter中，启动异步处理在各返回值对应的返回值处理器中。</p>
 <p>原文链接：<a href="https://github.com/sixtrees/kantouspringmvc/blob/master/%E7%AC%AC22%E7%AB%A0%20%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82.md" target="_blank" rel="external">https://github.com/sixtrees/kantouspringmvc/blob/master/%E7%AC%AC22%E7%AB%A0%20%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82.md</a></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/" itemprop="url">
-                  (译)JVM Concurrent Mark Sweep (CMS) Collector 1.8
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-22T15:48:01+08:00">
-                2017-05-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/Servlet3/" rel="tag"># Servlet3</a>
           
-
+            <a href="/tags/callable/" rel="tag"># callable</a>
           
-            
+            <a href="/tags/api/" rel="tag"># api</a>
           
-
+            <a href="/tags/转载/" rel="tag"># 转载</a>
           
-          
-             <span id="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/" class="leancloud_visitors" data-flag-title="(译)JVM Concurrent Mark Sweep (CMS) Collector 1.8">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
         
-          <p>最近线上JDK升级到啦1.8，应用在发布时，总会发生Full GC报警，看了下GC日志，发现应用重启时会接连发生4次Full GC，但是这4次GC后很久一段时间（第二天再次查看GC日志和jstat的统计）没有再发生Full GC，查了下官方资料，顺便翻译出来，方便以后阅读。翻译的不好，请见谅，也欢迎提出建议，在下将不胜感激。</p>
-<p>原文链接：<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/cms.html</a></p>
-<p>The Concurrent Mark Sweep (CMS) collector is designed for applications that prefer shorter garbage collection pauses and that can afford to share processor resources with the garbage collector while the application is running. Typically applications that have a relatively large set of long-lived data (a large tenured generation) and run on machines with two or more processors tend to benefit from the use of this collector. However, this collector should be considered for any application with a low pause time requirement. The CMS collector is enabled with the command-line option -XX:+UseConcMarkSweepGC.</p>
-<p>CMS收集器特点：1.更短的垃圾回收暂停(stop the world) 2.垃圾收集器能够在应用运行时与其共享处理器资源。通常，一个运行在多处理器机器上并且其中有长期存活的大集合(较大的老生代)的应用可以考虑使用CMS收集器。当然，对于具有低暂停时间要求的应用，都可以考虑使用该收集器。使用-XX:+UseConcMarkSweepGC来启用CMS收集器。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/22/译-JVM-Concurrent-Mark-Sweep-CMS-Collector-1-8/" rel="next" title="(译)JVM Concurrent Mark Sweep (CMS) Collector 1.8">
+                <i class="fa fa-chevron-left"></i> (译)JVM Concurrent Mark Sweep (CMS) Collector 1.8
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
+          <span class="post-nav-divider"></span>
 
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/11/JDK源码-hash杂记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/2017/05/11/JDK源码-hash杂记/" itemprop="url">
-                  JDK源码 Hash杂记
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T19:29:30+08:00">
-                2017-05-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/杂记/" itemprop="url" rel="index">
-                    <span itemprop="name">杂记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/05/11/JDK源码-hash杂记/" class="leancloud_visitors" data-flag-title="JDK源码 Hash杂记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>最早了解Hash的用法，是一次分表的经历，公司用户表数据有几千万，查询的效率已经比较低了，需要做拆分处理，之前系统中已经有分表的数据，处理方式比较简单，没有使用中间件，按照商家的ID（32位字符串）做Hash然后取模，算出其落在表的编号，然后加上前缀得到最终表名。</p>
-<p>最近在了解zk分布式锁时，为了避免一种实现方式的羊群效应，其改进思路类似一致性哈希算法。于是，便看了下Hash相关的知识，并用Java做了简单实现。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/05/11/JDK源码-hash杂记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/24/JDK源码-java的四种Reference/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/24/JDK源码-java的四种Reference/" itemprop="url">
-                  JDK源码 Java Reference
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T15:08:54+08:00">
-                2017-04-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/04/24/JDK源码-java的四种Reference/" class="leancloud_visitors" data-flag-title="JDK源码 Java Reference">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>之前探讨过一次JAVA的FinalReference，这次我们来看下java.lang.ref包下对应的其他三种引用。</p>
-<h4 id="走近引用"><a href="#走近引用" class="headerlink" title="走近引用"></a>走近引用</h4><p>Reference和ReferenceQueue在使用中一定是结伴出现的，当一个Reference确定要被GC回收，GC便会把Reference加入到与之关联的ReferenceQueue中。注意：在Reference的构造方法中，我们可以传入一个注册队列ReferenceQueue，这个队列我们稍后会具体看，需要主要的是，这个队列需要单独的线程去做消费，否则会存在OOM的隐患。</p>
-<p>这些引用可用来实现不同的缓存类型（内存敏感和内存不敏感），大名鼎鼎的Guava cache就是基于引用的这些特性来实现高速本地缓存。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/24/JDK源码-java的四种Reference/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/01/JDK源码-FinalReference/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/01/JDK源码-FinalReference/" itemprop="url">
-                  JDK源码 FinalReference
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T12:19:04+08:00">
-                2017-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/04/01/JDK源码-FinalReference/" class="leancloud_visitors" data-flag-title="JDK源码 FinalReference">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="JAVA-FinalReference"><a href="#JAVA-FinalReference" class="headerlink" title="JAVA FinalReference"></a>JAVA FinalReference</h3><h4 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h4><p>使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Finalizer</span> <span class="keyword">extends</span> <span class="title">FinalReference</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ReferenceQueue queue = <span class="keyword">new</span> ReferenceQueue();</div><div class="line">	<span class="comment">//... ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>结合它的数据结构基本可以看出来，Finalizer中持有一个一个引用队列。猜测是这个队列吃掉了那些内存。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/01/JDK源码-FinalReference/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/" itemprop="url">
-                  MAT(Memory Analyzer Tool)基本使用
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-24T21:15:26+08:00">
-                2017-03-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/" class="leancloud_visitors" data-flag-title="MAT(Memory Analyzer Tool)基本使用">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="MAT-Memory-Analyzer-Tool-基本使用"><a href="#MAT-Memory-Analyzer-Tool-基本使用" class="headerlink" title="MAT Memory Analyzer Tool 基本使用"></a>MAT Memory Analyzer Tool 基本使用</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>分析和理解我们应用中内存的分布是一件极具挑战的事情。一个逻辑错误就有可能导致OutOfMemory。dump内存的方式很单：<code>jmap -dump:format=b,file=path pid</code><br>注意操作时要有正确的用户权限。本篇旨在介绍分析中涉及到的一些概念和操作方法，实际案例分析放在下篇介绍。</p>
-<p><strong>内存泄漏</strong>指由于疏忽或错误造成程序未能释放已经不再使用的内存。内存泄漏并非指内存在物理上的消失，而是应用程序分配某段内存后，由于设计错误，导致在释放该段内存之前就失去了对该段内存的控制，从而造成了内存的浪费。</p>
-<h4 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h4>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/24/MAT-Memory-Analyzer-Tool-基本使用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/07/Dubbo源码-SPI实现之ExtensionLoader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/07/Dubbo源码-SPI实现之ExtensionLoader/" itemprop="url">
-                  Dubbo源码 SPI实现之ExtensionLoader
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-07T18:00:57+08:00">
-                2017-03-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/07/Dubbo源码-SPI实现之ExtensionLoader/" class="leancloud_visitors" data-flag-title="Dubbo源码 SPI实现之ExtensionLoader">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="Dubbo-SPI"><a href="#Dubbo-SPI" class="headerlink" title="Dubbo SPI"></a>Dubbo SPI</h4><p>SPI 全称为 (Service Provider Interface) ，JDK也默认提供了SPI的一种实现，不过对比Dubbo的实现，JDK的实现就非常简单。</p>
-<p>简单说下JDK默认的SPI用法。</p>
-<ol>
-<li>定义Service接口</li>
-<li>增加Service实现类</li>
-<li>META-INF/services目录下建立以接口包全名命名的文件，文件中写入实现类的包名+类名</li>
-<li>用Java提供的ServiceLoader来加载实现
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/07/Dubbo源码-SPI实现之ExtensionLoader/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/27/服务器Load飙高排查方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/27/服务器Load飙高排查方法/" itemprop="url">
-                  服务器Load高简单排查
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T19:28:20+08:00">
-                2017-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/02/27/服务器Load飙高排查方法/" class="leancloud_visitors" data-flag-title="服务器Load高简单排查">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="服务器Load飙高排查方法"><a href="#服务器Load飙高排查方法" class="headerlink" title="服务器Load飙高排查方法"></a>服务器Load飙高排查方法</h4><p>线上碰到CPU利用率高或者Load高的时候，排查的顺序。</p>
-<ol>
-<li>拿到进程PID：ps -ef | grep java 或者 jps</li>
-<li>dump应用栈信息：jstack PID &gt; PID.stack</li>
-<li>top查看导致高CPU的进程: top 后键入 x 默认按照CPU使用率排序进程，键入c可看到commond</li>
-<li>查看导致高CPU利用率的线程信息：top -Hp PID</li>
-<li>查看CPU利用率高线程的栈信息，stack文件中线程号为16进制，需要top出来的线程号进行转换：printf ‘%x\n’ ThreadPID
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/27/服务器Load飙高排查方法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/14/JDK源码-AQS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/14/JDK源码-AQS/" itemprop="url">
-                  JDK源码 AQS
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-14T11:17:03+08:00">
-                2017-02-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/02/14/JDK源码-AQS/" class="leancloud_visitors" data-flag-title="JDK源码 AQS">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="AbstractQueueSynchronizer笔记"><a href="#AbstractQueueSynchronizer笔记" class="headerlink" title="AbstractQueueSynchronizer笔记"></a>AbstractQueueSynchronizer笔记</h3><p>在开始介绍之前我先来简单理解一下为什么会产生AQS。在我们应用内不可避免的会发生对一些资源的抢占，那么如何处理线程之间对资源的争夺呢？在Java SE 5 之前JDK可以使用synchronized来串行化对资源的操作，synchronized可以隐式的获取和释放锁，但是带来的不便就是不够灵活，可扩展性没有显式获取和释放锁的自主控制性强，另外synchronized是完全互斥的，没法达到诸如共享锁、读写锁的效果。对资源的竞争可以抽象为对变量状态的竞争，这正是AQS实现的基本原理，当然，AQS的实现是复杂的。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/14/JDK源码-AQS/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/18/test4j导致Load飙高排查/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/18/test4j导致Load飙高排查/" itemprop="url">
-                  test4j导致Load飙高排查
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-18T13:38:20+08:00">
-                2016-11-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/18/test4j导致Load飙高排查/" class="leancloud_visitors" data-flag-title="test4j导致Load飙高排查">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="记一次test4j导致CPU飙高的事故"><a href="#记一次test4j导致CPU飙高的事故" class="headerlink" title="记一次test4j导致CPU飙高的事故"></a>记一次test4j导致CPU飙高的事故</h3><p>在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。<br>于是，我就开始查找原因的漫漫长征路。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/18/test4j导致Load飙高排查/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+  </div>
 
           
           </div>
@@ -2052,6 +662,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -2071,8 +685,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
@@ -2145,6 +768,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第22章-异步请求"><span class="nav-number">1.</span> <span class="nav-text">第22章 异步请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#22-1-Servlet3．O对异步请求的支持"><span class="nav-number">1.1.</span> <span class="nav-text">22.1  Servlet3．O对异步请求的支持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#22-1-1-Servlet-3-0处理异步请求实例"><span class="nav-number">1.1.1.</span> <span class="nav-text">22.1.1 Servlet 3.0处理异步请求实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-1-2异步请求监听器AsyncListener"><span class="nav-number">1.1.2.</span> <span class="nav-text">22.1.2异步请求监听器AsyncListener</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-2-1-Spring-MVC中异步请求相关组件"><span class="nav-number">1.1.3.</span> <span class="nav-text">22.2.1 Spring MVC中异步请求相关组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-2-2-Spring-MVC对异步请求的支持"><span class="nav-number">1.1.4.</span> <span class="nav-text">22.2.2 Spring MVC对异步请求的支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-2-3-WebAsyncTask和Calla-ble类型异步请求的处理过程及用法"><span class="nav-number">1.1.5.</span> <span class="nav-text">22.2.3 WebAsyncTask和Calla ble类型异步请求的处理过程及用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-2-4-DeferredResult类型异步请求的处理过程及用法"><span class="nav-number">1.1.6.</span> <span class="nav-text">22.2.4 DeferredResult类型异步请求的处理过程及用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-2-5-ListenableFuture类型异步请求的处理过程及用法"><span class="nav-number">1.1.7.</span> <span class="nav-text">22.2.5 ListenableFuture类型异步请求的处理过程及用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#22-3小结"><span class="nav-number">1.2.</span> <span class="nav-text">22.3小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -2251,6 +890,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
