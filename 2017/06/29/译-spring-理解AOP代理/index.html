@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="源码,MyBatis," />
+  <meta name="keywords" content="Spring,翻译,AOP," />
 
 
 
@@ -87,24 +87,22 @@
 
 
 
-<meta name="description" content="Mybatis Parameters JDBC TypeMybatis的sqlmap中Parameters的jdbcType参数可以不设置，Parameters 官方文档中解释:
-The JDBC Type is required by JDBC for all nullable columns, if null is passed as a value. 
-You can investigate">
+<meta name="description" content="引入之前写过一篇关于Spring代理流程的博客，当时没有深入思考，最近碰到一个有趣的事情，类内部调用带有spring注解，但注解不生效的问题，举例说明：
+123456789101112public class SimplePojo implements Pojo &amp;#123;    public void foo() &amp;#123;        // this next method invoca">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mybatis源码 Parameters JDBC Type">
-<meta property="og:url" content="http://yoursite.com/2016/09/19/Mybatis源码-Parameters-JDBC-Type/index.html">
+<meta property="og:title" content="译-Spring-理解AOP代理">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/译-spring-理解AOP代理/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="Mybatis Parameters JDBC TypeMybatis的sqlmap中Parameters的jdbcType参数可以不设置，Parameters 官方文档中解释:
-The JDBC Type is required by JDBC for all nullable columns, if null is passed as a value. 
-You can investigate">
-<meta property="og:image" content="http://img.blog.csdn.net/20160919133135554">
-<meta property="og:updated_time" content="2017-03-10T03:10:41.000Z">
+<meta property="og:description" content="引入之前写过一篇关于Spring代理流程的博客，当时没有深入思考，最近碰到一个有趣的事情，类内部调用带有spring注解，但注解不生效的问题，举例说明：
+123456789101112public class SimplePojo implements Pojo &amp;#123;    public void foo() &amp;#123;        // this next method invoca">
+<meta property="og:image" content="http://img.blog.csdn.net/20170629155443463?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170629155555694?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-06-29T08:01:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mybatis源码 Parameters JDBC Type">
-<meta name="twitter:description" content="Mybatis Parameters JDBC TypeMybatis的sqlmap中Parameters的jdbcType参数可以不设置，Parameters 官方文档中解释:
-The JDBC Type is required by JDBC for all nullable columns, if null is passed as a value. 
-You can investigate">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20160919133135554">
+<meta name="twitter:title" content="译-Spring-理解AOP代理">
+<meta name="twitter:description" content="引入之前写过一篇关于Spring代理流程的博客，当时没有深入思考，最近碰到一个有趣的事情，类内部调用带有spring注解，但注解不生效的问题，举例说明：
+123456789101112public class SimplePojo implements Pojo &amp;#123;    public void foo() &amp;#123;        // this next method invoca">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170629155443463?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -132,13 +130,13 @@ You can investigate">
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/19/Mybatis源码-Parameters-JDBC-Type/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/译-spring-理解AOP代理/"/>
 
 
 
 
 
-  <title> Mybatis源码 Parameters JDBC Type | 凡隐的博客 </title>
+  <title> 译-Spring-理解AOP代理 | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +299,7 @@ You can investigate">
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/19/Mybatis源码-Parameters-JDBC-Type/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/译-spring-理解AOP代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -322,7 +320,7 @@ You can investigate">
             
             
               
-                Mybatis源码 Parameters JDBC Type
+                译-Spring-理解AOP代理
               
             
           </h2>
@@ -337,8 +335,8 @@ You can investigate">
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-19T20:11:52+08:00">
-                2016-09-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T13:45:19+08:00">
+                2017-06-29
               </time>
             
 
@@ -360,8 +358,8 @@ You can investigate">
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
                   </a>
                 </span>
 
@@ -377,7 +375,7 @@ You can investigate">
 
           
           
-             <span id="/2016/09/19/Mybatis源码-Parameters-JDBC-Type/" class="leancloud_visitors" data-flag-title="Mybatis源码 Parameters JDBC Type">
+             <span id="/2017/06/29/译-spring-理解AOP代理/" class="leancloud_visitors" data-flag-title="译-Spring-理解AOP代理">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,12 +404,36 @@ You can investigate">
       
 
       
-        <h3 id="Mybatis-Parameters-JDBC-Type"><a href="#Mybatis-Parameters-JDBC-Type" class="headerlink" title="Mybatis Parameters JDBC Type"></a>Mybatis Parameters JDBC Type</h3><p>Mybatis的sqlmap中Parameters的jdbcType参数可以不设置，<a href="http://www.mybatis.org/mybatis-3/sqlmap-xml.html" target="_blank" rel="external">Parameters 官方文档</a>中解释:</p>
-<p><code>The JDBC Type is required by JDBC for all nullable columns, if null is passed as a value. 
-You can investigate this yourself by reading the JavaDocs for the PreparedStatement.setNull() method.</code><br><a id="more"></a><br>Mybatis在处理参数具体类型时从TypeHandlerRegistry中获取具体的TypeHandler。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* parameter where子句后具体某个参数入参</div><div class="line">* jdbcType sqlmap中声明的jdbcType，如：where id = #&#123;id,jdbcType=VARCHAR&#125;</div><div class="line">**/</div><div class="line"> <span class="keyword">private</span> TypeHandler&lt;? extends Object&gt; resolveTypeHandler(Object parameter, JdbcType jdbcType) &#123;</div><div class="line">    TypeHandler&lt;? extends Object&gt; handler;</div><div class="line">    <span class="keyword">if</span> (parameter == <span class="keyword">null</span>) &#123;</div><div class="line">      handler = OBJECT_TYPE_HANDLER;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">//参数的运行时类型</span></div><div class="line">      handler = typeHandlerRegistry.getTypeHandler(parameter.getClass(), jdbcType);</div><div class="line">      <span class="keyword">if</span> (handler == <span class="keyword">null</span> || handler <span class="keyword">instanceof</span> UnknownTypeHandler) &#123;</div><div class="line">        handler = OBJECT_TYPE_HANDLER;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> handler;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> &lt;T&gt; <span class="function">TypeHandler&lt;T&gt; <span class="title">getTypeHandler</span><span class="params">(Type type, JdbcType jdbcType)</span> </span>&#123;</div><div class="line">	<span class="comment">//TYPE_HANDLER_MAP是jdbc类型到java数据类型映射，详见下图</span></div><div class="line">	<span class="comment">//TYPE_HANDLER_MAP中每个类型都会包含类似这条记录"null" -&gt; "class java.lang.Float"（null为key-&gt;java类型为value）</span></div><div class="line">	<span class="comment">//也就是说只要入参运行时类型确定，handler就确定</span></div><div class="line">    Map&lt;JdbcType, TypeHandler&lt;?&gt;&gt; jdbcHandlerMap = TYPE_HANDLER_MAP.get(type);</div><div class="line">    TypeHandler&lt;?&gt; handler = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">//该步一定会拿到handler，除非参数类型Mybatis本身处理不了，并且没有自定义的handler</span></div><div class="line">    <span class="keyword">if</span> (jdbcHandlerMap != <span class="keyword">null</span>) &#123;</div><div class="line">      handler = jdbcHandlerMap.get(jdbcType);</div><div class="line">      <span class="keyword">if</span> (handler == <span class="keyword">null</span>) &#123;</div><div class="line">        handler = jdbcHandlerMap.get(<span class="keyword">null</span>);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (handler == <span class="keyword">null</span> &amp;&amp; type != <span class="keyword">null</span> &amp;&amp; type <span class="keyword">instanceof</span> Class &amp;&amp; Enum.class.isAssignableFrom((Class&lt;?&gt;) type)) &#123;</div><div class="line">      handler = <span class="keyword">new</span> EnumTypeHandler((Class&lt;?&gt;) type);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// type drives generics here</span></div><div class="line">    <span class="keyword">return</span> (TypeHandler&lt;T&gt;) handler;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20160919133135554" alt="插图1"></p>
-<p>继续看了mysql.jdbc对null值的处理，发现其实这个jdbcType在设置值时根本没用到，可能是为了以后使用吧。直接上代码。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">	 * Set a parameter to SQL NULL</div><div class="line">	 * </div><div class="line">	 * &lt;p&gt;</div><div class="line">	 * &lt;B&gt;Note:&lt;/B&gt; You must specify the parameters SQL type (although MySQL</div><div class="line">	 * ignores it)</div><div class="line">	 * &lt;/p&gt;</div><div class="line">	 * </div><div class="line">	 * <span class="doctag">@param</span> parameterIndex</div><div class="line">	 *            the first parameter is 1, etc...</div><div class="line">	 * <span class="doctag">@param</span> sqlType</div><div class="line">	 *            the SQL type code defined in java.sql.Types</div><div class="line">	 * </div><div class="line">	 * <span class="doctag">@exception</span> SQLException</div><div class="line">	 *                if a database access error occurs</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNull</span><span class="params">(<span class="keyword">int</span> parameterIndex, <span class="keyword">int</span> sqlType)</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">		<span class="keyword">synchronized</span> (checkClosed().getConnectionMutex()) &#123;</div><div class="line">			setInternal(parameterIndex, <span class="string">"null"</span>); <span class="comment">//$NON-NLS-1$</span></div><div class="line">			<span class="keyword">this</span>.isNull[parameterIndex - <span class="number">1</span> + getParameterIndexOffset()] = <span class="keyword">true</span>;</div><div class="line">			</div><div class="line">			<span class="keyword">this</span>.parameterTypes[parameterIndex - <span class="number">1</span> + getParameterIndexOffset()] = Types.NULL;</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+        <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>之前写过一篇关于Spring代理流程的博客，当时没有深入思考，最近碰到一个有趣的事情，类内部调用带有spring注解，但注解不生效的问题，举例说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimplePojo</span> <span class="keyword">implements</span> <span class="title">Pojo</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// this next method invocation is a direct call on the 'this' reference</span></div><div class="line">        <span class="keyword">this</span>.bar();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="meta">@Transaction</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// some logic...</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>外部一个类直接调用SimplePojo.bar()事务是有效的，但如果调用SimplePojo.foo()，那么bar()方法上的事务不会生效。<br>查了一下spring文档，其中特别对AOP代理做了讲解，现翻译记录。</p>
+<h3 id="对照译文"><a href="#对照译文" class="headerlink" title="对照译文"></a>对照译文</h3><p>原文链接：<a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-understanding-aop-proxies" target="_blank" rel="external">https://docs.spring.io/spring/docs/current/spring-framework-reference/html/aop.html#aop-understanding-aop-proxies</a></p>
+<p>Spring AOP is proxy-based. It is vitally important that you grasp the semantics of what that last statement actually means before you write your own aspects or use any of the Spring AOP-based aspects supplied with the Spring Framework.</p>
+<p>Srping AOP基于proxy-based。在我们基于Spring框架自定义切面或者使用Spring基于AOP-based提供的切面之前，理解proxy-based的含义很重要。</p>
+<p>Consider first the scenario where you have a plain-vanilla, un-proxied, nothing-special-about-it, straight object reference, as illustrated by the following code snippet.</p>
+<p>看下面一个最简单的调用片段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimplePojo</span> <span class="keyword">implements</span> <span class="title">Pojo</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// this next method invocation is a direct call on the 'this' reference</span></div><div class="line">        <span class="keyword">this</span>.bar();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// some logic...</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>If you invoke a method on an object reference, the method is invoked directly on that object reference, as can be seen below.</p>
+<p>如果你使用对象的引用调用其一个方法，这个方法是被直接调用的，看下图。</p>
+<p><img src="http://img.blog.csdn.net/20170629155443463?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="直接调用"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        Pojo pojo = <span class="keyword">new</span> SimplePojo();</div><div class="line"></div><div class="line">        <span class="comment">// this is a direct method call on the 'pojo' reference</span></div><div class="line">        pojo.foo();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Things change slightly when the reference that client code has is a proxy. Consider the following diagram and code snippet.</p>
+<p>当客户端代码的引用是代理时，会略有改变。请看下图和代码片段。</p>
+<p><img src="http://img.blog.csdn.net/20170629155555694?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="代理调用"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        ProxyFactory factory = <span class="keyword">new</span> ProxyFactory(<span class="keyword">new</span> SimplePojo());</div><div class="line">        factory.addInterface(Pojo.class);</div><div class="line">        factory.addAdvice(<span class="keyword">new</span> RetryAdvice());</div><div class="line"></div><div class="line">        Pojo pojo = (Pojo) factory.getProxy();</div><div class="line"></div><div class="line">        <span class="comment">// this is a method call on the proxy!</span></div><div class="line">        pojo.foo();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>The key thing to understand here is that the client code inside the main(..) of the Main class has a reference to the proxy. This means that method calls on that object reference will be calls on the proxy, and as such the proxy will be able to delegate to all of the interceptors (advice) that are relevant to that particular method call. However, once the call has finally reached the target object, the SimplePojo reference in this case, any method calls that it may make on itself, such as this.bar() or this.foo(), are going to be invoked against the this reference, and not the proxy. This has important implications. It means that self-invocation is not going to result in the advice associated with a method invocation getting a chance to execute.</p>
+<p>着重看下Main类中main方法中对代理的引用。这意味着对该对象引用的方法调用实际调用的是代理，因此代理能够将调用委托给与该方法调用相关的所有拦截器（advice）。然而，一旦调用最终到达目标对象，例子中的SimplePojo引用，那么其任何自我方法的调用，例如this.bar()或者this.foo(),都将是直接调用，而不是调用的代理。这点特别重要。这意味着自我调用不会被其相关联advice不会被执行。</p>
+<p>Okay, so what is to be done about this? The best approach (the term best is used loosely here) is to refactor your code such that the self-invocation does not happen. For sure, this does entail some work on your part, but it is the best, least-invasive approach. The next approach is absolutely horrendous, and I am almost reticent to point it out precisely because it is so horrendous. You can (choke!) totally tie the logic within your class to Spring AOP by doing this:</p>
+<p>那么我们要做些什么呢？最好的方式是重构你自己的代码使得不会发生自我调用。当然，这需要一些工作量，但这是最好并且低侵入的方式。另外一种方式绝对是可怕的。你可以将你的逻辑与Spring AOP完全耦合，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimplePojo</span> <span class="keyword">implements</span> <span class="title">Pojo</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// this works, but... gah!</span></div><div class="line">        ((Pojo) AopContext.currentProxy()).bar();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// some logic...</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>This totally couples your code to Spring AOP, and it makes the class itself aware of the fact that it is being used in an AOP context, which flies in the face of AOP. It also requires some additional configuration when the proxy is being created:</p>
+<p>这完全将你的代码与Spring AOP结合在一起，它使得这个类本身就意识到它被用在一个面向AOP的AOP上下文中。它也使用时也需要加入一些配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        ProxyFactory factory = <span class="keyword">new</span> ProxyFactory(<span class="keyword">new</span> SimplePojo());</div><div class="line">        factory.adddInterface(Pojo.class);</div><div class="line">        factory.addAdvice(<span class="keyword">new</span> RetryAdvice());</div><div class="line">        factory.setExposeProxy(<span class="keyword">true</span>);</div><div class="line"></div><div class="line">        Pojo pojo = (Pojo) factory.getProxy();</div><div class="line"></div><div class="line">        <span class="comment">// this is a method call on the proxy!</span></div><div class="line">        pojo.foo();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Finally, it must be noted that AspectJ does not have this self-invocation issue because it is not a proxy-based AOP framework.</p>
+<p>最后，必须注意的是，AspectJ没有这种自我调用问题，因为它不是基于proxy-based的AOP框架。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>回顾了下上一篇关于AOP源码阅读的博客，其实代码中已经给出答案。只是当时并没想这么多。<br>代理类实际上是对目标类做了聚合封装。这也就解释了为什么自我调用时advisor不会被执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//AbstractAutoProxyCreator</span></div><div class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">createProxy</span><span class="params">(</span></span></div><div class="line">			Class&lt;?&gt; beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) &#123;</div><div class="line"></div><div class="line">		ProxyFactory proxyFactory = <span class="keyword">new</span> ProxyFactory();</div><div class="line">		proxyFactory.copyFrom(<span class="keyword">this</span>);</div><div class="line"></div><div class="line">		...</div><div class="line"></div><div class="line">		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);</div><div class="line">		<span class="keyword">for</span> (Advisor advisor : advisors) &#123;</div><div class="line">			proxyFactory.addAdvisor(advisor);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		proxyFactory.setTargetSource(targetSource);</div><div class="line">		customizeProxyFactory(proxyFactory);</div><div class="line"></div><div class="line">		proxyFactory.setFrozen(<span class="keyword">this</span>.freezeProxy);</div><div class="line">		<span class="keyword">if</span> (advisorsPreFiltered()) &#123;</div><div class="line">			proxyFactory.setPreFiltered(<span class="keyword">true</span>);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> proxyFactory.getProxy(getProxyClassLoader());</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -435,9 +457,11 @@ You can investigate this yourself by reading the JavaDocs for the PreparedStatem
       
         <div class="post-tags">
           
-            <a href="/tags/源码/" rel="tag"># 源码</a>
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
           
-            <a href="/tags/MyBatis/" rel="tag"># MyBatis</a>
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+            <a href="/tags/AOP/" rel="tag"># AOP</a>
           
         </div>
       
@@ -450,15 +474,15 @@ You can investigate this yourself by reading the JavaDocs for the PreparedStatem
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/06/28/了解ClassLoader/" rel="next" title="了解ClassLoader">
+                <i class="fa fa-chevron-left"></i> 了解ClassLoader
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/17/IO模型/" rel="prev" title="IO模型">
-                IO模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -598,7 +622,7 @@ You can investigate this yourself by reading the JavaDocs for the PreparedStatem
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mybatis-Parameters-JDBC-Type"><span class="nav-number">1.</span> <span class="nav-text">Mybatis Parameters JDBC Type</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引入"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对照译文"><span class="nav-number">2.</span> <span class="nav-text">对照译文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

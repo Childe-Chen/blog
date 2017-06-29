@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="第22章 异步请求Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。
 异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，">
-<meta property="og:updated_time" content="2017-06-13T08:00:50.000Z">
+<meta property="og:updated_time" content="2017-06-29T08:01:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="转-Servlet3-异步请求">
 <meta name="twitter:description" content="第22章 异步请求Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。
@@ -402,8 +402,7 @@
 
       
         <h1 id="第22章-异步请求"><a href="#第22章-异步请求" class="headerlink" title="第22章 异步请求"></a>第22章 异步请求</h1><p>Servlet3.0规范新增了对异步请求的支持，Spring MVC也在此基础上对异步请求提供了方便。异步请求是在处理比较耗时的业务时先将request返回，然后另起线程处理耗时的业务，处理完后再返回给用户。</p>
-<p>异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，等处理完成后再将结果返回给用户。稍微扩展一下还可以实现订阅者模式的消息订阅功能，比如，当有异常情况发生时可以主动将相关信息发给运维人员，还有现在很多邮箱系统中收到新邮件的自动提示功能也是这种技术。甚至更进一步的使用方式是在浏览器上做即时通信的程序！</p>
-<p>HTTP协议是单向的，只能客户端自己拉不能服务器主动推，Servlet对异步请求的支持并没有修改HTTP协议，而是对Http的巧妙利用。异步请求的核心原理主要分为两大类，一类是轮询，另一类是长连接。轮询就是定时自动发起请求检查有没有需要返回的数据，这种方式对资源的浪费是比较大的；长连接的原理是在客户端发起请求，服务端处理并返回后并不结束连接，这样就可以在后面再次运回给客户端数据。Servlet对异步请求的支持其实采用的是长连接的方式，也就是说，异步请求中在原始的请求返回的时候并没有关闭连接，关闭的只是处理请求的那个线程（一般是回收的线程池里了），只有在异步请求全部处理完之后才会关闭连接。</p>
+<p>异步请求可以给我们带来很多方便，最直接的用法就是处理耗时的业务，比如，需要查询数据库、需要调用别的服务器来处理等情况下可以先将请求返回给客户端，然后启用新线程处理耗时业务，等处理完成后再将结果返回给用户。稍微扩展一下还可以实现订阅者模式的消息订阅功能，比如，当有异常情况发生时可以主动将相关信息发给运维人员，还有现在很多邮箱系统中收到新邮件的自动提示功能也是这种技术。甚至更进一步的使用方式是在浏览器上做即时通信的程序！<br><a id="more"></a><br>HTTP协议是单向的，只能客户端自己拉不能服务器主动推，Servlet对异步请求的支持并没有修改HTTP协议，而是对Http的巧妙利用。异步请求的核心原理主要分为两大类，一类是轮询，另一类是长连接。轮询就是定时自动发起请求检查有没有需要返回的数据，这种方式对资源的浪费是比较大的；长连接的原理是在客户端发起请求，服务端处理并返回后并不结束连接，这样就可以在后面再次运回给客户端数据。Servlet对异步请求的支持其实采用的是长连接的方式，也就是说，异步请求中在原始的请求返回的时候并没有关闭连接，关闭的只是处理请求的那个线程（一般是回收的线程池里了），只有在异步请求全部处理完之后才会关闭连接。</p>
 <h2 id="22-1-Servlet3．O对异步请求的支持"><a href="#22-1-Servlet3．O对异步请求的支持" class="headerlink" title="22.1  Servlet3．O对异步请求的支持"></a>22.1  Servlet3．O对异步请求的支持</h2><p>在Servlet3.0规范巾使用异步处理请求非常简单，只需要在请求处理过程中调用request的startAsync方法即可，其返回值是AsyncContext类型。</p>
 <p>AsyncContext在异步请求中充当着非常重要的角色，可以称为异步请求上下文也可以称为异步请求容器，无论叫什么其实就是个名字，它的作用是保存与异步请求相关的所有信息，类似于Servlet中的ServletContext。异步请求主要是使用AsyncContext进行操作，它是在请求处理的过程中调用Request的startAsync方法返回的，需要注意的是多次调用startAsync方法返回的是同一个AsyncContext。AsyncContext接口定义如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AsyncContext</span> </span>&#123;</div><div class="line"></div><div class="line">  </div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_REQUEST_URI = <span class="string">"javax.servlet.async.request_uri"</span>;</div><div class="line">   </div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_CONTEXT_PATH = <span class="string">"javax.servlet.async.context_path"</span>;</div><div class="line">   </div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_PATH_INFO = <span class="string">"javax.servlet.async.path_info"</span>;</div><div class="line">   </div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_SERVLET_PATH = <span class="string">"javax.servlet.async.servlet_path"</span>;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String ASYNC_QUERY_STRING = <span class="string">"javax.servlet.async.query_string"</span>;</div><div class="line">    </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ServletRequest <span class="title">getRequest</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ServletResponse <span class="title">getResponse</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasOriginalRequestAndResponse</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispatch</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispatch</span><span class="params">(String path)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">complete</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(Runnable run)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addListener</span><span class="params">(AsyncListener listener)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addListener</span><span class="params">(AsyncListener listener,</span></span></div><div class="line">                            ServletRequest servletRequest,</div><div class="line">                            ServletResponse servletResponse);</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;T extends AsyncListener&gt; <span class="function">T <span class="title">createListener</span><span class="params">(Class&lt;T&gt; clazz)</span></span></div><div class="line">        <span class="keyword">throws</span> ServletException; </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTimeout</span><span class="params">(<span class="keyword">long</span> timeout)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getTimeout</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>其中，getResponse方法用得非常多，它可以获取到response，然后就可以对response进行各种操作了；dispatch方法用于将请求发送到一个新地址，有三个重载实现方法，其中没有参数dispatch方法的会发送到request原来的地址（如果有forward则使用forward后的最后一个地址）．一个path参数的dispatch方法直接将path作为地址，两个参数的dispatch方法可以发送给别的应用指定的地址；complete方法用于通知容器请求已经处理完了；start方法用于启动实际处理线程．不过也可以自己创建线程在其中使用AsyncContext保存的信息(如response)进行处理；addListener用于添加监听器；setTimeout方法用于修改超时时间，因为异步请求一般耗时比较长，而正常的请求设置的有效时长一般比较短，所以在异步请求中很多时候都需要修改超时的时间。</p>
@@ -640,6 +639,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/06/28/了解ClassLoader/" rel="prev" title="了解ClassLoader">
+                了解ClassLoader <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -710,7 +713,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -721,7 +724,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
