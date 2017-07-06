@@ -559,11 +559,28 @@
 
       
         
-          
-            <a id="more"></a>
-<p>tomcat 打破双亲 <a href="http://www.infocool.net/kb/Tomcat/201609/193323.html" target="_blank" rel="external">http://www.infocool.net/kb/Tomcat/201609/193323.html</a></p>
-
-          
+          <h3 id="初识ClassLoader"><a href="#初识ClassLoader" class="headerlink" title="初识ClassLoader"></a>初识ClassLoader</h3><ol>
+<li><p>在开发中有时会碰到ClassNotFoundException。这个异常和ClassLoader有着密切的关系。</p>
+</li>
+<li><p>我们常使用instanceof关键字判断某个对象是否属于指定Class创建的对象实例。如果对象和Class不属同一个加载器加载，那么instanceof返回的结果一定是false。</p>
+</li>
+<li><p>GC Root有一种叫做System Class，官方解释“Class loaded by bootstrap/system class loader. For example, everything from the rt.jar like java.util.<em> .”，大意是：被bootstrap/system加载器加载的类，比如，像java.util.</em>这些来自rt.jar的类。</p>
+</li>
+<li><p>GC时对Class的卸载，需要满足的条件如下：</p>
+</li>
+</ol>
+<p>类需要满足以下3个条件才能算是“无用的类”</p>
+<ul>
+<li>该类所有的实例已经被回收</li>
+<li><strong>加载该类的ClassLoder已经被回收</strong></li>
+<li>该类对应的java.lang.Class对象没有任何对方被引用
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/28/了解ClassLoader/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
