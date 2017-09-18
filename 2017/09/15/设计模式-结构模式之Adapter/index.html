@@ -87,30 +87,33 @@
 
 
 
-<meta name="description" content="翻译整理自：https://refactoring.guru/design-patterns/adapter
-目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
+<meta name="description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
 问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有">
+举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
+
+在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
 <meta property="og:type" content="article">
 <meta property="og:title" content="译-设计模式-结构模式之Adapter">
 <meta property="og:url" content="http://yoursite.com/2017/09/15/设计模式-结构模式之Adapter/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="翻译整理自：https://refactoring.guru/design-patterns/adapter
-目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
+<meta property="og:description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
 问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有">
+举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
+
+在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
 <meta property="og:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170918213027831?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170918213103878?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170918213135660?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20170918213211205?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-09-18T13:38:59.000Z">
+<meta property="og:updated_time" content="2017-09-18T13:42:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Adapter">
-<meta name="twitter:description" content="翻译整理自：https://refactoring.guru/design-patterns/adapter
-目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
+<meta name="twitter:description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
 问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有">
+举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
+
+在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
@@ -413,8 +416,7 @@
       
 
       
-        <p>翻译整理自：<a href="https://refactoring.guru/design-patterns/adapter" target="_blank" rel="external">https://refactoring.guru/design-patterns/adapter</a></p>
-<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。</p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。</p>
 <p>举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。</p>
 <p><img src="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="xmlcant2json.png"></p>
@@ -489,6 +491,7 @@
 <li><p>Sate（状态），Strategy（策略），Bridge（某种程度上的Adapter）有类似的解决结构。他们都是共享”handle/body”元素。他们的意图不同，所以，他们解决不同的问题。</p>
 </li>
 </ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/adapter" target="_blank" rel="external">https://refactoring.guru/design-patterns/adapter</a></p>
 
       
     </div>
@@ -679,7 +682,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同国家的插头和插板"><span class="nav-number">4.1.</span> <span class="nav-text">不同国家的插头和插板</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象适配"><span class="nav-number">5.1.</span> <span class="nav-text">对象适配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类适配"><span class="nav-number">5.2.</span> <span class="nav-text">类适配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的联系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的联系</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同国家的插头和插板"><span class="nav-number">4.1.</span> <span class="nav-text">不同国家的插头和插板</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象适配"><span class="nav-number">5.1.</span> <span class="nav-text">对象适配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类适配"><span class="nav-number">5.2.</span> <span class="nav-text">类适配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的联系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的联系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
