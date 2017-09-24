@@ -87,34 +87,27 @@
 
 
 
-<meta name="description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
-问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
-
-在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
+<meta name="description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
+问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
+解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Adapter">
-<meta property="og:url" content="http://yoursite.com/2017/09/15/设计模式-结构模式之Adapter/index.html">
+<meta property="og:title" content="译-设计模式-结构模式之Decorator">
+<meta property="og:url" content="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
-问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
-
-在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213027831?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213103878?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213135660?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213211205?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-09-18T13:42:25.000Z">
+<meta property="og:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
+问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
+解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
+<meta property="og:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-09-24T09:50:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Adapter">
-<meta name="twitter:description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
-问题想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。
-举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
-
-在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-结构模式之Decorator">
+<meta name="twitter:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
+问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
+解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -142,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/15/设计模式-结构模式之Adapter/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/"/>
 
 
 
 
 
-  <title> 译-设计模式-结构模式之Adapter | 凡隐的博客 </title>
+  <title> 译-设计模式-结构模式之Decorator | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -311,7 +304,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/15/设计模式-结构模式之Adapter/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -332,7 +325,7 @@
             
             
               
-                译-设计模式-结构模式之Adapter
+                译-设计模式-结构模式之Decorator
               
             
           </h2>
@@ -347,8 +340,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-15T21:45:08+08:00">
-                2017-09-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-20T16:24:57+08:00">
+                2017-09-20
               </time>
             
 
@@ -387,7 +380,7 @@
 
           
           
-             <span id="/2017/09/15/设计模式-结构模式之Adapter/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Adapter">
+             <span id="/2017/09/20/设计模式-结构模式之Decorator/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Decorator">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -416,82 +409,91 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。</p>
-<p>举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。</p>
-<p><img src="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="xmlcant2json.png"></p>
-<p>在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其支持XML。第一种选择要破坏已有的代码，第二种选择看上去是不可能的，因为我们常常无法修改三方库。<br><a id="more"></a></p>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>你可以创建一个适配器。它可以将调用方发送的数据按照格式转换成三方库可以解析的类型。适配器封装了对一个对象复杂的转换过程。</p>
-<p>适配器可以不仅可以格式化数据，也可以适配接口。比如，适配器接收到一个对方法A的调用，他可以转交给被包装的方法B、C、D。</p>
-<p>有时甚至可以创建一个双向适配，这样就可以双向转换。</p>
-<p><img src="http://img.blog.csdn.net/20170918213027831?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="xml2json"></p>
-<p>综上讨论，股票超市APP需要一个特别的<code>XML_To_JSON_Adapter</code>类。在调用分析类库之前，将xml转换为json。采用这种方式你将不需要改变任何已有的APP代码，也不需要改变分析库的代码。</p>
-<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="不同国家的插头和插板"><a href="#不同国家的插头和插板" class="headerlink" title="不同国家的插头和插板"></a>不同国家的插头和插板</h4><p>当你第一次从美国到偶主，你会发现没办法给你的笔记本充电。两个国家插座和插头的标准根本不一样。这就是为什么美国的插头没办法适配德国的插座。</p>
-<p>这个问题可以通过使用具有美式插座和欧式插头的电源插头适配器来解决。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="对象适配"><a href="#对象适配" class="headerlink" title="对象适配"></a>对象适配</h4><p>实现采用组合原则：适配器实现其中一对象的接口，并且封装另一个对象。他可以在所有新生代语言中实现。</p>
-<p><img src="http://img.blog.csdn.net/20170918213103878?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="objectAdapter"></p>
-<h4 id="类适配"><a href="#类适配" class="headerlink" title="类适配"></a>类适配</h4><p>实现采用集成。适配器同是继承两个接口。该方式只有像C++这种支持多继承的语言可以实现。</p>
-<p><img src="http://img.blog.csdn.net/20170918213135660?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="classAdapter"></p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。</p>
+<p>当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有一样的接口，所以客户端代码不会注意到你用封装者替换了源对象。</p>
+<p>所有的封装者这都持有一个源对象实例的强引用。大多数包装器使用传入其构造函数的对象初始化该字段。</p>
+<p>所以，该如何动态改变他的行为呢？正如我提到的，封装者何和目标对象拥有一样的接口。当你调用装饰者的方法时，他执行被封装对象中同样方法并且在返回的结果中添加一些东西。它也可以在原始方法之前调用，但这取决于业务逻辑。</p>
+<p>这里是有趣的一部分：你可以使用装饰者封装一个对象，然后再使用另外一个装饰器封装这个包装结果，等等。最终的行为结果是所有装饰器和源对象组合得到的。</p>
+<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><p>穿衣服就是使用装饰者的例子。当你冷的时候，你用毛衣包裹自己。如果你还是冷，你可以在外边套一个夹克。如果下雨了，你还可以再传一件雨衣。</p>
+<p>所有的服装“扩展”自你基本的行为，但不是你的一部分。因此，在你不需要他们的时候，可以轻松的移除它们。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Structure"></p>
 <ol>
-<li><p><em>Existing interface</em> （存在的接口或者类）已经被你的其余代码支持</p>
+<li><p>Component为封装者何被封装者声明了一个通用的接口。</p>
 </li>
-<li><p><em>Service</em> （服务）是一些不能在应用类直接工作的有用类（通常是三方库或者遗留代码）</p>
+<li><p>Concrete Component是一个包涵基本行为并可以被装饰器修改的类。</p>
 </li>
-<li><p><em>Adapter</em> 实现了 <em>Existing interface</em> 并且持有 <em>Service</em> 类引用。</p>
-<p> adapter会接收到client通过 <em>Existing interface</em> 定义的方法调用。他在调用 <em>Service</em> 前可能会修正调用参数的类型或者格式化数据。</p>
+<li><p>Base Decorator包涵一个被封装对象的强引用域。这个域应该被声明为Component类型，以便支持Concrete Components 和 Decorators.Base Decorator将所有操作委托给被封装对象。</p>
 </li>
-<li><p><em>Client</em> 使用 <em>Adapter</em> 调用 <em>Existing interface</em> 中定义的接口。</p>
-<p> 这里允许添加新的 <em>Adapter</em> 来编程而不需要改动已经存在的代码（<em>Service</em> 改变的的情况可能也会出现，比如，当你更新依赖的三方库）。</p>
-</li>
-<li><p>这个adapter类不需要封装任何对象。他同时实现了两个接口。因此，对所有的对象都是兼容的。</p>
+<li><p>Concrete Decorators包涵可以被动态添加的额外行为。装饰器可以在调用被封装对象方法前后执行自己的行为。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>让我们看看Adapter如何从一个接口到另一个接口进行基本数据转换。这个例子给予圆孔和方形钉的冲突。圆孔可以和圆钉很好的工作；可以通过两者的半径来决定是否合适。但是方形钉不能测量半径。</p>
-<p><img src="http://img.blog.csdn.net/20170918213211205?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode"></p>
-<p>这就是我们为什么需要创建一个Adapter类来封装方形钉对象并且伪装他有一个等于方形直径一半的半径。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Classes with compatible interfaces: RoundHole and RoundPeg.</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RoundHole</span> <span class="title">is</span></span></div><div class="line">    <span class="title">constructor</span> <span class="title">RoundHole</span>(<span class="title">radius</span>) &#123; ... &#125;</div><div class="line">    <span class="function">method getRadius</span></div><div class="line">    method <span class="title">fits</span><span class="params">(peg: RoundPeg)</span> is</div><div class="line">        return <span class="keyword">this</span>.<span class="title">getRadius</span><span class="params">()</span> &gt;= peg.radius()</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RoundPeg</span> <span class="title">is</span></span></div><div class="line">    <span class="title">constructor</span> <span class="title">RoundPeg</span>(<span class="title">radius</span>) &#123; ... &#125;</div><div class="line"></div><div class="line">    <span class="function">method <span class="title">getRadius</span><span class="params">()</span> is</span></div><div class="line">        Return the peg radius.</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Obsolete incompatible class: SquarePeg.</span></div><div class="line">class SquarePeg is</div><div class="line">    constructor <span class="title">SquarePeg</span><span class="params">(width)</span> &#123; ... &#125;</div><div class="line"></div><div class="line">    <span class="function">method <span class="title">getWidth</span><span class="params">()</span> is</span></div><div class="line">        Return the square peg width.</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Adapter allows fitting square pegs into round holes.</span></div><div class="line">class SquarePegAdapter extends RoundPeg is</div><div class="line">    <span class="keyword">private</span> field peg: SquarePeg</div><div class="line"></div><div class="line">    constructor <span class="title">SquarePegAdapter</span><span class="params">(peg: SquarePeg)</span> is</div><div class="line">        <span class="keyword">this</span>.peg = <span class="function">peg</span></div><div class="line"></div><div class="line">    method <span class="title">getRadius</span><span class="params">()</span> is</div><div class="line">        return Math.<span class="title">sqrt</span><span class="params">(Math.pow((peg.getWidth()</span>/2), 2) * 2);</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Somewhere in client code.</span></div><div class="line">hole = <span class="keyword">new</span> RoundHole(<span class="number">5</span>)</div><div class="line">rpeg = <span class="keyword">new</span> RoundPeg(<span class="number">5</span>)</div><div class="line">hole.fits(rpeg) <span class="comment">// true</span></div><div class="line"></div><div class="line">small_sqpeg = <span class="keyword">new</span> SquarePeg(<span class="number">2</span>)</div><div class="line">large_sqpeg = <span class="keyword">new</span> SquarePeg(<span class="number">5</span>)</div><div class="line">hole.fits(small_sqpeg) <span class="comment">// won't compile (incompatible types)</span></div><div class="line"></div><div class="line">small_sqpeg_adapter = <span class="keyword">new</span> SquarePegAdapter(small_sqpeg)</div><div class="line">large_sqpeg_adapter = <span class="keyword">new</span> SquarePegAdapter(large_sqpeg)</div><div class="line">hole.fits(small_sqpeg_adapter) <span class="comment">// true</span></div><div class="line">hole.fits(large_sqpeg_adapter) <span class="comment">// false</span></div></pre></td></tr></table></figure>
-<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><p><em>当你想服用已经存在的类，但是接口和应用其他代码不兼容</em></p>
-<p>采用适配器模式创建一个中间层来将调用转换成应用中已存在对象可以处理的数据。</p>
-<p><em>你需要复用几个已经存在的类，但是她们缺少一些常用的功能。并且你无法在父类中添加这些功能，因为他是闭源或者被其他代码使用的。</em></p>
-<p>你可以把这些缺少的功能放到新建的adapter中。他将连接你应用的代码和你感兴趣的类。这种解决方式看起来很像Visitor模式。</p>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，装饰器通过加密保护金融数据，对已经存在的代码来讲是透明的。应用对金融数据做了加密和压缩装饰，当我们从硬盘读取数据时返回的是普通的数据，但是当我们写会到磁盘时数据被加密和压缩。</p>
+<p>装饰者和金融类都有一个相同的接口，使得它们对客户端来讲是通用的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">// Common interface for all components.</div><div class="line">interface DataSource is</div><div class="line">    method writeData(data)</div><div class="line">    method readData():data</div><div class="line"></div><div class="line">// One of the concrete components can act as a base layer.</div><div class="line">class FileDataSource implements DataSource is</div><div class="line">    constructor FileDataSource(filename) &#123; ... &#125;</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        Write data to file.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Read data from file.</div><div class="line"></div><div class="line">// All other concrete components may act as wrappers.</div><div class="line">class DataSourceDecorator implements DataSource is</div><div class="line">    protected field wrappee: DataSource</div><div class="line"></div><div class="line">    constructor DataEncyptionDecorator(source: DataSource) is</div><div class="line">        wrappee = source</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        wrappee.writeData(data)</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        return wrappee.readData()</div><div class="line"></div><div class="line">// Concrete Decorators extend the functionality of a component they wrap.</div><div class="line">class EncyptionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Encrypt passed data.</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Decrypt and return that data.</div><div class="line"></div><div class="line">// You can wrap objects in several layers of decorators.</div><div class="line">class CompressionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Compress passed data</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Uncompress and return that data.</div><div class="line"></div><div class="line"></div><div class="line">// Option 1. A simple example of decorator assembly.</div><div class="line">class Application is</div><div class="line">    method dumbUsageExample() is</div><div class="line">        source = new FileDataSource('somefile.dat')</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // a file with plain data</div><div class="line"></div><div class="line">        source = new CompressionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed file</div><div class="line"></div><div class="line">        source = new EncyptionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed and encrypted file</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">// Option 2. Client code, which uses an external data source. SalaryManager</div><div class="line">// neither knows not cares about data storage specifics. It receives already</div><div class="line">// configured data source.</div><div class="line">class SalaryManager is</div><div class="line">    field source: DataSource</div><div class="line"></div><div class="line">    constructor SalaryManager(source: DataSource) &#123; ... &#125;</div><div class="line"></div><div class="line">    method load() is</div><div class="line">        return source.readData()</div><div class="line"></div><div class="line">    method save() is</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">    // ...Other useful methods...</div><div class="line"></div><div class="line"></div><div class="line">// Application can assemble objects with a different set of functionality using</div><div class="line">// the same decorators at run time, depending on the configuration</div><div class="line">// or environment.</div><div class="line">class ApplicationConfigurator is</div><div class="line">    method configurationExample() is</div><div class="line">        source = new FileDataSource("salary.dat");</div><div class="line">        if (enabledEncryption)</div><div class="line">            source = new EncyptionDecorator(source)</div><div class="line">        if (enabledCompression)</div><div class="line">            source = new CompressionDecorator(source)</div><div class="line"></div><div class="line">        logger = new SalaryLogger(source)</div><div class="line">        salary = logger.load();</div><div class="line">    // ...Rest of an application code.</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当你需要动态赋予某个对象行为并且不需要破坏这个对象的代码。<br>  装饰器模式允许给某个对象动态的赋予新的行为，而且对客户端代码是隐式的。对象可以同时封装多个wrapper（译者注：就像同时穿了背心、衬衣和西装），结果是所有封装的堆叠结果。</p>
+</li>
+<li><p>当不可能活着不合适通过继承来扩展对象的行为。<br>  许多编程语言都有<code>final</code>关键字来阻止未来对一个类的扩展。当处理这些代码，进行扩展的唯一选项就是适用装饰器模式。</p>
+</li>
+</ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li>确保你有两种元素：</li>
+<li><p>确保您的任务可以表示为一个主要组件和几个可选扩展。</p>
+</li>
+<li><p>创建Component（组件）接口，它需要描述该组件所有可被扩展的方法。</p>
+</li>
+<li><p>创建Concrete Component（具体组件）类并且实现业务逻辑。</p>
+</li>
+<li><p>创建Base Decorator（基础装饰）类。创建一个域来保存被封装对象的强引用。该域应该是Component类型，这样强引用就可以持有组件类和装饰器的强引用（译者注：即变量声明为接口类型，这样可以持有所有Component的所有子类）。</p>
+</li>
+<li><p>确保所有子类实现了Component接口。</p>
+</li>
+<li><p>确保Base Decorator类的所有方法都将方法执行委托给了被包装对象。它将允许Concrete Decorators（具体装饰器）仅扩展一部分组件行为，并且不需要修改其他行为。</p>
+</li>
+<li><p>创建Concrete Decorators类，该类从Base Decorator扩展。</p>
+</li>
+<li><p>一个Concrete Decorator可以在调用被封装对象相同方法前后执行它自己的的行为（你可以仅仅只调用弗雷德方法，因为它将最终调用封装方法）。</p>
+</li>
+<li><p>Client代码必须负责配置包装层。Client应该通过Component的接口和其他类一起工作，使装饰器可以互换。</p>
+</li>
 </ol>
-<ul>
-<li>有用的service对象</li>
-<li>应用代码必须使用service对象。应用不能够直接调用service，因为接口或者数据格式不兼容。</li>
-</ul>
-<ol>
-<li><p>声明后面需要adpater跟随的client接口。应用将使用这个接口和adapter交互。</p>
-</li>
-<li><p>创建一个adpater，实现client接口（空实现）。</p>
-</li>
-<li><p>adapter增加一个service变量。通常情况下，这个变量在构造方法中设置。简单的场景下，适配器可直接转发调用（直接调用service中对应的方法）。</p>
-</li>
-<li><p>实现client定义的接口。adapter方法直接调用service中适当的方法并传递格式化后的数据。</p>
-</li>
-<li><p>adapter类编写完成后，在应用中通过client接口来使用它。</p>
-</li>
-</ol>
+<p><code>不必完全拘泥于以上步骤，一些情况下译者认为完全可以省略掉Base Decorator。</code></p>
 <h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><ul>
-<li><p>优点：隐藏了客户端代码不需要知道的接口实现细节和数据转换</p>
+<li><p>优点</p>
+<ol>
+<li>比继承灵活</li>
+<li>允许在运行时添加和删除行为</li>
+<li>通过使用多层封住，组合几个额外的行为。</li>
+<li>可以组合多个单行为实现使其实现更加复杂的行为。</li>
+</ol>
 </li>
-<li><p>缺点：引入新的类，使得整体复杂度增加</p>
-</li>
-</ul>
-<h3 id="和其他模式的联系"><a href="#和其他模式的联系" class="headerlink" title="和其他模式的联系"></a>和其他模式的联系</h3><ul>
-<li><p>Bridge（桥接）是先期设计把抽象和实现独立。Adapter是进行改装，使没有关系的类在一起工作。Adapter是在设计后期使一些功能工作；Bridge在前期做这些事情。</p>
-</li>
-<li><p>Adapter为了实现目标，提供不同的接口。Proxy（代理）提供相同的接口。Decorator（装饰）提供增强的接口。</p>
-</li>
-<li><p>Adapter意味着改变现有代码的接口。Decorator另一个对象的接口但是没有改变接口。因而Decorator比Adapter更透明。结果就是，Decorator支持递归组合，纯粹的适配器做不到这点。</p>
-</li>
-<li><p>Facade（门面）定义了一个新接口，而Adapter复用已有接口。记住，Adapter使两个存在的接口协作而不是完全定义一个新接口。</p>
-</li>
-<li><p>Sate（状态），Strategy（策略），Bridge（某种程度上的Adapter）有类似的解决结构。他们都是共享”handle/body”元素。他们的意图不同，所以，他们解决不同的问题。</p>
+<li><p>缺点</p>
+<ol>
+<li>配置一个多封装对象是困难的。</li>
+<li>导致很多小类。</li>
+</ol>
 </li>
 </ul>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/adapter" target="_blank" rel="external">https://refactoring.guru/design-patterns/adapter</a></p>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>Adapter提供不同的接口来达到目的。Proxy提供相同的接口。Decorator提供增强的接口。</p>
+</li>
+<li><p>Adapter意味着改变一个存在对象的接口。Decorator在不改变原有接口的情况下增强另外一个对象。Decorator对应用来讲比Adapter更加透明。因此，Decorator支持递归组合，这对于纯Adapter是不可能的。</p>
+</li>
+<li><p>Chain of Responsibility（责任链）和Decorator具有非常普通的类机构。它们都依赖于一系列对象的递归组合来执行。但是它们也有几个关键的不同点。</p>
+<p>  Chain of Responsibility的处理者可以执行随意的行为操作，处理者之间相互独立。它们可以随意的终端下一步的调用。另一方面，各种Decorator扩展一个特别的行为并且假设保持接口一致。并且，Decorator不允许随意中断执行链。</p>
+</li>
+<li><p>Composite和Decorator拥有类似的结构图，因为它们都依赖递归组合来组织一个对象开闭的数量。<br>  装饰器可以看作只有一个组件的退化组合。然而，Decorator向对象增加了额外的责任，而Composite只是对其子类执行相同的行为的“summs up”。</p>
+<p>  但是它们也可以协作：Composite可以使用Decorator来改变树组件的行为。</p>
+</li>
+<li><p>大量使用Composite和Decorator模式的设计通常可以从Prototype中受益。它允许克隆复杂的结构，而不是从头重新构建它们。</p>
+</li>
+<li><p>装饰器可以让您更改对象的皮肤。策略让你改变勇气。</p>
+</li>
+<li><p>Decorator和Proxy有相似的结构，但是目的不同。两种模式都建立在将工作委托给其他对象的组合原则上。然而，Proxy自己管理他持有服务对象的生命周期，而Decorator结构由客户端控制。</p>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/decorator" target="_blank" rel="external">https://refactoring.guru/design-patterns/decorator</a></p>
 
       
     </div>
@@ -534,8 +536,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/29/译-spring-理解AOP代理/" rel="next" title="译-Spring-理解AOP代理">
-                <i class="fa fa-chevron-left"></i> 译-Spring-理解AOP代理
+              <a href="/2017/09/15/设计模式-结构模式之Adapter/" rel="next" title="译-设计模式-结构模式之Adapter">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Adapter
               </a>
             
           </div>
@@ -543,10 +545,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/20/设计模式-结构模式之Decorator/" rel="prev" title="译-设计模式-结构模式之Decorator">
-                译-设计模式-结构模式之Decorator <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -686,7 +684,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不同国家的插头和插板"><span class="nav-number">4.1.</span> <span class="nav-text">不同国家的插头和插板</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象适配"><span class="nav-number">5.1.</span> <span class="nav-text">对象适配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类适配"><span class="nav-number">5.2.</span> <span class="nav-text">类适配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的联系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的联系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">11.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
