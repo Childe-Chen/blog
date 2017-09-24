@@ -89,24 +89,21 @@
 
 <meta name="description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
 问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
-解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="译-设计模式-结构模式之Decorator">
 <meta property="og:url" content="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
 问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
-解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
 <meta property="og:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-09-24T09:50:29.000Z">
+<meta property="og:updated_time" content="2017-09-24T09:52:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Decorator">
 <meta name="twitter:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
 问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。
-解决办法装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有">
+当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
@@ -411,7 +408,7 @@
       
         <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。</p>
-<p>当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。</p>
+<p>当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。<br><a id="more"></a></p>
 <h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有一样的接口，所以客户端代码不会注意到你用封装者替换了源对象。</p>
 <p>所有的封装者这都持有一个源对象实例的强引用。大多数包装器使用传入其构造函数的对象初始化该字段。</p>
 <p>所以，该如何动态改变他的行为呢？正如我提到的，封装者何和目标对象拥有一样的接口。当你调用装饰者的方法时，他执行被封装对象中同样方法并且在返回的结果中添加一些东西。它也可以在原始方法之前调用，但这取决于业务逻辑。</p>
