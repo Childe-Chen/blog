@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Bridge," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Facade," />
 
 
 
@@ -87,29 +87,24 @@
 
 
 
-<meta name="description" content="目的Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。
-问题抽象？实现？听起来害怕？我们首先来看个简单的例子。
-你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和R">
+<meta name="description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
+问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
+最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Bridge">
-<meta property="og:url" content="http://yoursite.com/2017/10/17/设计模式-结构模式之Bridge/index.html">
+<meta property="og:title" content="设计模式-结构模式之Facade">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。
-问题抽象？实现？听起来害怕？我们首先来看个简单的例子。
-你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和R">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194817750?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194846982?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194902726?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194918958?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194937180?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-18T11:56:26.000Z">
+<meta property="og:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
+问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
+最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
+<meta property="og:image" content="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-10-25T12:41:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Bridge">
-<meta name="twitter:description" content="目的Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。
-问题抽象？实现？听起来害怕？我们首先来看个简单的例子。
-你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和R">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="设计模式-结构模式之Facade">
+<meta name="twitter:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
+问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
+最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -137,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/17/设计模式-结构模式之Bridge/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/"/>
 
 
 
 
 
-  <title> 译-设计模式-结构模式之Bridge | 凡隐的博客 </title>
+  <title> 设计模式-结构模式之Facade | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -306,7 +301,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/设计模式-结构模式之Bridge/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -327,7 +322,7 @@
             
             
               
-                译-设计模式-结构模式之Bridge
+                设计模式-结构模式之Facade
               
             
           </h2>
@@ -342,8 +337,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T18:50:00+08:00">
-                2017-10-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T13:45:10+08:00">
+                2017-10-21
               </time>
             
 
@@ -382,7 +377,7 @@
 
           
           
-             <span id="/2017/10/17/设计模式-结构模式之Bridge/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Bridge">
+             <span id="/2017/10/21/设计模式-结构模式之Facade/" class="leancloud_visitors" data-flag-title="设计模式-结构模式之Facade">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -411,101 +406,69 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>抽象？实现？听起来害怕？我们首先来看个简单的例子。</p>
-<p>你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和RedTriangle。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="shapeCombination"></p>
-<p>添加更多的形状类型和颜色将会导致层级结构变的更大。比如，添加一个Circles，你必须创建两个子类，每个对应一种颜色。之后，再添加新的颜色就需要为每个形状添加一个子类。再往后发展，将会变的更糟。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>我们每次在扩展类层次到几个独立纬度时都会碰到这个问题。</p>
-<p>Bridge模式尝试通过用委托替换继承来解决这个问题。你必须将其中一个维度抽离到不同的层次结构中。原类将通过持有新层次结构中的一个对象的引用的方式来替换在一个类中保留它所有的状态和行为的方式。</p>
-<p><img src="http://img.blog.csdn.net/20171018194817750?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="shapeSolution"></p>
-<p>通过这种方式我们抽离出Color和它的两个子类，Red和Blue。Shape类将持有一个颜色类的引用域。当我们需要时通过这个引用把工作委托给color对象。这个引用在Shapps和Color之间像桥一样提供服务。从现在开始，添加color将不再需要改变shape类，反之亦然。</p>
-<h3 id="抽象（Abstraction）和实现（Implementation）"><a href="#抽象（Abstraction）和实现（Implementation）" class="headerlink" title="抽象（Abstraction）和实现（Implementation）"></a>抽象（Abstraction）和实现（Implementation）</h3><p>在GoF的书中把“抽象和实现”一词作为Bridge模式定义的一部分。在我看来，那样太过学术并且使得这个模式变的更加难以理解。通过上面那个简单的例子，让我们看下GoF的真正意思。</p>
-<p>抽象（Abstraction），也叫做接口（Interface），是一些实体的控制层。它们自己并不做任何真正事情，而是把大多工作委托给实现（Implementation）层，有时叫做平台（Platform）。不要把接口和抽象类和你的编程语言混淆，他们不是一回事。</p>
-<p>比如，当我们谈到真正的应用是，抽象可以表示用户图形界面（GUI），实现可以表示响应用户交互的GUI层调用系统底层操作的API。</p>
-<p>有两个方向来将应用扩展：</p>
-<ul>
-<li>有一些不同的GUI（用户GUI和管理GUI）</li>
-<li>支持一些不同的API（可以工作在Windows，Linux和MacOS下）</li>
-</ul>
-<p>这个程序的代码看起来像<a href="http://wiki.mbalib.com/wiki/%E2%80%9C%E6%84%8F%E5%A4%A7%E5%88%A9%E9%9D%A2%E6%9D%A1%E7%A2%97%E2%80%9D%E7%8E%B0%E8%B1%A1" target="_blank" rel="external">“巨大的意大利面条碗”</a>，有着成吨的连接不同GUI和API行为的操作条件。</p>
-<p><img src="http://img.blog.csdn.net/20171018194846982?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="compare"></p>
-<p>可以通过对所有接口-平台的变体进行子类化来改进代码。但实际上，这个将导致我们已经在形状例子中看到的同样的问题。类层次将爆发时增长，每个新GUI或者API类型将需要增加一些组合类。</p>
-<p>Bridge模式建议把这些类分成两个层次：</p>
-<ul>
-<li>抽象层（Abstraction）：应用的GUI层。</li>
-<li>实现层（Implementation）：操作系统API。</li>
-</ul>
-<p>抽象对象持有一个具体实现对象的引用。只要遵循通用的接口，使同一个GUI能够在Windows和Linux下工作，不同的实现将是可互换的。</p>
-<p><img src="http://img.blog.csdn.net/20171018194902726?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="exampleApp"></p>
-<p>更重要的是，你可以在不触碰操作系统代码的情况下开始在GUI类中工作，反之亦然。比如，添加一个对新操作系统的支持，将仅需要在实现层中创建一个子类。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171018194918958?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。</p>
+<p>最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。<br><a id="more"></a></p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>门面是一个类，它为一个包含很多类的复杂子系统提供一个简单的接口。相对直接调用子系统而言，门面提供有限的功能。它仅提供客户端关心的那些特性。</p>
+<p>当你在使用一个拥有很多模块的的复杂类库，但是你只用到其中一部分功能时，使用门面模式就显得很便利。</p>
+<p>比如，一个上传短视频到Youtube伤的app使用了一个专业的视频转换类库。但是它真正需要的只是一个拥有encode(filename,format)方法的类。创建这种类之后，你变有了第一个门面。</p>
+<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><h4 id="电话下单"><a href="#电话下单" class="headerlink" title="电话下单"></a>电话下单</h4><p>当你用电话向一个商店下单时，话务员就是所有服务和部门的门面。他或者她提供了下单，支付，配送的简单接口。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
 <ol>
-<li><p>抽象（Abstraction）主要包含一个像用户接口一样的控制逻辑。抽象代码依赖具体实现对象来完成任务。</p>
+<li><p>Facade（门面）为访问子系统的特定功能提供方便。它知道怎样引导客户的请求和怎样为所有moving parts做准备。</p>
 </li>
-<li><p>实现（Implementation）为所有具体的实现声明了通用的接口。抽象层可以和任何一个符合这个接口的具体实现工作。<br> 抽象和实现接口在一些程序中是相等的。但是大多情况下，实现包含基本的原语操作，抽象层用它们来处理一些复杂的行为。</p>
+<li><p>Additional facades用来隔离功能和阻止源门面变成另外一个复杂结构。Additional facades也可以被客户端或者其他门面使用。</p>
 </li>
-<li><p>具体实现包含具体平台的代码。</p>
+<li><p>Complex subsystem（复杂的子系统）包含很多类。为了让他们做一些有意义的事情，你必须知道它的实现细节，初始化顺序等很多事情。<br> 注意：子系统并不关心门面的存在，它直接和其他模块协作。</p>
 </li>
-<li><p>精制抽象（Refined Abstractions）可以用来创建一些控制逻辑的变种。这些类和它们的父类一样，应该用实现接口（Implementation inteface）来和不同的实现协作。</p>
-</li>
-<li><p>客户端（Client）只和抽象类有一个地方不同。在构建抽象对象时，客户端会传递一个具体实现对象。然而，如果需要，具体实现可以动态替换。</p>
+<li><p>Client使用门面代替直接调用子系统对象。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，Bridge将设备（Devices）和遥控器（Remotes）的代码分成几部分：</p>
-<ul>
-<li>设备（看作实现）</li>
-<li>遥控器（看作抽象）</li>
-</ul>
-<p><img src="http://img.blog.csdn.net/20171018194937180?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="umlExample"></p>
-<p>遥控器的基类有一个域来持有一个要控制设备的对象引用。遥控器通过设备提供的通用接口工作。它允许一个遥控器可以和几个不同的设备协作（译者注：控制几个不同类型的设备）。</p>
-<p>你可以独立的改变控制类。例如，你可以创建一个仅有两个按钮的遥控器或者带有触摸屏的复杂遥控器。</p>
-<p>因此，Bridge模式允许你将一个实体分成几个不同的实体，它们可以独立发展。客户端代码总是保持简单。它只需要选择一个抽象并且配置给它一个具体实现。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">// All remote classes contain reference to the device they controls. Remote's</div><div class="line">// methods delegate most of the work to the device methods.</div><div class="line">class Remote is</div><div class="line">    protected field device: Device</div><div class="line">    constructor BasicRemote(device: Device) is</div><div class="line">        this.device = device</div><div class="line">    method togglePower() is</div><div class="line">        if device.isEnabled() then device.disable()</div><div class="line">        else device.enable()</div><div class="line">    method volumeDown() is</div><div class="line">        device.setVolume(device.getVolume() - 10)</div><div class="line">    method volumeUp() is</div><div class="line">        device.setVolume(device.getVolume() + 10)</div><div class="line">    method channelDown() is</div><div class="line">        device.setChannel(device.getChannel() - 1)</div><div class="line">    method channelUp() is</div><div class="line">        device.setChannel(device.getChannel() + 1)</div><div class="line"></div><div class="line">// You can extend remote hierarchy independently from device classes.</div><div class="line">class AdvancedRemote extends BasicRemote is</div><div class="line">    method mute() is</div><div class="line">        device.setVolume(0)</div><div class="line"></div><div class="line"></div><div class="line">// All devices have the common interface. This makes them compatible with</div><div class="line">// all remotes.</div><div class="line">interface Device is</div><div class="line">    method isEnabled()</div><div class="line">    method enable()</div><div class="line">    method disable()</div><div class="line">    method getVolume()</div><div class="line">    method setVolume(percent)</div><div class="line">    method getChannel()</div><div class="line">    method setChannel(channel)</div><div class="line"></div><div class="line">// But each concrete device may have its own implementation.</div><div class="line">class Tv implements Device is</div><div class="line">    // ...</div><div class="line"></div><div class="line">class Radio implements Device is</div><div class="line">    // ...</div><div class="line"></div><div class="line"></div><div class="line">// Somewhere in client code.</div><div class="line">tv = new Tv();</div><div class="line">remote = new Remote(tv)</div><div class="line">remote.pover()</div><div class="line"></div><div class="line">radio = new Radio();</div><div class="line">remote = new AdvancedRemote(radio)</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，门面简化了和一个复杂视频转换框架的协作。</p>
+<p>门面是一个单独的类，它提供一个公开的方法来处理框架复杂的配置并返回一个正确的格式。</p>
+<p>通过这种方式，门面模式保证客户端代码简单、干净、可靠。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">// Some classes of a complex 3rd-party video conversion framework. We don't</div><div class="line">// control that code, therefore can't simplify it.</div><div class="line"></div><div class="line">class VideoFile</div><div class="line">// ...</div><div class="line"></div><div class="line">class OggCompressionCodec</div><div class="line">// ...</div><div class="line"></div><div class="line">class MPEG4CompressionCodec</div><div class="line">// ...</div><div class="line"></div><div class="line">class CodecFactory</div><div class="line">// ...</div><div class="line"></div><div class="line">class BitrateReader</div><div class="line">// ...</div><div class="line"></div><div class="line">class AudioMixer</div><div class="line">// ...</div><div class="line"></div><div class="line"></div><div class="line">// To defeat the complexity, we create a Facade class, which hides all of the</div><div class="line">// framework's complexity behind a simple interface. It is a trade-off between</div><div class="line">// functionality and simplicity.</div><div class="line">class VideoConvertor is</div><div class="line">    method convertVideo(filename, format):File is</div><div class="line">        file = new VideoFile(filename)</div><div class="line">        sourceCodec = new CodecFactory.extract(file)</div><div class="line">        if (format == "mp4")</div><div class="line">          distinationCodec = new MPEG4CompressionCodec()</div><div class="line">        else</div><div class="line">          distinationCodec = new OggCompressionCodec()</div><div class="line">        buffer = BitrateReader.read(filename, sourceCodec);</div><div class="line">        result = BitrateReader.convert(buffer, distinationCodec);</div><div class="line">        result = (new AudioMixer()).fix(result);</div><div class="line">        return new File(result)</div><div class="line"></div><div class="line">// Application classes don't depend on a billion classes provided by the complex</div><div class="line">// framework. Also, if you happen to decide to switch framework, you will only</div><div class="line">// need to rewrite the facade class.</div><div class="line">class Application is</div><div class="line">    method main() is</div><div class="line">        convertor = new VideoConvertor();</div><div class="line">        mp4video = convertor.convertVideo("youtubevideo.ogg", "mp4");</div><div class="line">        mp4video.save();</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你有一个包含一些功能变种的大类（比如，工作在几个不同的数据库服务上）<br>  这个类会变的很难维护，因为任何一个人触碰她的人都需要花费大量的时间去完全理解它。更改功能的某个变种会导致编辑整个类，这可能会引起讨厌的被忽视的错误。</p>
-<p>  Bridge模式将单体类分成几个层次，一个包含另外一个的引用。这些层次中的类可以独立的编辑。它简化了支持，并最大限度地减少了修改现有代码的风险。</p>
+<li><p>当你需要一个简单但是功能有限的复杂子系统接口时<br>  通常，子系统随着时间的推移变得越来越复杂。即使使用了设计模式也难避免创建更多的类。子系统可能变的更加灵活并且在不同的环境中复用性更高，但是它的样板代码数量也会随之增长。门面模式尝试通过提供访问子系统的一部分来适应更多客户端的需要。</p>
 </li>
-<li><p>当你需要在正交（独立）的维度扩展一个类<br>  取代单层次的增长，Bridge模式建议为每个维度创建一个分离的类层次，并且通过引用域来关联这些层次。</p>
-</li>
-<li><p>当你需要在运行时改变实现<br>  尽管它是可选的，Bridge模式允许改变抽象中的实现对象。这就像为一个字段分配一个新值一样简单。</p>
-<p>  顺便说下，这也是为什么许多人对Bridge模式和Strategy模式分不清楚。记住，模式不仅仅是类结构，而是意图（译者注：或者目的）。Bridge模式的目的就是结构化代码。</p>
+<li><p>当你想把一个子系统构建成层<br>  创建门面来定义每个层子系统的连接点。如果多子系统之间相互依赖，你可以通过要求子系统只能通过门面交互来限制耦合。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>确定你的类是正交维度。这些独立的概念可以是：abstraction/platform, or domain/infrastructure, or front-end/back-end, or interface/implementation.</p>
+<li><p>检查是否可以使用简化的接口和一个复杂的子系统交互。<br> 如果接口使客户端没有子系统的依赖，你就在正确的轨道上。</p>
 </li>
-<li><p>考虑客户端想要干什么，然后把他们描述在基本抽象类中。</p>
+<li><p>创建一个门面类并在接口中描述它。它必须能够引导客户端调用适当的子系统对象。门面应该关心子系统正确的初始化。通常，这些代码在门面的构造方法中，懒实例化往往比较有用。</p>
 </li>
-<li><p>确定所有平台的能力和抽象需要什么。然后把它们描述在实现接口中。</p>
+<li><p>如果客户端仅和门面协作，你将得到巨大的收益。在这种情况下，客户端不需要关心子系统代码的变化。比如，当一个库的代码更新世，你只需要修改门面。</p>
 </li>
-<li><p>在你的领域中为所有平台创建具体实现类，确定它们都遵循了实现接口。</p>
-</li>
-<li><p>在抽象类中增加一个实现类型的域。然后实现所有抽象方法，同时将大部分工作委托给该域中引用的实现对象。</p>
-</li>
-<li><p>客户端代码应将实现对象传递给抽象的构造函数。它可以根据需要使用抽象对象。</p>
+<li><p>如果这个门面变的太大，请考虑抽离出一个新的门面。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>允许建立平台独立代码。</li>
-<li>符合开闭原则。</li>
-<li>对客户端隐藏实现细节。</li>
+<li><p>分离客户端和子系统组件。</p>
+</li>
+<li><p>客户端代码和子系统最小耦合。</p>
+</li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>创建多个附加类导致总体代码复杂性增加。</li>
+<li>门面可能造成<a href="https://refactoring.guru/antipatterns/god-object" target="_blank" rel="external">god object</a>，它和所有应用类耦合。</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>Bridge是前置设计，让抽象和实现相互独立。Adapter是通过改装使得没有关系的类协作。Adapter通常是在设计完成后使用；Bridge通常是设计时采用。</p>
+<li><p>Facade重新定义了一个接口，而Adapter重用了一个老接口。记住，Adapter使两个已存在接口协作，反对完全重新定义一个接口。</p>
 </li>
-<li><p>State, Strategy, Bridge (和某种程度上的Adapter) 具有相似的解决结构。它们都是采用分享“句柄/身体”的方式。它们的意图不同，因此它们解决不同的问题。</p>
+<li><p>Abstract Factory可以用来替代Facade来隐藏平台特定的类。</p>
 </li>
-<li><p>Abstract Factory可与Bridge模式一起使用。当Bridge“接口”的一部分只能与特定的“实现”工作时，这很有用。在这种情况下，工厂可以封装这些关系，对客户端隐藏复杂性。</p>
+<li><p>Flyweight展示如何制造更多小对象，而Facade展示如何使用一个对象代表整个子系统。</p>
 </li>
-<li><p>Builder可以构造为Bridge模式：Director将作为接口，Builders将扮演实现角色。</p>
+<li><p>Meditor在抽象已存在类的功能上和Facade很像。Mediator抽象/集中两个随意交互的协作对象。它常规的做法是“add values”，并且协作对象间相互知道被引用。相比之下，Facade为子系统定义了一个简单的接口，它并不添加新功能，并且子系统类不知道它的存在。</p>
+</li>
+<li><p>Facade可以被改造成Singleton，因为大多情况下单例门面对象就够了。</p>
+</li>
+<li><p>Facade在缓冲一个复杂实体和初始化这点上和Proxy很像。不像Facade，Proxy模式和他服务的对象拥有相同的接口，使得它们是通用的。</p>
 </li>
 </ul>
-<h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：Bridge模式对这些情况特别适用：跨平台应用，支持多类型的数据库服务，和一些特定类型的API提供者（例如，云平台，社交网络等）合作。</p>
-<p>坚定：可以通过区分控制实体和它所依赖的几个不同的平台来识别Bridge模式。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/bridge" target="_blank" rel="external">https://refactoring.guru/design-patterns/bridge</a></p>
+<h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：在用Java写的app中，门面模式很常见。它特别用来处理和复杂类库和API协作的情景。</p>
+<p>鉴定：Facade可以在具有简单接口的类中被识别，但是它将大部分工作委托给其他类。通常，门面管理它们使用对象的生命周期。</p>
 
       
     </div>
@@ -535,7 +498,7 @@
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Bridge/" rel="tag"># Bridge</a>
+            <a href="/tags/Facade/" rel="tag"># Facade</a>
           
         </div>
       
@@ -548,8 +511,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/20/设计模式-结构模式之Decorator/" rel="next" title="译-设计模式-结构模式之Decorator">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Decorator
+              <a href="/2017/10/20/设计模式-结构模式之Composite/" rel="next" title="设计模式-结构模式之Composite">
+                <i class="fa fa-chevron-left"></i> 设计模式-结构模式之Composite
               </a>
             
           </div>
@@ -557,10 +520,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/20/设计模式-结构模式之Composite/" rel="prev" title="设计模式-结构模式之Composite">
-                设计模式-结构模式之Composite <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -700,7 +659,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象（Abstraction）和实现（Implementation）"><span class="nav-number">4.</span> <span class="nav-text">抽象（Abstraction）和实现（Implementation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java中模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#电话下单"><span class="nav-number">4.1.</span> <span class="nav-text">电话下单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java中模式的使用</span></a></li></ol></div>
             
 
           </div>
