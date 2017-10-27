@@ -91,16 +91,16 @@
 问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
 最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式-结构模式之Facade">
+<meta property="og:title" content="译-设计模式-结构模式之Facade">
 <meta property="og:url" content="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
 问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
 最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
 <meta property="og:image" content="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-25T12:41:26.000Z">
+<meta property="og:updated_time" content="2017-10-27T09:47:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式-结构模式之Facade">
+<meta name="twitter:title" content="译-设计模式-结构模式之Facade">
 <meta name="twitter:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
 问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
 最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
@@ -138,7 +138,7 @@
 
 
 
-  <title> 设计模式-结构模式之Facade | 凡隐的博客 </title>
+  <title> 译-设计模式-结构模式之Facade | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -322,7 +322,7 @@
             
             
               
-                设计模式-结构模式之Facade
+                译-设计模式-结构模式之Facade
               
             
           </h2>
@@ -377,7 +377,7 @@
 
           
           
-             <span id="/2017/10/21/设计模式-结构模式之Facade/" class="leancloud_visitors" data-flag-title="设计模式-结构模式之Facade">
+             <span id="/2017/10/21/设计模式-结构模式之Facade/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Facade">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -469,6 +469,7 @@
 </ul>
 <h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：在用Java写的app中，门面模式很常见。它特别用来处理和复杂类库和API协作的情景。</p>
 <p>鉴定：Facade可以在具有简单接口的类中被识别，但是它将大部分工作委托给其他类。通常，门面管理它们使用对象的生命周期。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/facade" target="_blank" rel="external">https://refactoring.guru/design-patterns/facade</a></p>
 
       
     </div>
@@ -520,6 +521,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/26/设计模式-结构模式之Proxy/" rel="prev" title="译-设计模式-结构模式之Proxy">
+                译-设计模式-结构模式之Proxy <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -591,7 +596,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -613,7 +618,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -659,7 +664,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#电话下单"><span class="nav-number">4.1.</span> <span class="nav-text">电话下单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java中模式的使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#电话下单"><span class="nav-number">4.1.</span> <span class="nav-text">电话下单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java中模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

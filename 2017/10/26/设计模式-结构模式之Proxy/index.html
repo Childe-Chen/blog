@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="源码,test4j," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Proxy," />
 
 
 
@@ -87,16 +87,27 @@
 
 
 
-<meta name="description" content="记一次test4j导致CPU飙高的事故在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。于是，我就开始查找原因的漫漫长征路。">
+<meta name="description" content="意图Proxy是结构模式的一种，它能够让你为另外一个对象提供一个替身或者占位符来控制对它的访问。
+问题为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。
+因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。
+理想状态下，我们可以直接在对象类中加入代码">
 <meta property="og:type" content="article">
-<meta property="og:title" content="test4j导致Load飙高排查">
-<meta property="og:url" content="http://yoursite.com/2016/11/18/test4j导致Load飙高排查/index.html">
+<meta property="og:title" content="译-设计模式-结构模式之Proxy">
+<meta property="og:url" content="http://yoursite.com/2017/10/26/设计模式-结构模式之Proxy/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="记一次test4j导致CPU飙高的事故在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。于是，我就开始查找原因的漫漫长征路。">
-<meta property="og:updated_time" content="2017-03-10T03:12:10.000Z">
+<meta property="og:description" content="意图Proxy是结构模式的一种，它能够让你为另外一个对象提供一个替身或者占位符来控制对它的访问。
+问题为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。
+因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。
+理想状态下，我们可以直接在对象类中加入代码">
+<meta property="og:image" content="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-10-27T09:50:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="test4j导致Load飙高排查">
-<meta name="twitter:description" content="记一次test4j导致CPU飙高的事故在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。于是，我就开始查找原因的漫漫长征路。">
+<meta name="twitter:title" content="译-设计模式-结构模式之Proxy">
+<meta name="twitter:description" content="意图Proxy是结构模式的一种，它能够让你为另外一个对象提供一个替身或者占位符来控制对它的访问。
+问题为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。
+因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。
+理想状态下，我们可以直接在对象类中加入代码">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -124,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/18/test4j导致Load飙高排查/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/26/设计模式-结构模式之Proxy/"/>
 
 
 
 
 
-  <title> test4j导致Load飙高排查 | 凡隐的博客 </title>
+  <title> 译-设计模式-结构模式之Proxy | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -293,7 +304,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/18/test4j导致Load飙高排查/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/设计模式-结构模式之Proxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -314,7 +325,7 @@
             
             
               
-                test4j导致Load飙高排查
+                译-设计模式-结构模式之Proxy
               
             
           </h2>
@@ -329,8 +340,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-18T13:38:20+08:00">
-                2016-11-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T18:46:26+08:00">
+                2017-10-26
               </time>
             
 
@@ -352,8 +363,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
-                    <span itemprop="name">源码阅读</span>
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
                   </a>
                 </span>
 
@@ -369,7 +380,7 @@
 
           
           
-             <span id="/2016/11/18/test4j导致Load飙高排查/" class="leancloud_visitors" data-flag-title="test4j导致Load飙高排查">
+             <span id="/2017/10/26/设计模式-结构模式之Proxy/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Proxy">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -398,25 +409,94 @@
       
 
       
-        <h3 id="记一次test4j导致CPU飙高的事故"><a href="#记一次test4j导致CPU飙高的事故" class="headerlink" title="记一次test4j导致CPU飙高的事故"></a>记一次test4j导致CPU飙高的事故</h3><p>在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。<br>于是，我就开始查找原因的漫漫长征路。<br><a id="more"></a><br>首先简单了解下test4j初始化过程(忽略读取相关配置及之前)。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Test4jCore-&gt;CoreModule:1.initSingletonInstance()</div><div class="line">CoreModule-&gt;ConfigurationLoader:2.loading()\n加载系统信息\n模块信息\n配置信息（比如：数据库）\n等</div><div class="line">CoreModule-&gt;ConfigHelper:3.logLevel()\n设置打印消息级别</div><div class="line">CoreModule-&gt;CoreModule:4.new CoreModule()</div></pre></td></tr></table></figure></p>
-<p>CoreModule时序列图<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CoreModule-&gt;ModulesLoader:1.load()\n加载test4j模块并进行初始化(init)\n初始化Module管理器，主要管理Module监听器</div><div class="line">note right of ModulesLoader:相关模块参见test4j-default.properties</div><div class="line">CoreModule-&gt;CoreModule$CoreModuleListener:2.new CoreModule$CoreModuleListener()</div><div class="line">CoreModule-&gt;3.Module:afterInit()</div></pre></td></tr></table></figure></p>
-<p>上面简单列出test4j的初始化流程，那么这次故障原因在哪产生的呢？不着急，容我慢慢道来。</p>
-<p>事故现场：在maven执行test生命周期的过程中，发现cpu利用率不断升高，甚至达到700%，load也随之不断飙升。</p>
-<p>排查点一：业务需要大量计算。纵观所有单元测试，没有大量数据计算，那么业务本身原因也就排除。</p>
-<p>排查点二：load飙高，是否有大量IO等待。查看stack及各个子线程cpu使用率后，确实有一些IO等待（redis读取等待），此点Mark。</p>
-<p>排查点三：IO不会造成高cpu使用率，那么最可能的就是GC了。果不其然，4个GC线程cpu使用率均在100%左右。</p>
-<p>排查点四：既然GC这么高，会不会是heap给的太小，但查看程序执行日之后基本排除此种可能，因为发现每个测试类开始test4j都会对spring重新初始化。</p>
-<p>排查到第四点就有些兴奋了，test4j是有参数可以设定spring容器行为的，@SpringContext注解中，shared属性默认为fasle，即：spring容器在测试类之间并不共享。那么改掉它，重新跑。竟然好了！那么为什么采用默认的shared值会有问题呢？</p>
-<p>排查到这里基本可以确定：1.test4j配置有问题；2.test4j自身的BUG</p>
-<p>随后查看了test4j的源码，尼玛！！share属性在程序中竟然写死为ture！！test4j一直就是在以共享spring容器的方式运行！！看到这里基本上就可以确定是test4j的问题了，毕竟这个项目最后一次更新停留在了两年前！！</p>
-<p>让我们重新审视test4j的启动，发现还并没有涉及到对spring的操作，因为是对spring的多次初始化，所以我们的目光可以聚焦在对SpringModule的处理上。</p>
-<p>在test4j中每个Module均包含一个内部监听类，test4j会在不同的测试生命周期点通知到监听类，以便各个Module做出响应的行为。</p>
-<p>下面是SpringModule的监听类部分源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">SpringModule.<span class="function">java</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeClass</span><span class="params">(Class testClazz)</span> &#123;</div><div class="line">	SpringModuleHelper.resetDumpReference();</div><div class="line">	SpringInitInvoker.invokeSpringInitMethod(TestContext.currTestedObject());</div><div class="line">	<span class="comment">//每次切换测试类，都会init，内部是怎么实现的呢？看下段源码</span></div><div class="line">	Test4JSpringContext springContext = SpringModuleHelper.initSpringContext(testClazz, contextFactory);</div><div class="line">	MessageHelper.warn(<span class="string">"SpringModuleHelper.initSpringContext "</span> + SpringTestedContext.getSpringContext());</div><div class="line">    SpringTestedContext.setSpringContext(springContext);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">Override</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterClass</span><span class="params">(Object testedObject)</span> &#123;</div><div class="line">	<span class="comment">//释放当前测试类Spring</span></div><div class="line">	SpringTestedContext.removeSpringContext();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">SpringModuleHelper.<span class="function">java</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Test4JSpringContext <span class="title">initSpringContext</span><span class="params">(Class testClazz, ApplicationContextFactory contextFactory)</span> &#123;</div><div class="line">	<span class="comment">//首先会从test4j自定义的上下文查找spring上下文，没找到进行创建</span></div><div class="line">	Test4JSpringContext springContext = SpringTestedContext.getSpringContext();</div><div class="line">    <span class="keyword">if</span> (springContext != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> springContext;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//找出配置@SpringContext</span></div><div class="line">    SpringContext annotation = AnnotationHelper.getClassLevelAnnotation(SpringContext.class, testClazz);</div><div class="line">    Class declaredAnnotationClazz = AnnotationHelper.getClassWithAnnotation(SpringContext.class, testClazz);</div><div class="line">    <span class="keyword">if</span> (annotation == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//spring容器是否共享，程序默认为false</span></div><div class="line">    <span class="keyword">boolean</span> share = annotation.share();</div><div class="line">    Test4JSpringContext context = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">if</span> (share) &#123;</div><div class="line">	    <span class="comment">//SHARED_SPRING_CONTEXT以@SpringContext被注解类为key，来实现spring容器共享</span></div><div class="line">        context = SHARED_SPRING_CONTEXT.get(declaredAnnotationClazz);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (context == <span class="keyword">null</span>) &#123;</div><div class="line">	    <span class="comment">//注意：BUG即将诞生！！！！！！！</span></div><div class="line">        context = newSpringContext(testClazz, contextFactory, annotation);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (share) &#123;</div><div class="line">        SHARED_SPRING_CONTEXT.put(declaredAnnotationClazz, context);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//将springContext设置回测试上下文</span></div><div class="line">    SpringTestedContext.setSpringContext(context);</div><div class="line">    <span class="keyword">return</span> context;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Test4JSpringContext <span class="title">newSpringContext</span><span class="params">(Class testClazz, ApplicationContextFactory contextFactory, SpringContext annotation)</span> </span>&#123;</div><div class="line">    <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">    String[] locations = annotation.value();</div><div class="line">    <span class="keyword">boolean</span> allowLazy = annotation.allowLazy();</div><div class="line">    Test4JSpringContext springContext = contextFactory.createApplicationContext(Arrays.asList(locations), <span class="keyword">false</span>, allowLazy);</div><div class="line">    <span class="comment">//设置Context共享方式，BUG也由此产生了。</span></div><div class="line">    springContext.setShared(annotation.share());</div><div class="line">    <span class="comment">//test4j对spring进行了封装，内部调用spring方法初始化</span></div><div class="line">    springContext.refresh();</div><div class="line">    <span class="keyword">long</span> duration = System.currentTimeMillis() - startTime;</div><div class="line">    MessageHelper.warn(String.format(<span class="string">"take %d ms to init spring context for test obejct[%s]"</span>, duration,</div><div class="line">            testClazz.getName()));</div><div class="line">    <span class="keyword">return</span> springContext;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 释放测试类的spring容器</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> springContext</div><div class="line"> *            AbstractApplicationContext实例，这里定义为Object是方便其它模块脱离spring依赖</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">closeSpringContext</span><span class="params">(Object springContext)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (springContext == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (!(springContext <span class="keyword">instanceof</span> Test4JSpringContext)) &#123;</div><div class="line">        String error = String.format(<span class="string">"there must be something error, the type[%s] object isn't a spring context."</span>,springContext.getClass().getName());</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(error);</div><div class="line">    &#125;</div><div class="line">    Test4JSpringContext context = (Test4JSpringContext) springContext;</div><div class="line">    <span class="comment">//这个方法</span></div><div class="line">    <span class="keyword">if</span> (context.isShared() == <span class="keyword">false</span>) &#123;</div><div class="line">        context.destroy();</div><div class="line">        MessageHelper.warn(<span class="string">"close spring context for class:"</span> + TestContext.currTestedClazzName());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test4JSpringContext</span> <span class="keyword">extends</span> <span class="title">ClassPathXmlApplicationContext</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> shared;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 设置是否共享spring</div><div class="line">	 * </div><div class="line">	 * <span class="doctag">@param</span> share</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setShared</span><span class="params">(<span class="keyword">boolean</span> share)</span> </span>&#123;</div><div class="line">		<span class="comment">//哈哈哈，作者写了一个低级BUG出来，当你没使用共享方式的时候，恭喜你，你惨了！继续看代码！</span></div><div class="line">	    <span class="keyword">this</span>.shared = <span class="keyword">true</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>此时BUG的全貌出现了，大家仔细看，test4j中默认的shared为false，也就是默认不共享，但是在为Test4JSpringContext设置shared时却写死为true了。我们还记得test4j的每个Module都有一个内部监听类来处理关心的测试中的各个生命周期，在每个测试类开始前（beforeClass），SpringModule负责spring容器的创建（如果需要），在测试结束后（afterClass），负责容器的销毁（如果需要）。</p>
-<p>那么问题就在这里，当我们使用默认的shared时，每个测试开始都会创建一个spring容器，这是正常的，因为我们并没有共享spring容器，但是，当测试结束时，本应该根据shared值销毁spring容器，却因为BUG，从Test4JSpringContext中取出的值为true，作孽啊，test4j认为我们是共享的，便保留了当前的spring容器，于是乎，就出现了车祸现场！</p>
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Proxy是结构模式的一种，它能够让你为另外一个对象提供一个替身或者占位符来控制对它的访问。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。</p>
+<p>因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。</p>
+<p>理想状态下，我们可以直接在对象类中加入代码，但不总是这样。比如，这是第三方库中的类。<br><a id="more"></a></p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Proxy模式建议创建一个和原服务对象遵循相同接口的替代类。当接收到客户端的请求时，代理对象创建一个服务对象的实例并把真正工作委托给他。</p>
+<p>但是有什么好处呢？你可以在调用真正服务对象方法之前（或之后）在代理类中加入一些代码。因为代理和服务对象遵循相同的接口，它可以传递服务对象可以接受的任何代码。</p>
+<h3 id="现实世界类比"><a href="#现实世界类比" class="headerlink" title="现实世界类比"></a>现实世界类比</h3><h4 id="支票"><a href="#支票" class="headerlink" title="支票"></a>支票</h4><p>支票是一种文件，可以命令银行从个人账户支付特定金额给持有支票的人。支票和现金都有一个通用的接口：可以用作付款。因此，支票是一大堆现金的代理。</p>
+<p>站在消费者角度看，支票很棒，因为没有必要携带大量的现金。对于店主来说，他们也很好，因为可以在最近的银行兑换现金。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="strcutrue"></p>
+<ol>
+<li><p>Service interface为Service和Proxy生命了通用接口。</p>
+</li>
+<li><p>Service是一个提供有用业务逻辑的类。</p>
+</li>
+<li><p>Proxy有一个持有Service对象的字段。Proxy的方法做一些中间工作，并且大部分时间将请求传递给服务对象的相同方法。</p>
+<p> 大多情况下，Proxy管理它们的Service对象的声明周期。</p>
+</li>
+<li><p>Client应该同Service和Proxy通用接口协作。这样就可以把Proxy对象传递给任何期望一个Service对象的代码。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，Proxy模式帮助实现懒实例化并且为一个低效的第三方Youtube集成库做缓存。</p>
+<p>原视频下载类在之前已经下载过的情况下也会再去下载这个视频。代理类仅会使用原下载器下载一次相同的视频，然后把它缓存下来，随后相同的请求会直接返回缓存。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line">// The interface of a remote service.</div><div class="line">interface ThirdPartyYoutubeLib is</div><div class="line">    method listVideos()</div><div class="line">    method getVideoInfo(id)</div><div class="line">    method downloadVideo(id)</div><div class="line"></div><div class="line">// Concrete implementation of a service connector. Methods of this class can</div><div class="line">// request various info from youtube. Request speed depends on a user's internet</div><div class="line">// connection as wells as Youtube's. Application will slow down if a lot of</div><div class="line">// requests will be fired at the same time, even if they are requesting the</div><div class="line">// same info.</div><div class="line">class ThirdPartyYoutubeClass is</div><div class="line">    method listVideos() is</div><div class="line">        Send API request to Youtube.</div><div class="line"></div><div class="line">    method getVideoInfo(id) is</div><div class="line">        Get a meta information about some video.</div><div class="line"></div><div class="line">    method downloadVideo(id) is</div><div class="line">        Download video file from Youtube.</div><div class="line"></div><div class="line">// On the other hand, to save some bandwidth, we can cache request results and</div><div class="line">// keep them for some time. But it might be impossible to put such code directly</div><div class="line">// to the service class: it could be provided by third party library or/and</div><div class="line">// defined as final. That is why we put the caching code to a new proxy class</div><div class="line">// which implements the same interface as a service class. It is going to</div><div class="line">// delegate to the service object only when the real requests have to be sent.</div><div class="line">class CachedYoutubeClass implements ThirdPartyYoutubeLib is</div><div class="line">    private field service: ThirdPartyYoutubeClass</div><div class="line">    private field listCache, videoCache</div><div class="line">    field needReset</div><div class="line"></div><div class="line">    constructor CachedYoutubeClass(service: ThirdPartyYoutubeLib) is</div><div class="line">        this.service = service</div><div class="line"></div><div class="line">    method listVideos() is</div><div class="line">        if (listCache == null || needReset)</div><div class="line">            listCache = service.listVideos()</div><div class="line">        return listCache</div><div class="line"></div><div class="line">    method getVideoInfo(id) is</div><div class="line">        if (videoCache == null || needReset)</div><div class="line">            videoCache = service.getVideoInfo(id)</div><div class="line">        return videoCache</div><div class="line"></div><div class="line">    method downloadVideo(id) is</div><div class="line">        if (!downloadExists(id) || needReset)</div><div class="line">            service.downloadVideo(id)</div><div class="line"></div><div class="line">// The GUI class, which used to work with a service object stays unchanged. But</div><div class="line">// only as long as it works with the service object through an interface. We can</div><div class="line">// safely pass here a proxy object instead of a real service object since both</div><div class="line">// of them implement the same interface.</div><div class="line">class YoutubeManager is</div><div class="line">    protected field service: ThirdPartyYoutubeLib</div><div class="line"></div><div class="line">    constructor YoutubeManager(service: ThirdPartyYoutubeLib) is</div><div class="line">        this.service = service</div><div class="line"></div><div class="line">    method renderVideoPage() is</div><div class="line">        info = service.getVideoInfo()</div><div class="line">        Render the video page.</div><div class="line"></div><div class="line">    method renderListPanel() is</div><div class="line">        list = service.listVideos()</div><div class="line">        Render the list of video thumbnails.</div><div class="line"></div><div class="line">    method reactOnUserInput() is</div><div class="line">        renderVideoPage()</div><div class="line">        renderListPanel()</div><div class="line"></div><div class="line">// Application can configure proxies on the fly.</div><div class="line">class Application is</div><div class="line">    method init() is</div><div class="line">        youtubeService = new ThirdPartyYoutubeClass()</div><div class="line">        youtubeProxy = new CachedYoutubeClass(youtubeService)</div><div class="line">        manager = new YoutubeManager(youtubeProxy)</div><div class="line">        manager.reactOnUserInput()</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>懒初始化（虚拟代理）。当你有一个需要从文件系统，网络或者数据库加载数据的重量级对象时。</p>
+<p>  不是在应用启动时加载数据，而是将对象的初始化延迟到需要它的时间。</p>
+</li>
+<li><p>访问控制（保护代理）。当一个程序有不同类型的用户并且你想阻止未授权用户对保护对象的访问。比如，当对象是操作系统的关键部分，并且程序（包括恶意的）是他们的客户端。</p>
+<p>  代理会在每次请求时检查客户端的证书，只会让拥有正确访问权限请求通过。</p>
+</li>
+<li><p>本地执行一个远程服务（远程代理）。当一个真实服务对象在远程服务器上时。</p>
+<p>  在这种情况下，代理会把客户端的请求通过网络传递到远程服务，处理所有网络传输细节（译者注：Dubbo等RPC框架）。</p>
+</li>
+<li><p>缓存对象（智能引用）。当你需要混存客户端的请求并且管理它们的生命周期时（当结果比较重时）时。</p>
+<p>  Proxy能够统计引用服务对象或者缓存结果的数量。当所有的引用被释放，代理就可以销毁它追踪的对象（比如，终止数据库链接）。</p>
+<p>  Proxy还可以追踪客户端是否改变了服务对象。它可以重用未改变的对象并且保存系统资源。</p>
+</li>
+<li><p>请求日志（日志代理）。当你需要保留一个服务对象的请求历史。</p>
+<p>  Proxy可以在传递给服务对象之前记录下每次请求。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>从一个服务类抽象出代理和服务对象的通用接口。你可能需要创建一个服务类的子类作为被代理类，因为服务类可能是闭合的。</p>
+</li>
+<li><p>创建一个代理类。你应该用一个字段来持有服务对象的强引用。大多情况下，代理类自己创建它自己需要的服务对象。少数情况下，客户端通过构造代理类的构造方法把服务传递给代理。</p>
+</li>
+<li><p>根据目的来实现代理方法。大多情况下，在做一些事情后，代理类应该把工作委托给服务对象。</p>
+</li>
+<li><p>想想可以引入工厂对象来决定客户端需要什么样的对象，代理或真正的服务。另一方面，这个逻辑也可以在一个代理类中的一个创建方法中。</p>
+</li>
+<li><p>考虑添加懒初始化服务对象。这对比较重的对象很有用处。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>客户端无感知情况下控制对对象的访问。</p>
+</li>
+<li><p>可以在服务对象没有准备好时开始工作。</p>
+</li>
+<li><p>管理服务对象的生命周期，即使客户端并不关心。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>延迟响应。</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>Adapter提供不同的接口达到目的，而Proxy提供相同的接口。Decorator提供增强的接口。</p>
+</li>
+<li><p>Facade和Proxy很像，它们给复杂的实体提供缓冲并且初始化它。不像Facade，Proxy模式和服务对象遵循一样的接口，他们是通用的。</p>
+</li>
+<li><p>Decorator和Proxy结构相似，但目的不同。两者均采用组合的方式来把工作委托给其他对象。然而，Proxy自己管理服务对象的生命周期，而Decorator由客户端管理。</p>
+</li>
+</ul>
+<h3 id="在Java中的使用"><a href="#在Java中的使用" class="headerlink" title="在Java中的使用"></a>在Java中的使用</h3><p>用例：虽然代理模式在大多数Java程序中不是常客，但在某些特殊情况下，它是非常方便的。当你想在一些现有的类的对象中添加一些额外的行为而不改变客户端代码时，它是不可取代的。</p>
+<p>在标准Java库中有一些例子：</p>
+<ul>
+<li><p>java.lang.reflect.Proxy</p>
+</li>
+<li><p>java.rmi.*</p>
+</li>
+<li><p>javax.ejb.EJB <a href="http://stackoverflow.com/questions/25514361/when-using-ejb-does-each-managed-bean-get-its-own-ejb-instance" target="_blank" rel="external">(注释)</a></p>
+</li>
+<li><p>javax.inject.Inject <a href="http://stackoverflow.com/questions/29651008/field-getobj-returns-all-nulls-on-injected-cdi-managed-beans-while-manually-i/29672591#29672591" target="_blank" rel="external">(注释)</a></p>
+</li>
+<li><p>javax.persistence.PersistenceContext</p>
+</li>
+</ul>
+<p>鉴定：代理将真正的工作全部委托给其他对象。每个代理方法应该最终引用一个服务对象，除非代理是服务的一个子类。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/proxy" target="_blank" rel="external">https://refactoring.guru/design-patterns/proxy</a></p>
 
       
     </div>
@@ -440,9 +520,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/源码/" rel="tag"># 源码</a>
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
           
-            <a href="/tags/test4j/" rel="tag"># test4j</a>
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          
+            <a href="/tags/Proxy/" rel="tag"># Proxy</a>
           
         </div>
       
@@ -455,8 +539,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/29/Spring源码-AOP代理流程/" rel="next" title="Spring源码 AOP代理流程">
-                <i class="fa fa-chevron-left"></i> Spring源码 AOP代理流程
+              <a href="/2017/10/21/设计模式-结构模式之Facade/" rel="next" title="译-设计模式-结构模式之Facade">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Facade
               </a>
             
           </div>
@@ -464,10 +548,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/14/JDK源码-AQS/" rel="prev" title="JDK源码 AQS">
-                JDK源码 AQS <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -607,7 +687,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#记一次test4j导致CPU飙高的事故"><span class="nav-number">1.</span> <span class="nav-text">记一次test4j导致CPU飙高的事故</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#支票"><span class="nav-number">4.1.</span> <span class="nav-text">支票</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Java中的使用"><span class="nav-number">12.</span> <span class="nav-text">在Java中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
