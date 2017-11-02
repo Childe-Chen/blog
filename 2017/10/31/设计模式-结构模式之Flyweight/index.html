@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Facade," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Flyweight," />
 
 
 
@@ -87,24 +87,29 @@
 
 
 
-<meta name="description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
-问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
-最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
+<meta name="description" content="目的Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。
+问题在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。
+过了一会，你最后一次提交代码并且把游">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Facade">
-<meta property="og:url" content="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/index.html">
+<meta property="og:title" content="译-设计模式-结构模式之Flyweight">
+<meta property="og:url" content="http://yoursite.com/2017/10/31/设计模式-结构模式之Flyweight/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
-问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
-最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
-<meta property="og:image" content="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-27T09:47:36.000Z">
+<meta property="og:description" content="目的Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。
+问题在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。
+过了一会，你最后一次提交代码并且把游">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110552606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110636035?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110701654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110730283?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171102110759904?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-02T03:11:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Facade">
-<meta name="twitter:description" content="目的Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。
-问题想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。
-最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-结构模式之Flyweight">
+<meta name="twitter:description" content="目的Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。
+问题在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。
+过了一会，你最后一次提交代码并且把游">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -132,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/31/设计模式-结构模式之Flyweight/"/>
 
 
 
 
 
-  <title> 译-设计模式-结构模式之Facade | 凡隐的博客 </title>
+  <title> 译-设计模式-结构模式之Flyweight | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +306,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/设计模式-结构模式之Facade/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/31/设计模式-结构模式之Flyweight/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -322,7 +327,7 @@
             
             
               
-                译-设计模式-结构模式之Facade
+                译-设计模式-结构模式之Flyweight
               
             
           </h2>
@@ -337,8 +342,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T13:45:10+08:00">
-                2017-10-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-31T19:31:56+08:00">
+                2017-10-31
               </time>
             
 
@@ -377,7 +382,7 @@
 
           
           
-             <span id="/2017/10/21/设计模式-结构模式之Facade/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Facade">
+             <span id="/2017/10/31/设计模式-结构模式之Flyweight/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Flyweight">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,70 +411,98 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Facade是结构模式的一种，它让你可以为一个复杂的系统，类库或者框架提供一个简单的接口。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>想象一下，代码必须和一大堆复杂的框架或者类库协作。你必须手动实力话这些对象，跟踪依赖，正确的顺序关系等等。</p>
-<p>最后，你的业务逻辑类会和第三方类库的实现紧密耦合。这些代码难以理解和维护。<br><a id="more"></a></p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>门面是一个类，它为一个包含很多类的复杂子系统提供一个简单的接口。相对直接调用子系统而言，门面提供有限的功能。它仅提供客户端关心的那些特性。</p>
-<p>当你在使用一个拥有很多模块的的复杂类库，但是你只用到其中一部分功能时，使用门面模式就显得很便利。</p>
-<p>比如，一个上传短视频到Youtube伤的app使用了一个专业的视频转换类库。但是它真正需要的只是一个拥有encode(filename,format)方法的类。创建这种类之后，你变有了第一个门面。</p>
-<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><h4 id="电话下单"><a href="#电话下单" class="headerlink" title="电话下单"></a>电话下单</h4><p>当你用电话向一个商店下单时，话务员就是所有服务和部门的门面。他或者她提供了下单，支付，配送的简单接口。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171025204008005?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。</p>
+<p>过了一会，你最后一次提交代码并且把游戏发给了你的朋友，希望他能够立马玩起来。尽管游戏在你电脑上完美运行，但是你的朋友却不能玩起来。这个游戏总是在他的电脑上运行一会儿就崩溃。</p>
+<p>在你看了日之后，发现是因为RAM不足导致了游戏崩溃。这个看起来和你的粒子系统有关。</p>
+<p>每一个例子由一个包含和丰富数据的对象表示。在某一刻，当团战达到高潮，可用的RAM无法装入新创建的粒子，此时程序就崩溃了。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="crash"></p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>仔细检查Particle类，你会发现color和sprite数据是对象中最耗内存的字段。更糟糕的是，这些字段存储的是所有粒子都相同的数据。比如，所有的子弹都是相同的颜色和质地。</p>
+<p><img src="http://img.blog.csdn.net/20171102110552606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution"></p>
+<p>粒子的其他数据，像坐标，移动向量和速度是所有粒子唯一的。另外，这些字段的数据是实时变化的。对color和sprite这类保留常量而言，它们看起来就像粒子的可变上下文。</p>
+<p>这些context-specific对象的变量数据通常被叫做“外在状态”，因为他们早对象外部变化。对象余下的状态，就是这些不可变的数据，被叫做“内在状态”。</p>
+<p>Flyweight模式建议你不要再对象内部存储外部状态，而是通过调用方法时当作参数传递进来。通过这种方式你就可以把不可变状态留在对象内，这样你就可以在不同的上下文环境中重用它。更重要的，你将会需要很少这种对象，因为仅仅出现在固有状态不同时，而这种状态并不多。</p>
+<p>就我们的游戏而言，只需要三个粒子对象就能满足（子弹，导弹和碎片）。现在你应该猜到了，这种分离对象的方式就叫做“flyweight”（享元，这个术语来自拳击，表示选手小于111磅）。</p>
+<p><img src="http://img.blog.csdn.net/20171102110636035?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="flyweight"></p>
+<h4 id="外部状态存储"><a href="#外部状态存储" class="headerlink" title="外部状态存储"></a>外部状态存储</h4><p>但是我们在那里做外部状态的移动？用一些类来持有他，对吗？大多情况下，把这些数据移动到容器中是很便利的，该容器用于在应用模式之前聚合对象。</p>
+<p>在我们的例子中，它是主要游戏对象。你可以创建额外的数组字段来存储坐标，向量和速度。另外，你也需要其他的数组来存储表示一个粒子的指定享元对象的引用。</p>
+<p>等一下！难道我们不需要在一开始就需要有相同数量的上下问对象？从技术上讲，需要。但事实是，这些对象要比之前小太多了。最耗内存的字段现在仅存活在几个享元对象中。上千个上下文对象可以连接并且重用单个享元对象，而不是复制状态到内部各自存储。</p>
+<p><img src="http://img.blog.csdn.net/20171102110701654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="extrinsic"></p>
+<h4 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h4><p>因为相同的享元对象可以被用在不同的上下文中，你必须确保它们的状态不能被改变。享元应该智能通过构造参数来接收内部状态。它们不应该暴露set方法或者称为公开字段。</p>
+<h4 id="享元工厂"><a href="#享元工厂" class="headerlink" title="享元工厂"></a>享元工厂</h4><p>你可以创建一个工厂方法来管理已经存在享元对象的池子。这个方法接收客户端期望的内部状态，并能够在已经存在的享元对象中匹配这个状态，如果找到就返回它。如果没有找到，它将创建一个新享元并且把它加入池子。</p>
+<p>有几个地方可以放置该方法。通常的做法是放在享元容器中。另外，一个新工厂类应该被创建。你甚至可以把工厂方法做成静态的，并将其放在主要的Flyweight类中。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171102110730283?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure">【structure.png】</p>
 <ol>
-<li><p>Facade（门面）为访问子系统的特定功能提供方便。它知道怎样引导客户的请求和怎样为所有moving parts做准备。</p>
+<li><p>不要忘记，Flyweight模式是一种优化，只有在使用大量相似对象的程序中才有意义。模式把对象的状态分成两个部分：享元和上下文。</p>
 </li>
-<li><p>Additional facades用来隔离功能和阻止源门面变成另外一个复杂结构。Additional facades也可以被客户端或者其他门面使用。</p>
+<li><p>Flyweight保存能够在多个对象之间共享的原始对象状态的一部分。相同的享元对象可以被用在许多不同的上下文中。被保存在享元中的状态叫做“内部状态”。原始对象状态的另一部分通过参数传递给flyweight的称为“外在状态”。</p>
 </li>
-<li><p>Complex subsystem（复杂的子系统）包含很多类。为了让他们做一些有意义的事情，你必须知道它的实现细节，初始化顺序等很多事情。<br> 注意：子系统并不关心门面的存在，它直接和其他模块协作。</p>
+<li><p>Context包含外部状态，就是对所有原对象都唯一的那些。当一个上下文和一个享元对象结合起来，它就表示来一个原对象的所有状态。</p>
 </li>
-<li><p>Client使用门面代替直接调用子系统对象。</p>
+<li><p>大多情况下，原对象的行为保留在Flyweight类中。在这种情况下，不管是谁调用一个享元方法，必须把外部状态通过方法参数传递进来。另一方面，这个行为也可以放在Context类中，把连接的享元仅当作数据对象。</p>
+</li>
+<li><p>Client计算或者存储享元的外部状态。从一个客户端角度看，一个享元就是一个模版，可以在运行时通过调用带有上下文数据参数的方法进行配置。</p>
+</li>
+<li><p>Flyweight Factory管理已经存在享元的池子。客户端不直接创建享元。它们调用享元工厂的方法并且告诉这个创建方法它们期望得到享元的内部状态。工厂先去享元池中查找，如果这种享元已经存在就直返回，否则，就创建一个新的。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，门面简化了和一个复杂视频转换框架的协作。</p>
-<p>门面是一个单独的类，它提供一个公开的方法来处理框架复杂的配置并返回一个正确的格式。</p>
-<p>通过这种方式，门面模式保证客户端代码简单、干净、可靠。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">// Some classes of a complex 3rd-party video conversion framework. We don't</div><div class="line">// control that code, therefore can't simplify it.</div><div class="line"></div><div class="line">class VideoFile</div><div class="line">// ...</div><div class="line"></div><div class="line">class OggCompressionCodec</div><div class="line">// ...</div><div class="line"></div><div class="line">class MPEG4CompressionCodec</div><div class="line">// ...</div><div class="line"></div><div class="line">class CodecFactory</div><div class="line">// ...</div><div class="line"></div><div class="line">class BitrateReader</div><div class="line">// ...</div><div class="line"></div><div class="line">class AudioMixer</div><div class="line">// ...</div><div class="line"></div><div class="line"></div><div class="line">// To defeat the complexity, we create a Facade class, which hides all of the</div><div class="line">// framework's complexity behind a simple interface. It is a trade-off between</div><div class="line">// functionality and simplicity.</div><div class="line">class VideoConvertor is</div><div class="line">    method convertVideo(filename, format):File is</div><div class="line">        file = new VideoFile(filename)</div><div class="line">        sourceCodec = new CodecFactory.extract(file)</div><div class="line">        if (format == "mp4")</div><div class="line">          distinationCodec = new MPEG4CompressionCodec()</div><div class="line">        else</div><div class="line">          distinationCodec = new OggCompressionCodec()</div><div class="line">        buffer = BitrateReader.read(filename, sourceCodec);</div><div class="line">        result = BitrateReader.convert(buffer, distinationCodec);</div><div class="line">        result = (new AudioMixer()).fix(result);</div><div class="line">        return new File(result)</div><div class="line"></div><div class="line">// Application classes don't depend on a billion classes provided by the complex</div><div class="line">// framework. Also, if you happen to decide to switch framework, you will only</div><div class="line">// need to rewrite the facade class.</div><div class="line">class Application is</div><div class="line">    method main() is</div><div class="line">        convertor = new VideoConvertor();</div><div class="line">        mp4video = convertor.convertVideo("youtubevideo.ogg", "mp4");</div><div class="line">        mp4video.save();</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，享元模式帮助在画布上渲染一百万棵树。模式从一个主Tree类中抽离出重复的内部状态并把它放到一个享元类TreeType中。</p>
+<p><img src="http://img.blog.csdn.net/20171102110759904?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode"></p>
+<p>现在不是将相同数据存储在多个对象中，而是把它们保留在几个享元对象中并且被响应的Tree对象连接（译者注：引用）。客户端代码通过享元工厂和不同的书协作，这个工厂封装了在新树对象中重用现有树类型的逻辑。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">// The Flyweight class contains only a portion of state that describes a tree.</div><div class="line">// These field store values that hardly unique for each particular tree. You</div><div class="line">// won't find here tree coordinates, however textures and colors shared between</div><div class="line">// multiple are here. And since this data is usually BIG, you'd waste a lot of</div><div class="line">// memory by keeping it in each tree object. That's why we extract texture,</div><div class="line">// colors and other data to a separate flyweight class that can be referenced</div><div class="line">// from all those similar trees.</div><div class="line">class TreeType is</div><div class="line">    field name</div><div class="line">    field color</div><div class="line">    field texture</div><div class="line">    constructor Tree(name, color, texture) &#123; ... &#125;</div><div class="line">    method draw(canvas, x, y) is</div><div class="line">        Create a bitmap from type, color and texture.</div><div class="line">        Draw bitmap on canvas at X and Y.</div><div class="line"></div><div class="line">// Flyweight factory decides whether to re-use existing flyweight or create a</div><div class="line">// new object.</div><div class="line">class TreeFactory is</div><div class="line">    static field treeTypes: collection of tree types</div><div class="line">    static method getTreeType(name, color, texture) is</div><div class="line">        type = treeTypes.find(name, color, texture)</div><div class="line">        if (type == null)</div><div class="line">            type = new TreeType(name, color, texture)</div><div class="line">            treeTypes.add(type)</div><div class="line">        return type</div><div class="line"></div><div class="line">// Context object contains extrinsic part of tree state. Application can create</div><div class="line">// billions of these since they are pretty thin: just two integer coordinates</div><div class="line">// and one reference.</div><div class="line">class Tree is</div><div class="line">    field x,y</div><div class="line">    field type: TreeType</div><div class="line">    constructor Tree(x, y, type) &#123; ... &#125;</div><div class="line">    method draw(canvas) is</div><div class="line">        type.draw(canvas, this.x, this.y)</div><div class="line"></div><div class="line">// Tree and Forest classes are Flyweight's clients. You might merge them</div><div class="line">// together if you don't plan to develop a Tree class any further.</div><div class="line">class Forest is</div><div class="line">    field trees: collection of Trees</div><div class="line"></div><div class="line">    method plantTree(x, y, name, color, texture) is</div><div class="line">        type = TreeFactory.getTreeType(name, color, texture)</div><div class="line">        tree = new Tree(x, y, type);</div><div class="line">        trees.add(tree)</div><div class="line"></div><div class="line">    method draw(canvas) is</div><div class="line">        foreach tree in trees</div><div class="line">            tree.draw(canvas)</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你需要一个简单但是功能有限的复杂子系统接口时<br>  通常，子系统随着时间的推移变得越来越复杂。即使使用了设计模式也难避免创建更多的类。子系统可能变的更加灵活并且在不同的环境中复用性更高，但是它的样板代码数量也会随之增长。门面模式尝试通过提供访问子系统的一部分来适应更多客户端的需要。</p>
-</li>
-<li><p>当你想把一个子系统构建成层<br>  创建门面来定义每个层子系统的连接点。如果多子系统之间相互依赖，你可以通过要求子系统只能通过门面交互来限制耦合。</p>
+<li><p>当你在给定的RAM中难以装下必须要支持数量级的对象时。</p>
+<p>  应用Flyweight模式的好处在很大程度上取决于使用方式和位置。它常用在：</p>
+<ul>
+<li>一个需要大量对象的应用；</li>
+<li>这些对象占用系统全部RAM；</li>
+<li>对象包含重复对象，并且它们可以被抽离并且共享。</li>
+</ul>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>检查是否可以使用简化的接口和一个复杂的子系统交互。<br> 如果接口使客户端没有子系统的依赖，你就在正确的轨道上。</p>
+<li><p>将一个类的字段划分享元，从以下两方面入手：</p>
+<ul>
+<li>内部状态：字段包含不变的数据，许多对象的该字段值重复；</li>
+<li>外部状态：字段包含上下文数据，所有对象的这个字段值都不一样。</li>
+</ul>
 </li>
-<li><p>创建一个门面类并在接口中描述它。它必须能够引导客户端调用适当的子系统对象。门面应该关心子系统正确的初始化。通常，这些代码在门面的构造方法中，懒实例化往往比较有用。</p>
+<li><p>把那些代表内部状态的字段保留在这个类中，并确保它们的不便性。它们应仅仅能通构造方法接收数据。</p>
 </li>
-<li><p>如果客户端仅和门面协作，你将得到巨大的收益。在这种情况下，客户端不需要关心子系统代码的变化。比如，当一个库的代码更新世，你只需要修改门面。</p>
+<li><p>将外在状态的字段转化为引用它们的方法的参数。</p>
 </li>
-<li><p>如果这个门面变的太大，请考虑抽离出一个新的门面。</p>
+<li><p>创建一个享元工厂类。它应该在创建新享元之间检查该享元是否已经存在。客户端必须从享元工厂中请求享元。客户端需要在获取享元时需要像工厂方法描述它们期望的享元。</p>
+</li>
+<li><p>客户端必须存储或计算外部状态（上下文）的值以便能够调用flyweight对象的方法。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li><p>分离客户端和子系统组件。</p>
-</li>
-<li><p>客户端代码和子系统最小耦合。</p>
-</li>
+<li>节省RAM，因此允许一个程序支持更多对象。</li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>门面可能造成<a href="https://refactoring.guru/antipatterns/god-object" target="_blank" rel="external">god object</a>，它和所有应用类耦合。</li>
+<li><p>在查找或者计算上下文时浪费CPU。</p>
+</li>
+<li><p>创建类更多的额外类增加代码复杂度。</p>
+</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>Facade重新定义了一个接口，而Adapter重用了一个老接口。记住，Adapter使两个已存在接口协作，反对完全重新定义一个接口。</p>
+<li><p>Flyweight常常和Composite结合使用来实现叶子结点共享和节约RAM。</p>
 </li>
-<li><p>Abstract Factory可以用来替代Facade来隐藏平台特定的类。</p>
+<li><p>Flyweight展示如何让创造更多小对象，而Facade告诉我们如何让用一个单独对象来代表一个完整子系统。</p>
 </li>
-<li><p>Flyweight展示如何制造更多小对象，而Facade展示如何使用一个对象代表整个子系统。</p>
-</li>
-<li><p>Meditor在抽象已存在类的功能上和Facade很像。Mediator抽象/集中两个随意交互的协作对象。它常规的做法是“add values”，并且协作对象间相互知道被引用。相比之下，Facade为子系统定义了一个简单的接口，它并不添加新功能，并且子系统类不知道它的存在。</p>
-</li>
-<li><p>Facade可以被改造成Singleton，因为大多情况下单例门面对象就够了。</p>
-</li>
-<li><p>Facade在缓冲一个复杂实体和初始化这点上和Proxy很像。不像Facade，Proxy模式和他服务的对象拥有相同的接口，使得它们是通用的。</p>
+<li><p>当每件事情都减少成一个享元对象时，Flyweight就和Singleton很像了。但是请记住，它们两者之间有两个根本区别：</p>
+<ol>
+<li>单例对象是可变的。享元对象是不可变的。</li>
+<li>Singleton的实力职能有一个，而Flyweight类可以有多个不同内部状态的实例。</li>
+</ol>
 </li>
 </ul>
-<h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：在用Java写的app中，门面模式很常见。它特别用来处理和复杂类库和API协作的情景。</p>
-<p>鉴定：Facade可以在具有简单接口的类中被识别，但是它将大部分工作委托给其他类。通常，门面管理它们使用对象的生命周期。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/facade" target="_blank" rel="external">https://refactoring.guru/design-patterns/facade</a></p>
+<h3 id="Java中模式的应用"><a href="#Java中模式的应用" class="headerlink" title="Java中模式的应用"></a>Java中模式的应用</h3><p>用例：Flyweight目的单一：最小化内存占用。如果您的程序不会遇到RAM不足，那么你可以暂时忽略此模式。</p>
+<p>Java核心库中Flyweight的例子：</p>
+<ul>
+<li>java.lang.Integer#valueOf(int) (also Boolean, Byte, Character, Short,  Long and BigDecimal)</li>
+</ul>
+<p>鉴定：Flyweight可以通过创建方法来识别，该方法返回缓存的对象，而不是创建新的对象。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/flyweight" target="_blank" rel="external">https://refactoring.guru/design-patterns/flyweight</a></p>
 
       
     </div>
@@ -499,7 +532,7 @@
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Facade/" rel="tag"># Facade</a>
+            <a href="/tags/Flyweight/" rel="tag"># Flyweight</a>
           
         </div>
       
@@ -512,8 +545,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/20/设计模式-结构模式之Composite/" rel="next" title="设计模式-结构模式之Composite">
-                <i class="fa fa-chevron-left"></i> 设计模式-结构模式之Composite
+              <a href="/2017/10/26/设计模式-结构模式之Proxy/" rel="next" title="译-设计模式-结构模式之Proxy">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Proxy
               </a>
             
           </div>
@@ -521,10 +554,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/26/设计模式-结构模式之Proxy/" rel="prev" title="译-设计模式-结构模式之Proxy">
-                译-设计模式-结构模式之Proxy <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -664,7 +693,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#电话下单"><span class="nav-number">4.1.</span> <span class="nav-text">电话下单</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java中模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#外部状态存储"><span class="nav-number">3.1.</span> <span class="nav-text">外部状态存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不可变性"><span class="nav-number">3.2.</span> <span class="nav-text">不可变性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#享元工厂"><span class="nav-number">3.3.</span> <span class="nav-text">享元工厂</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的应用"><span class="nav-number">11.</span> <span class="nav-text">Java中模式的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
