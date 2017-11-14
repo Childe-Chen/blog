@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Adapter," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Factory Method," />
 
 
 
@@ -87,24 +87,29 @@
 
 
 
-<meta name="description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
+<meta name="description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
+问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
+不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Decorator">
-<meta property="og:url" content="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/index.html">
+<meta property="og:title" content="译-设计模式-创建模式之Factory Method">
+<meta property="og:url" content="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
-<meta property="og:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-26T11:13:52.000Z">
+<meta property="og:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
+问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
+不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-14T08:05:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Decorator">
-<meta name="twitter:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-创建模式之Factory Method">
+<meta name="twitter:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
+问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
+不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -132,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/"/>
 
 
 
 
 
-  <title> 译-设计模式-结构模式之Decorator | 凡隐的博客 </title>
+  <title> 译-设计模式-创建模式之Factory Method | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +306,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -322,7 +327,7 @@
             
             
               
-                译-设计模式-结构模式之Decorator
+                译-设计模式-创建模式之Factory Method
               
             
           </h2>
@@ -337,8 +342,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-20T16:24:57+08:00">
-                2017-09-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-13T17:39:28+08:00">
+                2017-11-13
               </time>
             
 
@@ -377,7 +382,7 @@
 
           
           
-             <span id="/2017/09/20/设计模式-结构模式之Decorator/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Decorator">
+             <span id="/2017/11/13/设计模式-创建模式之FactoryMethod/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Factory Method">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,102 +411,126 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。</p>
-<p>当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。<br><a id="more"></a></p>
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有一样的接口，所以客户端代码不会注意到你用封装者替换了源对象。</p>
-<p>所有的封装者这都持有一个源对象实例的强引用。大多数包装器使用传入其构造函数的对象初始化该字段。</p>
-<p>所以，该如何动态改变他的行为呢？正如我提到的，封装者何和目标对象拥有一样的接口。当你调用装饰者的方法时，他执行被封装对象中同样方法并且在返回的结果中添加一些东西。它也可以在原始方法之前调用，但这取决于业务逻辑。</p>
-<p>这里是有趣的一部分：你可以使用装饰者封装一个对象，然后再使用另外一个装饰器封装这个包装结果，等等。最终的行为结果是所有装饰器和源对象组合得到的。</p>
-<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><p>穿衣服就是使用装饰者的例子。当你冷的时候，你用毛衣包裹自己。如果你还是冷，你可以在外边套一个夹克。如果下雨了，你还可以再传一件雨衣。</p>
-<p>所有的服装“扩展”自你基本的行为，但不是你的一部分。因此，在你不需要他们的时候，可以轻松的移除它们。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Structure"></p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。</p>
+<p>不久，你的应用很受欢迎，你收到了许多需求，包括水运。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="problem.png"></p>
+<p>好消息，不是吗？但是你的代码怎么样呢？看起来，你的代码有许多地方要和Truck类耦合。添加Ship类需要改变整个代码库。此外，如果你决定添加另外一个类型的配送方式，你可能需要再次修改整个代码库。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Factory Method模式建议通过调用一个特别的“工厂”方法来代替直接创建对象（使用new操作）。构造方法应该移到那个方法中调用。工厂方法返回的对象被称为“产品”。</p>
+<p>乍一看，这么做似乎没有意义。但是，现在你可以在字类中重写工厂方法，并且改变要创建对象的类。我们来看它是怎么工作的：</p>
+<p><img src="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution.png"></p>
+<p>当然，这种方式有个限制：所有的产品必须遵循一个通用接口（Transport）。基类中的工厂方法需要返回这个通用接口。</p>
+<p><img src="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution1.png"></p>
+<p>字类返回不同的具体产品，它们都有一样的基类或者接口（比如：Truck和Ship都实现了Transport接口）。</p>
+<p><img src="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution3.png"></p>
+<p>工厂方法的客户端不需要关心它得到产品的类型。它们通过产品接口和所有产品协作。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure.png"></p>
 <ol>
-<li><p>Component为被封装者声明了一个通用的接口。</p>
+<li><p>Product为creator和他的字类能够生产的对象定义接口。</p>
 </li>
-<li><p>Concrete Component是一个包涵基本行为并可以被装饰器修改的类。</p>
+<li><p>Concrete Product是Product的不同实现。Concrete Creator将会创建并返回这饿类的实例。</p>
 </li>
-<li><p>Base Decorator包涵一个被封装对象的强引用域。这个域应该被声明为Component类型，以便支持Concrete Components 和 Decorators.Base Decorator将所有操作委托给被封装对象。</p>
+<li><p>Creator声明了一个返回Product类型的工厂方法。在第一个例子中，所有的Concrete Creator必须实现它们的工厂方法。</p>
+<p> 尽管这个名字在现实世界中，生产产品并不是Concrete Creator的主要责任。通常，他有一些处理产品的核心逻辑。</p>
+<p> 打个比方：大的软件开发公司有对开发者进行培训的部门。但是公司的主要功能还是写代码。</p>
 </li>
-<li><p>Concrete Decorators包涵可以被动态添加的额外行为。装饰器可以在调用被封装对象方法前后执行自己的行为。</p>
+<li><p>Concrete Creator实现或者重写基本的工厂方法，创建并返回一个Concrete Product。</p>
+<p> 注意：工厂方法并不总是创建一个新实例。它也可以从缓存中返回一个已经存在的对象。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，装饰器通过加密保护金融数据，对已经存在的代码来讲是透明的。应用对金融数据做了加密和压缩装饰，当我们从硬盘读取数据时返回的是普通的数据，但是当我们写会到磁盘时数据被加密和压缩。</p>
-<p>装饰者和金融类都有一个相同的接口，使得它们对客户端来讲是通用的。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">// Common interface for all components.</div><div class="line">interface DataSource is</div><div class="line">    method writeData(data)</div><div class="line">    method readData():data</div><div class="line"></div><div class="line">// One of the concrete components can act as a base layer.</div><div class="line">class FileDataSource implements DataSource is</div><div class="line">    constructor FileDataSource(filename) &#123; ... &#125;</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        Write data to file.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Read data from file.</div><div class="line"></div><div class="line">// All other concrete components may act as wrappers.</div><div class="line">class DataSourceDecorator implements DataSource is</div><div class="line">    protected field wrappee: DataSource</div><div class="line"></div><div class="line">    constructor DataEncyptionDecorator(source: DataSource) is</div><div class="line">        wrappee = source</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        wrappee.writeData(data)</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        return wrappee.readData()</div><div class="line"></div><div class="line">// Concrete Decorators extend the functionality of a component they wrap.</div><div class="line">class EncyptionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Encrypt passed data.</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Decrypt and return that data.</div><div class="line"></div><div class="line">// You can wrap objects in several layers of decorators.</div><div class="line">class CompressionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Compress passed data</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Uncompress and return that data.</div><div class="line"></div><div class="line"></div><div class="line">// Option 1. A simple example of decorator assembly.</div><div class="line">class Application is</div><div class="line">    method dumbUsageExample() is</div><div class="line">        source = new FileDataSource('somefile.dat')</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // a file with plain data</div><div class="line"></div><div class="line">        source = new CompressionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed file</div><div class="line"></div><div class="line">        source = new EncyptionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed and encrypted file</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">// Option 2. Client code, which uses an external data source. SalaryManager</div><div class="line">// neither knows not cares about data storage specifics. It receives already</div><div class="line">// configured data source.</div><div class="line">class SalaryManager is</div><div class="line">    field source: DataSource</div><div class="line"></div><div class="line">    constructor SalaryManager(source: DataSource) &#123; ... &#125;</div><div class="line"></div><div class="line">    method load() is</div><div class="line">        return source.readData()</div><div class="line"></div><div class="line">    method save() is</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">    // ...Other useful methods...</div><div class="line"></div><div class="line"></div><div class="line">// Application can assemble objects with a different set of functionality using</div><div class="line">// the same decorators at run time, depending on the configuration</div><div class="line">// or environment.</div><div class="line">class ApplicationConfigurator is</div><div class="line">    method configurationExample() is</div><div class="line">        source = new FileDataSource("salary.dat");</div><div class="line">        if (enabledEncryption)</div><div class="line">            source = new EncyptionDecorator(source)</div><div class="line">        if (enabledCompression)</div><div class="line">            source = new CompressionDecorator(source)</div><div class="line"></div><div class="line">        logger = new SalaryLogger(source)</div><div class="line">        salary = logger.load();</div><div class="line">    // ...Rest of an application code.</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子用来展示工厂方法可以被用来创建跨平台的UI元素。工厂放被声明在对话框UI的基类中。它返回抽象的按钮。对话框的积累重写工厂方法并返回特定的按钮。</p>
+<p><img src="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode.png"></p>
+<p>结果是使用基本对话框的代码组合了一个UI窗口。对话框通过通用接口和那妞协作。所以，不管工厂方法返回什么类型的按钮，对话框保留基本的功能。</p>
+<p>因此，Factory Method使得类的主要代码独立于所使用的具体产品类。Factory Method让字类担负起选择生产产品所需要的具体类的责任。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">// The Factory Method pattern is applicable only when there is a</div><div class="line">// products hierarchy.</div><div class="line">interface Button is</div><div class="line">    method render()</div><div class="line">    method onClick(f)</div><div class="line"></div><div class="line">class WindowsButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Create and render a Windows looking button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a native OS click event.</div><div class="line"></div><div class="line">class HTMLButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Return an HTML representation of a button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a web browser click event.</div><div class="line"></div><div class="line">// Base factory class. Note that the "factory" is merely a role for the class.</div><div class="line">// It should have some core business logic which needs different products to</div><div class="line">// be created.</div><div class="line">class Dialog is</div><div class="line">    method renderWindow() is</div><div class="line">        Render other window controls.</div><div class="line"></div><div class="line">        Button okButton = createButton();</div><div class="line">        okButton.onClick(closeDialog);</div><div class="line">        okButton.render();</div><div class="line"></div><div class="line">    // Therefore we extract all product creation code to a special</div><div class="line">    // factory method.</div><div class="line">    abstract method createButton()</div><div class="line"></div><div class="line">// Concrete factories extend that method to produce different kinds of products.</div><div class="line">class WindowsDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new WindowsButton()</div><div class="line"></div><div class="line">class WebDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new HTMLButton()</div><div class="line"></div><div class="line">class ClientApplication is</div><div class="line">    field dialog: Dialog</div><div class="line"></div><div class="line">    // Application picks a factory type depending on configuration</div><div class="line">    // or environment.</div><div class="line">    method configure() is</div><div class="line">        if (we are in windows environment) then</div><div class="line">            dialog = new WindowsDialog()</div><div class="line"></div><div class="line">        if (we are in web environment) then</div><div class="line">            dialog = new WebDialog()</div><div class="line"></div><div class="line">    // The client code should work with factories and products through their</div><div class="line">    // abstract interfaces. This way it will remain functional even if you add</div><div class="line">    // new product types to the program.</div><div class="line">    method main() is</div><div class="line">        dialog.initialize()</div><div class="line">        dialog.render()</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你需要动态赋予某个对象行为并且不需要破坏这个对象的代码。<br>  装饰器模式允许给某个对象动态的赋予新的行为，而且对客户端代码是隐式的。对象可以同时封装多个wrapper（译者注：就像同时穿了背心、衬衣和西装），结果是所有封装的堆叠结果。</p>
+<li><p>当你的代码需要和不知道具体类型及一来对象协作时。</p>
+<p>  比如，从多数据源读写数据：文件系统，数据库或者网络。这些资源有着不同的类型，依赖和初始化代码。</p>
+<p>  工厂方法对其他代码隐藏了产品的实现细节。支持一个新的产品类型，你只需要创建一个新的字类并且重写工厂方法。</p>
 </li>
-<li><p>当不可能活着不合适通过继承来扩展对象的行为。<br>  许多编程语言都有<code>final</code>关键字来阻止未来对一个类的扩展。当处理这些代码，进行扩展的唯一选项就是适用装饰器模式。</p>
+<li><p>当你想要让用户扩展你的类库或者框架的内部组件时。</p>
+<p>  用户可以轻松的创建特定组件的字类。但是如何让框架识别这个字类并且替换标准的组件？用户必须重写每一个创建标准组件的方法，把它们改成创建自定义子类的对象。这样相当尴尬，不是吗？</p>
+<p>  最好的方法不仅仅是给用户提供扩展某个类，而是将生成组件的代码减少到单个创建方法中。换句话说，提供出一个工厂方法。</p>
+<p>  让我们看看它如何工作。假设你在用一个开源的UI框架写app，你的app必须使用圆边按钮，但是框架只提供了一个方形的。</p>
+<p>  你做的第一件事就是实现一个RoundButton类。但是现在你需要告诉UIFramework类用一个新的按钮类代替默认的那个。</p>
+<p>  为了实现这个，你创建了基础框架的一个子类UIWithRoundButtons，并且重写了createButton方法。这个方法会返回一个Button对象，除了你创建的新子类RoundButton对象。现在，在你的app中，你必须使用UIWithRoundButtons类替代UIFramework来初始化框架。</p>
+</li>
+<li><p>当你想要保存系统资源并且重用存在的对象，而不是重新建立一个时。</p>
+<p>  比如，当你需要处理像数据库连接这类大的或者资源紧张对象。</p>
+<p>  想象下要重用存在的对象需要做什么：</p>
+<ol>
+<li><p>首先，你需要创建一个池子来保存存在的对象。</p>
+</li>
+<li><p>当有人请求一个对象时，你需要在池子中找到一个闲置的对象。</p>
+</li>
+<li><p>然后把它返回给客户端代码。</p>
+</li>
+<li><p>仅仅在池子中没有闲置对象时，你才需要创建一个新的（并且把它放到池子中）。</p>
+<p>这些代码必须放在某个地方。最便利的地方是构造方法。这样子就可以在请求创建对象时去做那些检查。但是，从定义上讲构造方法必须返回新对象，所以它们不能返回存在的实例。</p>
+<p>另外，那些使用你对象的客户端代码也不能包含它。否则，客户端就知道太多你的类中的实现细节。因此，你需要一个独立的方法封装这个逻辑。那就是工厂方法。</p>
+</li>
+</ol>
 </li>
 </ul>
-<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>确保您的任务可以表示为一个主要组件和几个可选扩展。</p>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><pre><code>1. 为所有产品抽离出通用的接口。这个接口应该声明对每个产品都有意义的方法。
+
+2. 在创建类中添加一个空的工厂方法。他的签名应当返回产品的接口类型。
+
+3. 查看创建者的代码并且找到所有用到产品构造方法的引用。将它们逐一替换为对工厂方法的调用，并将产品创建代码提取到工厂方法。
+
+你肯呢个需要为工厂方法添加临时变量来控制要创建的产品。
+
+此时，工厂方法的代码看起来很挫。它有一个巨大的switch操作来获取要实例化产品的类。不过不用担心，我们马上修复他。
+
+4. 现在，在子类中重写工厂方法，并且把父类中对应的case语句挪到子类中。
+
+5. 基础创建类中的控制参数也可以用在子类中。
+
+比如，你可能有一个Mail作为基类的层级结构，里面有Air和Ground，还有产品类：Plane，Truck和Train。Air正好和Plane匹配，但是Ground可以同时和Truck还有Train匹配。你可以创建一个新的子类来处理这两种情况，但是还有一种处理方式。客户端代码向Ground的工厂方法传递一个参数来控制它想要的产品。
+
+6. 如果基本工厂方法在移动后变成空的了，你可以把它标志成抽象方法。
+</code></pre><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>遵循开闭原则。</p>
 </li>
-<li><p>创建Component（组件）接口，它需要描述该组件所有可被扩展的方法。</p>
+<li><p>避免产品和使用它们代码的耦合。</p>
 </li>
-<li><p>创建Concrete Component（具体组件）类并且实现业务逻辑。</p>
+<li><p>把创建代码都移动到一个地方，简化了代码。</p>
 </li>
-<li><p>创建Base Decorator（基础装饰）类。创建一个域来保存被封装对象的强引用。该域应该是Component类型，这样强引用就可以持有组件类和装饰器的强引用（译者注：即变量声明为接口类型，这样可以持有所有Component的所有子类）。</p>
+<li><p>简化添加新产品的编程。</p>
 </li>
-<li><p>确保所有子类实现了Component接口。</p>
-</li>
-<li><p>确保Base Decorator类的所有方法都将方法执行委托给了被包装对象。它将允许Concrete Decorators（具体装饰器）仅扩展一部分组件行为，并且不需要修改其他行为。</p>
-</li>
-<li><p>创建Concrete Decorators类，该类从Base Decorator扩展。</p>
-</li>
-<li><p>一个Concrete Decorator可以在调用被封装对象相同方法前后执行它自己的的行为（你可以仅仅只调用弗雷德方法，因为它将最终调用封装方法）。</p>
-</li>
-<li><p>Client代码必须负责配置包装层。Client应该通过Component的接口和其他类一起工作，使装饰器可以互换。</p>
-</li>
-</ol>
-<p><code>不必完全拘泥于以上步骤，一些情况下译者认为完全可以省略掉Base Decorator。</code></p>
-<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><ul>
-<li><p>优点</p>
-<ol>
-<li>比继承灵活</li>
-<li>允许在运行时添加和删除行为</li>
-<li>通过使用多层封住，组合几个额外的行为。</li>
-<li>可以组合多个单行为实现使其实现更加复杂的行为。</li>
-</ol>
-</li>
-<li><p>缺点</p>
-<ol>
-<li>配置一个多封装对象是困难的。</li>
-<li>导致很多小类。</li>
-</ol>
-</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>需要额外的子类。</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>Adapter提供不同的接口来达到目的。Proxy提供相同的接口。Decorator提供增强的接口。</p>
+<li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
 </li>
-<li><p>Adapter意味着改变一个存在对象的接口。Decorator在不改变原有接口的情况下增强另外一个对象。Decorator对应用来讲比Adapter更加透明。因此，Decorator支持递归组合，这对于纯Adapter是不可能的。</p>
+<li><p>Abstract Factory类通常使用工厂方法实现，但也可以使用Prototype实现。</p>
 </li>
-<li><p>Chain of Responsibility（责任链）和Decorator具有非常普通的类机构。它们都依赖于一系列对象的递归组合来执行。但是它们也有几个关键的不同点。</p>
-<p>  Chain of Responsibility的处理者可以执行随意的行为操作，处理者之间相互独立。它们可以随意的终端下一步的调用。另一方面，各种Decorator扩展一个特别的行为并且假设保持接口一致。并且，Decorator不允许随意中断执行链。</p>
+<li><p>Factory Method可以和Iterator单独使用，让集合子类返回正确的迭代器。</p>
 </li>
-<li><p>Composite和Decorator拥有类似的结构图，因为它们都依赖递归组合来组织一个对象开闭的数量。<br>  装饰器可以看作只有一个组件的退化组合。然而，Decorator向对象增加了额外的责任，而Composite只是对其子类执行相同的行为的“summs up”。</p>
-<p>  但是它们也可以协作：Composite可以使用Decorator来改变树组件的行为。</p>
+<li><p>Prototype不需要子类，但是需要一个“初始”操作。Factory Method需要子类，但是不需要初始化这个步骤。</p>
 </li>
-<li><p>大量使用Composite和Decorator模式的设计通常可以从Prototype中受益。它允许克隆复杂的结构，而不是从头重新构建它们。</p>
-</li>
-<li><p>装饰器可以让您更改对象的皮肤。策略让你改变勇气。</p>
-</li>
-<li><p>Decorator和Proxy有相似的结构，但是目的不同。两种模式都建立在将工作委托给其他对象的组合原则上。然而，Proxy自己管理他持有服务对象的生命周期，而Decorator结构由客户端控制。</p>
+<li><p>Factory Method是一个专业化的Template Method。另一方面，Factory Method常常作为一个大Template Method的一个步骤。</p>
 </li>
 </ul>
-<h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：Decorator在Java中是十分标准的，尤其是和流相关的代码。</p>
-<p>这有几个Java核心库中使用Decorator的例子：</p>
-<ul>
-<li><p>java.io.InputStream，OutputStream，Reader和Writer的所有子类都有接受它们自己类型的构造方法。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>工厂方法是一个用来解决创建产品对象时没有指定具体类的问题的设计模式。</p>
+<p>工厂方法定义了一个方法，用来替代直接调用构造方法（new操作）。子类可以重写这个方法来改变要创建对象的类。</p>
+<p>If you can’t figure out the difference between Factories, Factory Method &amp; Abstract Factory patterns, then read our Factory Comparison guide.<br>如果你分不清楚Factories，Factory Method和Abstract Factory，可以阅读<a href="https://refactoring.guru/design-patterns/factory-comparison" target="_blank" rel="external">工厂比较指南（待译）</a>。</p>
+<h3 id="在Java中的使用"><a href="#在Java中的使用" class="headerlink" title="在Java中的使用"></a>在Java中的使用</h3><ul>
+<li><p>用例</p>
+<p>  java.util.Calendar#getInstance()</p>
+<p>  java.util.ResourceBundle#getBundle()</p>
+<p>  java.text.NumberFormat#getInstance()</p>
+<p>  java.nio.charset.Charset#forName()</p>
+<p>  java.net.URLStreamHandlerFactory#createURLStreamHandler(String) (Returns different singleton objects, depending on a protocol)</p>
+<p>  java.util.EnumSet#of()</p>
+<p>  javax.xml.bind.JAXBContext#createMarshaller() and other similar methods.</p>
 </li>
-<li><p>java.util.Collections，方法checkedXXX()，synchronizedXXX()和unmodifiableXXX()。</p>
-</li>
-<li><p>javax.servlet.http.HttpServletRequestWrapper和HttpServletResponseWrapper。</p>
+<li><p>鉴定</p>
+<p>  工厂方法可以通过创建方法来识别，这些方法从具体类创建对象，但将它们作为抽象类型或接口的对象返回。</p>
 </li>
 </ul>
-<p>鉴定：可以通过创建方法或构造函数来识别Decorator，它接受与当前类相同的类或接口的对象。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/decorator" target="_blank" rel="external">https://refactoring.guru/design-patterns/decorator</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自： <a href="https://refactoring.guru/design-patterns/factory-method" target="_blank" rel="external">https://refactoring.guru/design-patterns/factory-method</a></p>
 
       
     </div>
@@ -531,7 +560,7 @@
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Adapter/" rel="tag"># Adapter</a>
+            <a href="/tags/Factory-Method/" rel="tag"># Factory Method</a>
           
         </div>
       
@@ -544,8 +573,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/15/设计模式-结构模式之Adapter/" rel="next" title="译-设计模式-结构模式之Adapter">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Adapter
+              <a href="/2017/11/02/设计模式-结构模式之小结/" rel="next" title="设计模式-结构模式之小结">
+                <i class="fa fa-chevron-left"></i> 设计模式-结构模式之小结
               </a>
             
           </div>
@@ -553,10 +582,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/17/设计模式-结构模式之Bridge/" rel="prev" title="译-设计模式-结构模式之Bridge">
-                译-设计模式-结构模式之Bridge <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -696,7 +721,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">11.</span> <span class="nav-text">Java中模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Java中的使用"><span class="nav-number">12.</span> <span class="nav-text">在Java中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
