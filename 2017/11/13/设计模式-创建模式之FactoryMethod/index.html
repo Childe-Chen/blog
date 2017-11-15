@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-14T08:05:04.000Z">
+<meta property="og:updated_time" content="2017-11-15T11:55:59.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-创建模式之Factory Method">
 <meta name="twitter:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
@@ -471,24 +471,22 @@
 </ol>
 </li>
 </ul>
-<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><pre><code>1. 为所有产品抽离出通用的接口。这个接口应该声明对每个产品都有意义的方法。
-
-2. 在创建类中添加一个空的工厂方法。他的签名应当返回产品的接口类型。
-
-3. 查看创建者的代码并且找到所有用到产品构造方法的引用。将它们逐一替换为对工厂方法的调用，并将产品创建代码提取到工厂方法。
-
-你肯呢个需要为工厂方法添加临时变量来控制要创建的产品。
-
-此时，工厂方法的代码看起来很挫。它有一个巨大的switch操作来获取要实例化产品的类。不过不用担心，我们马上修复他。
-
-4. 现在，在子类中重写工厂方法，并且把父类中对应的case语句挪到子类中。
-
-5. 基础创建类中的控制参数也可以用在子类中。
-
-比如，你可能有一个Mail作为基类的层级结构，里面有Air和Ground，还有产品类：Plane，Truck和Train。Air正好和Plane匹配，但是Ground可以同时和Truck还有Train匹配。你可以创建一个新的子类来处理这两种情况，但是还有一种处理方式。客户端代码向Ground的工厂方法传递一个参数来控制它想要的产品。
-
-6. 如果基本工厂方法在移动后变成空的了，你可以把它标志成抽象方法。
-</code></pre><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>为所有产品抽离出通用的接口。这个接口应该声明对每个产品都有意义的方法。</p>
+</li>
+<li><p>在创建类中添加一个空的工厂方法。他的签名应当返回产品的接口类型。</p>
+</li>
+<li><p>查看创建者的代码并且找到所有用到产品构造方法的引用。将它们逐一替换为对工厂方法的调用，并将产品创建代码提取到工厂方法。<br> 你可能需要为工厂方法添加临时变量来控制要创建的产品。此时，工厂方法的代码看起来很挫。<br> 它有一个巨大的switch操作来获取要实例化产品的类。不过不用担心，我们马上修复他。</p>
+</li>
+<li><p>现在，在子类中重写工厂方法，并且把父类中对应的case语句挪到子类中。</p>
+</li>
+<li><p>基础创建类中的控制参数也可以用在子类中。</p>
+<p> 比如，你可能有一个Mail作为基类的层级结构，里面有Air和Ground，还有产品类：Plane，Truck和Train。Air正好和Plane匹配，但是Ground可以同时和Truck还有Train匹配。你可以创建一个新的子类来处理这两种情况，但是还有一种处理方式。客户端代码向Ground的工厂方法传递一个参数来控制它想要的产品。</p>
+</li>
+<li><p>如果基本工厂方法在移动后变成空的了，你可以把它标志成抽象方法。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
 <li><p>遵循开闭原则。</p>
 </li>
 <li><p>避免产品和使用它们代码的耦合。</p>
@@ -583,6 +581,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/11/14/设计模式-创建模式之AbstractFactory/" rel="prev" title="译-设计模式-创建模式之Abstract Factory">
+                译-设计模式-创建模式之Abstract Factory <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -653,7 +655,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -675,7 +677,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
