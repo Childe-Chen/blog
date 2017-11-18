@@ -1,0 +1,1109 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Factory Method," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
+问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
+比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译-设计模式-创建模式之Builder">
+<meta property="og:url" content="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
+问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
+比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
+<meta property="og:image" content="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-18T08:13:53.048Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译-设计模式-创建模式之Builder">
+<meta name="twitter:description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
+问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
+比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/"/>
+
+
+
+
+
+  <title> 译-设计模式-创建模式之Builder | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                译-设计模式-创建模式之Builder
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-17T14:25:55+08:00">
+                2017-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/11/17/设计模式-创建模式之Builder/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Builder">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。</p>
+<p>比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你想要一个更大，更亮堂，并且有后院和其他好吃的东西的房子呢？<br><a id="more"></a><br>想到的最简单的解决方式是从Hose类扩展，通过创建子类来覆盖所有参数的组合。这种处理方式明显会导致创建许多子类。任何新的参数，比如阳台风格，都需要扩张这个层级甚至扩张很多。</p>
+<p>这些参数大多时候是无用的，导致<a href="https://refactoring.guru/smells/long-parameter-list" target="_blank" rel="external">构造方法看起来很丑陋</a>。比如，很多房子没有游泳池。因此，和游泳池相关的所有参数99%情况下都是无用的。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Builder模式建议抽离出类自身的构造代码到不同的对象中，这种对象叫做builder。</p>
+<p>模式把对象的构造组织称一系列步骤（比如：buildWalls，BuildDoor等）。创建这个对象，你需要调用一个构造类中的几个构造步骤。最重要的一点是你不需要调用所有的步骤。你只能使用生成对象的特定配置所需的步骤。</p>
+<p>通常，对于你正在尝试构建的各种产品，相同的构建步骤将会有所不同（一样步骤，但是每个步骤完成的方式不同）。比如，一个机舱可以用木日志建造，但是一座城堡必须用石头。</p>
+<p>在这种情况下，你可以在不同的方式下，创建几个不同的实现了相同构建步骤的builder类。然后，你就可以使用这些builder在相同的构建处理中生产不同类型的对象。</p>
+<p>比如，有一个StoneBuilder类来处理所有和石头相关的事情，一个WoodBuilder类来处理木头的。你可以使用它们中的一个通过一系列构造步骤来生产一个石头或者木头房子。这种方式仅在客户端代码通过通用接口来和builder交互时可用。</p>
+<p>你可以进一步抽离出整个构建过程到一个特别的类：Director。在这种情况下，Director（Director关联了一个Builder对象）可以定义构建步骤的顺序并执行他们。这种结构下将会向客户端隐藏所有构建细节。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<ol>
+<li><p>Builder声明构建一个产品需要的步骤。</p>
+</li>
+<li><p>Concrete Builder提供构造步骤的不同实现。Builder也可以提供获取构造结果的方法。这个方法不需要声明在builder接口中，因为builder可能生产没有遵循通用接口的产品。但是如果你处理的产品是单一层次的，你可以安全的把这个方法描述在基本接口中。</p>
+</li>
+<li><p>Product是创建结果的一个对象。Builder可以生产不属于同一个类层级或者接口的产品。这是Builder和其他创建模式的不同之处。</p>
+</li>
+<li><p>Director使用Builder对象构建产品。通常，客户端通过构造方法参数传给director一个builder实例。Director使用这个单一的builder对象完成所有的进一步构建。但是也有替代的方式，把builder传递给director的主要生产方法。</p>
+</li>
+<li><p>注意，Builder不需要创建一了director类。当你有几个需要不同构建流程的产品变种时，用不同的director类是很方便的。Director把代码都封装在一个单独的类中。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子展示了Builder是如何一步一步的构造出汽车。Director类使用不同的构建步骤生产不同类型的汽车。Director使用给他们的build对象工作。这种方式允许你重用已经存在的代码来生产不同种类汽车的用户手册。为了达到这个目的，你只需要一个新的builder类。</p>
+<p>因此，Builder模式允许你只通过简单的改变构造步骤的数量和顺序就可以创建产品的不同变种。另外，通过提交构建器对象的替代版本，您可以使用相同的构造代码生成完全不同类型的产品。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">// Builder can create different products using the same building process.</div><div class="line">class Car is</div><div class="line">    Can have GPS, trip computer and various numbers of seats.</div><div class="line">    Can be a city car, a sports car, or a cabriolet.</div><div class="line"></div><div class="line">class Manual is</div><div class="line">    Textual representation of a car.</div><div class="line"></div><div class="line"></div><div class="line">// Builder interface defines all possible ways to configure a product.</div><div class="line">interface Builder is</div><div class="line">    method reset()</div><div class="line">    method setSeats(number)</div><div class="line">    method setEngine(engine: Engine)</div><div class="line">    method setTripComputer()</div><div class="line">    method setGPS()</div><div class="line"></div><div class="line">// Concrete builders implement that interface differently.</div><div class="line">class CarBuilder implements Builder is</div><div class="line">    private field car:Car</div><div class="line">    method reset()</div><div class="line">        Put a new Car instance into the "car" field.</div><div class="line">    method setSeats(number) is</div><div class="line">        Set the number of seats in car.</div><div class="line">    method setEngine(engine: Engine) is</div><div class="line">        Install a given engine.</div><div class="line">    method setTripComputer() is</div><div class="line">        Install a trip computer.</div><div class="line">    method setGPS() is</div><div class="line">        Install a global positioning system.</div><div class="line">    method getResult(): Car is</div><div class="line">        Return the current car object.</div><div class="line"></div><div class="line">// Unlike other creational patterns, Builder can construct unrelated products,</div><div class="line">// which don't have the common interface.</div><div class="line">class CarManualBuilder implements Builder is</div><div class="line">    private field manual:Manual</div><div class="line">    method reset()</div><div class="line">        Put a new Manual instance into the "manual" field.</div><div class="line">    method setSeats(number) is</div><div class="line">        Document car seats features.</div><div class="line">    method setEngine(engine: Engine) is</div><div class="line">        Add an engine instruction.</div><div class="line">    method setTripComputer() is</div><div class="line">        Add a trip computer instruction.</div><div class="line">    method setGPS() is</div><div class="line">        Add GPS instruction.</div><div class="line">    method getResult(): Manual is</div><div class="line">        Return the current manual object.</div><div class="line"></div><div class="line"></div><div class="line">// Director defines the order of building steps. It works with a builder object</div><div class="line">// through common Builder interface. Therefore it may not know what product is</div><div class="line">// being built.</div><div class="line">class Director is</div><div class="line">    method constructSportsCar(builder: Builder) is</div><div class="line">        builder.reset();</div><div class="line">        builder.setSeats(2);</div><div class="line">        builder.setEngine(new SportEngine());</div><div class="line">        builder.setTripComputer();</div><div class="line">        builder.setGPS();</div><div class="line"></div><div class="line"></div><div class="line">// Director gets the concrete builder object from the client (application code).</div><div class="line">// That's because application knows better which builder to use to get a</div><div class="line">// specific product.</div><div class="line">class Application is</div><div class="line">    method makeCar is</div><div class="line">        director = new Director();</div><div class="line"></div><div class="line">        CarBuilder builder = new CarBuilder();</div><div class="line">        director.constructSportsCar(builder);</div><div class="line">        Car car = builder.getResult();</div><div class="line"></div><div class="line">        CarManualBuilder builder = new CarManualBuilder();</div><div class="line">        director.constructSportsCar(builder);</div><div class="line"></div><div class="line">        // The final product is often retrieved from a builder object, since</div><div class="line">        // Director is not aware and not dependent on concrete builders</div><div class="line">        // and products.</div><div class="line">        Manual manual = builder.getResult();</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当你有一个“伸缩”的构造方法。</p>
+<p>  调用一个有许多可选参数的构造方法很不方便。你必须指定所有的参数，即使你不需要。</p>
+<p>  解决这个痛点，可以重载一个长的构造方法，创建几个参数较少的构造方法。它们仍然调用主构造方法，只是把省略的参数传入了默认值。</p>
+<p>  Builder模式允许一步一步构建对象。在构建一个简单对象时，你可以只使用必要的步骤，跳过可选步骤。</p>
+</li>
+<li><p>当你的代码必须要创建一个产品的不同表示时（比如，石头和木头房子）。产品的构造步骤一样，但细节不同。另外，尽管这个产品是相似的，它们没有必要必须遵循一个通用基类或者接口。</p>
+<p>  Builder可以用相同的过程构建不同的产品。</p>
+<p>  不同的产品被不同的builder类表示。控制构建顺序的代码应该放在一个单独的director类中。</p>
+</li>
+<li><p>当你必须构建一个Composite树或者其他复杂对象时。</p>
+<p>  Builder一步一步的构建产品。他循序延时甚至递归构建，这在使用树结构时很有用。Builder在运行构建步骤时不能导出位完成的产品。这样可以阻止客户端代码拿到损坏的结果。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>确保你有构建产品的共同步骤和导致创建各种产品代表的步骤的变化（？）。</p>
+</li>
+<li><p>创建Builder接口并声明生产步骤。</p>
+</li>
+<li><p>为每一个产品表示创建Concrete Builder类。并实现它们的创建步骤。</p>
+</li>
+<li><p>考虑创建一个Director类。他的方法用相同的builder实例，不同的步骤来创建不同的产品配置。</p>
+</li>
+<li><p>客户端代码创建Builder和Director对象。它首先床架你个builder实例，然后把它传给director的构造方法或者他的生产方法。</p>
+</li>
+<li><p>客户端应该调用Director对象的生产方法开始构建过程。</p>
+</li>
+<li><p>是有在所有产品遵循一个通用接口时可以从Director对象中获取构建结果。相反，每个Builder必须有他自己检索结果的方法。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>允许一步一步构建产品。</p>
+</li>
+<li><p>允许使用相同的代码构建不同产品。</p>
+</li>
+<li><p>把产品的核心业务逻辑与复杂的构建代码隔离。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>创建多个额外类增加了代码的复杂度。</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
+</li>
+<li><p>Builder关注点在一步一步的构造出一个复杂对象。Abstract Factory创建产品对象的系列（不管是简单的还是复杂的）。Builder在最后一步返回产品，但是Abstrct Factory立刻返回结果。</p>
+</li>
+<li><p>Builder可以一步一步的构建一个复杂的Composite树。</p>
+</li>
+<li><p>Builder可已才有Bridge结构模式：Director当作接口，Builder当作实现。</p>
+</li>
+<li><p>Abstract Factory，Builder和Prototype都可以实现为Singleton。</p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Builder是创建型模式的一种，允许你一步一步构造出来复杂的对象。</p>
+<p>不想其他的创建型模式，Builder不需要产品遵循一个通用的接口。他可以使用相同的构造过程生成不同的产品。</p>
+<p>用例：Builder模式在你需要创建一个有很多可选配置的对象相当有用。</p>
+<p>Builder在Java核心库中也有广泛应用：</p>
+<pre><code>java.lang.StringBuilder#append() (unsynchronized)
+
+java.lang.StringBuffer#append() (synchronized)
+
+java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuffer, FloatBuffer and DoubleBuffer)
+
+所有java.lang.Appendable接口的实现
+</code></pre><p>鉴定：Builder模式可以在类中识别，它有一个创建方法和几个方法来配置结果对象。Builder方法通常是支持链式调用（比如，someBuilder-&gt;setValueA(1)-&gt;setValueB(2)-&gt;create()）。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/builder" target="_blank" rel="external">https://refactoring.guru/design-patterns/builder</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          
+            <a href="/tags/Factory-Method/" rel="tag"># Factory Method</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/14/设计模式-创建模式之AbstractFactory/" rel="next" title="译-设计模式-创建模式之Abstract Factory">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Abstract Factory
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
