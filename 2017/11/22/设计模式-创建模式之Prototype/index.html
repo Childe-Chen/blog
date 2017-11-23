@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Abstract Factory," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Prototype,Clone," />
 
 
 
@@ -87,33 +87,28 @@
 
 
 
-<meta name="description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
+<meta name="description" content="目的Prototype（也叫做Clone）是创建型模式的一种，允许你通过复制现有的对象来生成新的对象，而不会影响现有对象的内部。
+问题你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。
+但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。
+这么做还有另外的问题">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-创建模式之Abstract Factory">
-<meta property="og:url" content="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/index.html">
+<meta property="og:title" content="译-设计模式-创建模式之Prototype(Clone)">
+<meta property="og:url" content="http://yoursite.com/2017/11/22/设计模式-创建模式之Prototype/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
-<meta property="og:image" content="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-15T11:53:40.407Z">
+<meta property="og:description" content="目的Prototype（也叫做Clone）是创建型模式的一种，允许你通过复制现有的对象来生成新的对象，而不会影响现有对象的内部。
+问题你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。
+但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。
+这么做还有另外的问题">
+<meta property="og:image" content="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20171123101957076?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-23T02:21:08.348Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-创建模式之Abstract Factory">
-<meta name="twitter:description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-创建模式之Prototype(Clone)">
+<meta name="twitter:description" content="目的Prototype（也叫做Clone）是创建型模式的一种，允许你通过复制现有的对象来生成新的对象，而不会影响现有对象的内部。
+问题你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。
+但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。
+这么做还有另外的问题">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -141,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/22/设计模式-创建模式之Prototype/"/>
 
 
 
 
 
-  <title> 译-设计模式-创建模式之Abstract Factory | 凡隐的博客 </title>
+  <title> 译-设计模式-创建模式之Prototype(Clone) | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -310,7 +305,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/设计模式-创建模式之Prototype/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -331,7 +326,7 @@
             
             
               
-                译-设计模式-创建模式之Abstract Factory
+                译-设计模式-创建模式之Prototype(Clone)
               
             
           </h2>
@@ -346,8 +341,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-14T19:40:51+08:00">
-                2017-11-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T10:11:15+08:00">
+                2017-11-22
               </time>
             
 
@@ -386,7 +381,7 @@
 
           
           
-             <span id="/2017/11/14/设计模式-创建模式之AbstractFactory/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Abstract Factory">
+             <span id="/2017/11/22/设计模式-创建模式之Prototype/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Prototype(Clone)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -415,101 +410,88 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你在写一个家具店的模拟器。你的代码由以下构成：</p>
+        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Prototype（也叫做Clone）是创建型模式的一种，允许你通过复制现有的对象来生成新的对象，而不会影响现有对象的内部。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。</p>
+<p>但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。</p>
+<p>这么做还有另外的问题。因为你必须知道对象类能够被遍历的所有字段，你的代码需要依赖你要拷贝对象的类。在你仅知道拷贝对象的接口时无法拷贝对象。<br><a id="more"></a></p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Prototype模式把克隆操作委托给对象自己。</p>
+<p>他为所有需要克隆的对象声明通用的接口。他允许在不紧密耦合具体类的情况下克隆对象。通常，prototype接口只包含一个clone方法。</p>
+<p>所有类对clone方法的实现都很像。这个方法创建一个当前类的对象，然后把他的字段值拷贝到新对象中。大多数编程语言都允许访问同一个类对象中的私有字段，所以这种拷贝过程比较直接。</p>
+<p>可以被克隆的对象叫做prototype（原型）。有时，特别是当你的对象有很多字段并且一些字段可配置，原型可以作为子类的一种替代。在这种情况下，程序提前创建一些原型，然后克隆它们而不是从头开始重建对象。</p>
+<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="工业和细胞分裂"><a href="#工业和细胞分裂" class="headerlink" title="工业和细胞分裂"></a>工业和细胞分裂</h4><p>在真实生活中，原型在产品量产之前用来做各种测试。然而，在这种情况下，原型并没有参与真正的生产，是一个被动的角色。</p>
+<p>因为工业原型自己不会拷贝，对这个模式更相近的类比是有丝细胞分裂（生物学，还记得吗？）。在这种分裂后，两个完全一样的细胞就形成了。源细胞就是原型，在创建拷贝中是一个主动的角色。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h4><p><img src="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="basicStructure"></p>
+<h4 id="原型注册实现"><a href="#原型注册实现" class="headerlink" title="原型注册实现"></a>原型注册实现</h4><p><img src="http://img.blog.csdn.net/20171123101957076?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="registryStructure"></p>
 <ol>
-<li><p>相关产品的系列，像：Chair + Sofa + CoffeeTable。</p>
+<li><p>Prototype声明克隆接口。大多情况下，只要一个clone方法就够了。</p>
 </li>
-<li><p>系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtDeco。</p>
+<li><p>Concrete（具体的）Prototype来实现克隆方法。除了直接告杯字段值到新对象外，这个方法也可以解决一些应当对客户端隐藏的警告。比如，克隆引用对象，解开递归依赖等。</p>
+</li>
+<li><p>客户端使用Prototype接口来检索一个对象的克隆。</p>
+</li>
+<li><p>Prototype registry提供了对常用原型的简单访问，存储预先创建的一组对象，随时可以复制。通常，它可以用简单的（name-&gt;prototype）哈希映射实现。但是为了方便，任何其他搜索条件都可以添加到注册表中。</p>
 </li>
 </ol>
-<p>你需要有种方式创建个性化的家具对象，以便它们能够匹配相同系列中的其他对象。在没有匹配到家具时，客户会感到失望。</p>
-<p>另外，你不想在添加新产品或者产品系列时改变已经存在的代码。家具供应商常常会更新他们的目录，并且你不想每次在供货商改目录时修改你的核心代码。<br><a id="more"></a></p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>第一，Abstract Factory模式建议遍历所有不同的产品并且强制这些变种遵循通用的接口。比如，所有的椅子变种必须遵循Chair接口；所有的咖啡桌必须遵循CoffeeTable接口。</p>
-<p>第二步，创建AbstractFactory，一个基础接口，声明了创建产品系列的所有产品的方法（比如：createChair，createSofa和createCoffeeTable）。这步最重要的一件事就是让这些方法返回代表抽象产品类型的接口：Chair，Sofa，CoffeeTable。</p>
-<p>第三步，实现具体的工厂。工厂是返回某种特定产品的类。比如，IKEAFactory，将只会返回IKEAChair，IKEASofa和IKEACoffeeTable对象。所有的工厂在创建同一个变种的产品时必须遵循AbstractFactory接口。</p>
-<p>客户端代码只能通过抽象接口同工厂和产品协作。这样你就可以通过传递不同的工厂对象修改要用的产品类型。</p>
-<p>所以，当客户端像工厂请求创建一把椅子时，它不必关心工厂的具体类。也不必关心它将得到椅子的具体类。不管它将得到一把时尚的IKEA模型还是一把Victorian风格的椅子，它都用使用抽象的Chair接口和椅子协作。客户端代码只需要知道椅子实现了在接口中声明的sit方法。它还知道不管返回哪种椅子，它的类型是和沙发还有咖啡桌匹配的，因为它们是同一个工厂创建的。</p>
-<p>好了，但是谁创建实际的工厂对象呢？通常，程序在初始化阶段创建一个具体的工厂，并且工厂的类型依赖配置或者环境。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
-<ol>
-<li><p>Abstract products为创建产品系列的所有不同产品声明接口。通常，有几个不同的产品接口。</p>
-</li>
-<li><p>Concrete products实现不同Abstract product接口。实现相同接口的具体产品集合代表一个系列的不同变种。</p>
-</li>
-<li><p>Abstract factory声明了创建系列中所有产品的接口。</p>
-</li>
-<li><p>Concrete factory实现了abstract factory的创建方法。每个具体工厂代表一个系列产品的特定变种。</p>
-</li>
-<li><p>虽然具体的工厂实例化具体的产品，但是创建方法的签名必须声明为相应抽象产品类型。<br>通过这种歌方式，客户端代码在使用工厂时就不会和具体的产品变种耦合。它就能通过使用抽象接口和任何工厂/产品协作。</p>
-</li>
-</ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子用来说明Abstract Factory模式可一用来创建跨平台的UI而不需要客户端代码和具体UI类耦合。</p>
-<p>客户端代码从工厂中请求各个UI元素。返回元素的具体类型取决于客户端代码传递的工厂类型。客户端代码通过抽象接口和元素协作。只要它使用相同的工厂对象，它所有的产品都是兼容的。</p>
-<p>Abstract Factory模式使得客户端代码和具体UI元素类独立。另外，当添加一个新的UI变种时，你不需要修改已经存在的代码（比如，实现Linux的UI元素）。你只需要创建一个工厂的新子类，让他返回新类型的UI元素。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">// This pattern assumes that you have several families of products, structured</div><div class="line">// into separate class hierarchies (Button/Checkbox). All products of the same</div><div class="line">// family have the common interface.</div><div class="line">interface Button is</div><div class="line">    method paint()</div><div class="line"></div><div class="line">// All products families have the same varieties (macOS/Windows).</div><div class="line">class WinButton implementing Button is</div><div class="line">    method paint() is</div><div class="line">        Render a button in a Windows style</div><div class="line"></div><div class="line">class MacButton implementing Button is</div><div class="line">    method paint() is</div><div class="line">        Render a button in a Mac OS X style</div><div class="line"></div><div class="line"></div><div class="line">interface Checkbox is</div><div class="line">    method paint()</div><div class="line"></div><div class="line">class WinCheckbox implementing Checkbox is</div><div class="line">    method paint() is</div><div class="line">        Render a checkbox in a Windows style</div><div class="line"></div><div class="line">class MacCheckbox implementing Checkbox is</div><div class="line">    method paint() is</div><div class="line">        Render a checkbox in a Mac OS X style</div><div class="line"></div><div class="line"></div><div class="line">// Abstract factory knows about all (abstract) product types.</div><div class="line">interface GUIFactory is</div><div class="line">    method createButton():Button</div><div class="line">    method createCheckbox():Checkbox</div><div class="line"></div><div class="line"></div><div class="line">// Each concrete factory extends basic factory and responsible for creating</div><div class="line">// products of a single variety.</div><div class="line">class WinFactory implementing GUIFactory is</div><div class="line">    method createButton():Button is</div><div class="line">        return new WinButton</div><div class="line">    method createCheckbox():Checkbox is</div><div class="line">        return new WinCheckbox</div><div class="line"></div><div class="line">// Although concrete factories create the concrete products, they still return</div><div class="line">// them with the abstract type. This fact makes factories interchangeable.</div><div class="line">class MacFactory implementing GUIFactory is</div><div class="line">    method createButton():Button is</div><div class="line">        return new MacButton</div><div class="line">    method createCheckbox():Checkbox is</div><div class="line">        return new MacCheckbox</div><div class="line"></div><div class="line"></div><div class="line">// Factory users don't care which concrete factory they use since they work with</div><div class="line">// factories and products through abstract interfaces.</div><div class="line">class Application is</div><div class="line">    private field button: Button;</div><div class="line">    constructor Application(factory: GUIFactory) is</div><div class="line">        this.factory = factory</div><div class="line">    method createUI();</div><div class="line">        this.button = factory.createButton()</div><div class="line">    method paint();</div><div class="line">        button.paint()</div><div class="line"></div><div class="line"></div><div class="line">// Application picks the factory type and creates it in run time (usually at</div><div class="line">// initialization stage), depending on the configuration or</div><div class="line">// environment variables.</div><div class="line">class ApplicationConfigurator is</div><div class="line">    method main() is</div><div class="line">        Read the configuration file</div><div class="line">        If the OS specified in the configuration file is Windows, then</div><div class="line">            Construct a WinFactory</div><div class="line">            Construct an Application with WinFactory</div><div class="line">        else</div><div class="line">            Construct an MacFactory</div><div class="line">            Construct an Application with MacFactory</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，原型被用来克隆代表几何形状的对象，而不耦合到它们的类。</p>
+<p>所有的形状类都实现了只有克隆方法的通用克隆接口。子类先调用父类的克隆方法，然后把他们自己的字段拷贝到结果对象中。</p>
+<p>因此，原型模式允许客户端代码克隆对象，即使不知道和独立于其特定的类。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line">// Base prototype.</div><div class="line">abstract class Shape is</div><div class="line">    field X: int</div><div class="line">    field Y: int</div><div class="line">    field color: string</div><div class="line"></div><div class="line">    // A fresh object is initialized with values from the old object in</div><div class="line">    // the constructor.</div><div class="line">    method Shape(source: Shape) is</div><div class="line">        if (source != null) then</div><div class="line">            this.X = source.X</div><div class="line">            this.Y = source.Y</div><div class="line">            this.color = source.color</div><div class="line"></div><div class="line">    // Clone operation always returns one of the Shape subclasses.</div><div class="line">    abstract method clone(): Shape</div><div class="line"></div><div class="line"></div><div class="line">// Concrete prototype. Cloning method creates a new object and passes itself to</div><div class="line">// the constructor. Until constructor is finished, has a reference to a fresh</div><div class="line">// clone. Therefore, nobody has access to a partly built clone. This helps to</div><div class="line">// make the cloning result consistent.</div><div class="line">class Rectangle extends Shape is</div><div class="line">    field width: int</div><div class="line">    field height: int</div><div class="line"></div><div class="line">    method Rectangle(source: Rectangle) is</div><div class="line">        // Parent constructor call is mandatory in order to copy private fields</div><div class="line">        // defined in parent class.</div><div class="line">        super(source)</div><div class="line">        if (source != null) then</div><div class="line">            this.width = source.width</div><div class="line">            this.height = source.height</div><div class="line"></div><div class="line">    method clone(): Shape is</div><div class="line">        return new Rectangle(this)</div><div class="line"></div><div class="line"></div><div class="line">class Circle extends Shape is</div><div class="line">    field radius: int</div><div class="line"></div><div class="line">    method Circle(source: Circle) is</div><div class="line">        super(source)</div><div class="line">        if (source != null) then</div><div class="line">            this.radius = source.radius</div><div class="line"></div><div class="line">    method clone(): Shape is</div><div class="line">        return new Circle(this)</div><div class="line"></div><div class="line"></div><div class="line">// Somewhere in client code.</div><div class="line">class Application is</div><div class="line">    field shapes: array of Shape</div><div class="line"></div><div class="line">    method constructor() is</div><div class="line">        Circle circle = new Circle()</div><div class="line">        circle.X = 10</div><div class="line">        circle.Y = 20</div><div class="line">        circle.radius = 15</div><div class="line">        shapes.add(circle)</div><div class="line"></div><div class="line">        Circle anotherCircle = circle.clone()</div><div class="line">        shapes.add(anotherCircle)</div><div class="line">        // anotherCircle is the exact copy of circle.</div><div class="line"></div><div class="line">        Rectangle rectangle = new Rectangle()</div><div class="line">        rectangle.width = 10</div><div class="line">        rectangle.height = 20</div><div class="line">        shapes.add(rectangle)</div><div class="line"></div><div class="line">    method businessLogic() is</div><div class="line">        // Prototype rocks because it allows producing a copy of an object</div><div class="line">        // without knowing anything about its type.</div><div class="line">        Array shapesCopy = new Array of Shapes.</div><div class="line"></div><div class="line">        // For instance, we do not know exact types of elements in shapes array.</div><div class="line">        // All we know is that all of them are Shapes. But thanks to the</div><div class="line">        // polymorphism, when we call the `clone` method on a shape, the program</div><div class="line">        // checks its real class and runs the appropriate clone method, defined</div><div class="line">        // in that class. That is why we get proper clones instead of a set of</div><div class="line">        // simple Shape objects.</div><div class="line">        foreach shapes as shape do</div><div class="line">            shapesCopy.add(shape.clone())</div><div class="line"></div><div class="line">        // The variable `shapesCopy` will contain exact copies of the `shape`</div><div class="line">        // array's children.</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当业务逻辑必须要和同一个产品系列的不同变种协作，并且你不想依赖具体产品类时（或者它们无法预先知道）。</p>
-<p>  Abstract Factory对客户端代码隐藏了创建产品类的信息。客户端代码可以和任何工厂创建出来的任何产品协作，只要客户端通过抽象接口和它们交互。</p>
+<li><p>当你的代码不应该依赖你要拷贝对象的具体类时。比如，对象的类是未知的，因为你通过接口和他们协作。</p>
+<p>  原型模式提供给客户端一个和所有原型协作的接口。这个接口对所有支持克隆的对象是通用的。这使得客户端对要克隆产品的具体类保持独立。</p>
 </li>
-<li><p>当一个类拥有多个Factory Method使得它的主要责任不明确时。</p>
-<p>  每个类专注做一件事是很好的程序设计。当一个类需要处理多个产品类型，它就应该使用一个独立的抽象工厂来替代多个工厂方法。</p>
+<li><p>当你想要减少由不同方式配置相似对象（换句话说，每个类由唯一的字段值）组成的类层级结构的大小时。</p>
+<p>  原型模式允许创建一个原型对象集合，这些对象代表了一个对象所有可能的配置。</p>
+<p>  然后，客户端代码不是初始一个匹配一些配置的子类，而是寻找适当的原型并且克隆他。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>画出不同产品和相同产品不同变种的矩阵。</p>
+<li><p>创建原型接口并在接口中声明clone方法。你可以简单的把这个方法添加到现有类层级中的所有类，如果你有类的话。</p>
 </li>
-<li><p>为所有不同产品类型创建抽象接口并且让所有具体产品遵循这些接口。</p>
+<li><p>为所有原型类添加一个可选的构造方法，这个构造方法接收当前类的一个对象。这个构造函数必须从传递的对象中将类中定义的所有字段的值拷贝到当前实例。然后，它应该调用父类构造方法去拷贝父类中的字段。</p>
+<p> 如果你的编程语言不支持方法重载，你需要定义一个特别的方法来拷贝数据。构造方法仅仅是最便利的一个，因为他在new操作后就开始拷贝。</p>
 </li>
-<li><p>声明抽象工厂接口。这个接口应该列出所有不同类型产品的创建方法。</p>
+<li><p>clone方法通常是有一行：运行一个使用原型构造方法的new操作符。注意，每个支持克隆的类必须明确重写clone方法，克隆方法要new一个他自己的类。否则，克隆将会生产出一个父类的对象。</p>
 </li>
-<li><p>为产品系列的每个变种实现不同的工厂类。</p>
-</li>
-<li><p>创建一个空场的初始化代码写在客户端中。客户端依赖配置或者当前环境中来决定需要的工厂的类型并创建出来。</p>
-</li>
-<li><p>在客户端代码中，把所有调用产品构造方法的地方替换成调用工厂的创建方法。</p>
+<li><p>此步骤可选。创建一个原型注册中心来存储常用的原型。甚至是相同类的对象，只是配置方式不同。</p>
+<p> 你可以在原型的基类中用工厂类或者工厂方法实现注册中心。这个工厂方法可以根据客户端代码传递的参数查找适当的原型。搜索条件可以仅仅是一个字符串标签或者复杂的搜索条件。在找到原型后，它应该克隆它并且把拷贝返回给客户端。</p>
+<p> 最后，我们应该把直接调用对象构造方法的clone方法改成调用原型注册中心的工厂方法。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li><p>符合开闭原则。</p>
+<li><p>允许克隆对象而不耦合到具体的类。</p>
 </li>
-<li><p>允许构建系列产品对象并担保兼容性。</p>
+<li><p>减少重复的实例代码。</p>
 </li>
-<li><p>避免具体产品和使用它们的代码的耦合。</p>
+<li><p>更快的创建复杂对象。</p>
 </li>
-<li><p>在多个类间隔离责任。</p>
+<li><p>当你需要处理有许多可选配置的复杂对象时，可以把它当作替代子类的方案。</p>
 </li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>创建多个额外类，增加代码整体复杂度。</li>
+<li>引用了许多其他对象的复杂对象很难被克隆。</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
 <li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
 </li>
-<li><p>Builder关注点在一步一步的构造出一个复杂对象。Abstract Factory创建产品对象的系列（不管是简单的还是复杂的）。Builder在最后一步返回产品，但是Abstrct Factory立刻返回结果。</p>
+<li><p>Abstract Factory类通常使用工厂方法实现，但也可以使用Prototype实现。</p>
 </li>
-<li><p>Abstract Factory类通常用Factory Method来实现，单丝它们也可以用Prototype来实现。</p>
+<li><p>当您需要将Command的副本保存到历史记录中时，Prototype可以提供帮助。</p>
 </li>
-<li><p>Abstract Factory可以用来代替Facade隐藏特定平台的类。</p>
+<li><p>大量使用Composite和Decorator模式的设计通常也可以从Prototype中受益。他允许克隆复杂结构，而不是从头构建他们。</p>
 </li>
-<li><p>Abstract Factory可以和Bridge模式单独使用。当Bridge的“接口”部分只能与特定的“实现”一起工作时非常有用。这种情况下，工厂能够封装这些关系并且对客户端隐藏复杂性。</p>
+<li><p>Prototype不需要子类，但是需要初始操作。Factory Method需要子类，但是不需要初始化这个步骤。</p>
+</li>
+<li><p>Prototype是更简单的Memento替代，如果您想要把对象的某种状态保存在历史中，相当简单，没有外部资源的链接，或者链接很容易重新建立（Memento还不了解，此处很模糊）。</p>
 </li>
 <li><p>Abstract Factory，Builder和Prototype都可以实现为Singleton。</p>
 </li>
 </ul>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Abstract Factory是创建型模式的一种，用来解决创建没有制定具体类的产品系列。</p>
-<p>Abstract Factory定义了一个创建所有不同产品的接口，但是把创建真正产品的实现放在具体工厂类中。美国工厂类型都代表一个某些产品的变种。</p>
-<p>客户端代码不是直接调用构造方法（new操作）而是调用一个工厂对象的创建方法来创建对象。因为一个工厂代表了一个产品的变种，它的产品都是兼容的。</p>
-<p>客户端只通过抽象接口和工厂还有产品协作。它允许相同的客户端代码和不同的产品协作。你只需要创建一新的具体工厂类，并把它传递给客户端代码就行。如果你分不清楚Factories，Factory Method和Abstract Factory，可以阅读<a href="https://refactoring.guru/design-patterns/factory-comparison" target="_blank" rel="external">工厂比较指南（待译）</a>。</p>
-<h3 id="Java的模式的使用"><a href="#Java的模式的使用" class="headerlink" title="Java的模式的使用"></a>Java的模式的使用</h3><p>用例：许多框架和类库采用抽象工厂模式来提供扩展和定制它们的标准组件。</p>
-<p>Java的核心包中应用如下：</p>
-<pre><code>javax.xml.parsers.DocumentBuilderFactory#newInstance()
-
-javax.xml.transform.TransformerFactory#newInstance()
-
-javax.xml.xpath.XPathFactory#newInstance()
-</code></pre><p>鉴定：该模式很容易通过返回工厂对象的方法来识别。然后，工厂用于创建特定的子组件。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/abstract-factory" target="_blank" rel="external">https://refactoring.guru/design-patterns/abstract-factory</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Prototype是创建型模式的一种，允许你克隆对象，即使被克隆对象很复杂，它不需要耦合特定的被拷贝对象的类。</p>
+<p>用例：</p>
+<pre><code>java.lang.Object#clone() (class 应当实现java.lang.Cloneable 接口)
+</code></pre><p>鉴定：通过clone()或者copy()等方法轻松识别原型模式。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>整理翻译自：<a href="https://refactoring.guru/design-patterns/prototype" target="_blank" rel="external">https://refactoring.guru/design-patterns/prototype</a></p>
 
       
     </div>
@@ -539,7 +521,9 @@ javax.xml.xpath.XPathFactory#newInstance()
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Abstract-Factory/" rel="tag"># Abstract Factory</a>
+            <a href="/tags/Prototype/" rel="tag"># Prototype</a>
+          
+            <a href="/tags/Clone/" rel="tag"># Clone</a>
           
         </div>
       
@@ -552,8 +536,8 @@ javax.xml.xpath.XPathFactory#newInstance()
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/13/设计模式-创建模式之FactoryMethod/" rel="next" title="译-设计模式-创建模式之Factory Method">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Factory Method
+              <a href="/2017/11/17/设计模式-创建模式之Builder/" rel="next" title="译-设计模式-创建模式之Builder">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Builder
               </a>
             
           </div>
@@ -561,10 +545,6 @@ javax.xml.xpath.XPathFactory#newInstance()
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/17/设计模式-创建模式之Builder/" rel="prev" title="译-设计模式-创建模式之Builder">
-                译-设计模式-创建模式之Builder <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -704,7 +684,7 @@ javax.xml.xpath.XPathFactory#newInstance()
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java的模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java的模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工业和细胞分裂"><span class="nav-number">4.1.</span> <span class="nav-text">工业和细胞分裂</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本实现"><span class="nav-number">5.1.</span> <span class="nav-text">基本实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原型注册实现"><span class="nav-number">5.2.</span> <span class="nav-text">原型注册实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">12.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
