@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Factory Method," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,singleton," />
 
 
 
@@ -87,24 +87,33 @@
 
 
 
-<meta name="description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
-问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
-比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
+<meta name="description" content="意图Singleton是创建模式的一种，让你可以确保一个类只有一个实例，并为此实例提供一个全局访问点。
+问题Singleton同时解决了两个问题（违反了单一职责原则）：
+
+确保一个类只有一个实例。最常见原因是控制一些共享资源，比如，数据库。
+ 假设你已经创建了一个新对象，不久，又尝试创建一个新的。在这种秦光下，你想要老的那个对象而不是新创建一个实例。
+ 它不能通过正常的构造方法完成，因为在设计上每">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-创建模式之Builder">
-<meta property="og:url" content="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/index.html">
+<meta property="og:title" content="译-设计模式-创建模式之Singleton">
+<meta property="og:url" content="http://yoursite.com/2017/11/23/设计模式-创建模式之Singleton/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
-问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
-比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
-<meta property="og:image" content="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-18T08:13:53.048Z">
+<meta property="og:description" content="意图Singleton是创建模式的一种，让你可以确保一个类只有一个实例，并为此实例提供一个全局访问点。
+问题Singleton同时解决了两个问题（违反了单一职责原则）：
+
+确保一个类只有一个实例。最常见原因是控制一些共享资源，比如，数据库。
+ 假设你已经创建了一个新对象，不久，又尝试创建一个新的。在这种秦光下，你想要老的那个对象而不是新创建一个实例。
+ 它不能通过正常的构造方法完成，因为在设计上每">
+<meta property="og:image" content="http://img.blog.csdn.net/20171126114958048?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-11-26T03:52:37.649Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-创建模式之Builder">
-<meta name="twitter:description" content="意图Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。
-问题假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。
-比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-创建模式之Singleton">
+<meta name="twitter:description" content="意图Singleton是创建模式的一种，让你可以确保一个类只有一个实例，并为此实例提供一个全局访问点。
+问题Singleton同时解决了两个问题（违反了单一职责原则）：
+
+确保一个类只有一个实例。最常见原因是控制一些共享资源，比如，数据库。
+ 假设你已经创建了一个新对象，不久，又尝试创建一个新的。在这种秦光下，你想要老的那个对象而不是新创建一个实例。
+ 它不能通过正常的构造方法完成，因为在设计上每">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171126114958048?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -132,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/23/设计模式-创建模式之Singleton/"/>
 
 
 
 
 
-  <title> 译-设计模式-创建模式之Builder | 凡隐的博客 </title>
+  <title> 译-设计模式-创建模式之Singleton | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +310,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/17/设计模式-创建模式之Builder/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/23/设计模式-创建模式之Singleton/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -322,7 +331,7 @@
             
             
               
-                译-设计模式-创建模式之Builder
+                译-设计模式-创建模式之Singleton
               
             
           </h2>
@@ -337,8 +346,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-17T14:25:55+08:00">
-                2017-11-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-23T20:37:48+08:00">
+                2017-11-23
               </time>
             
 
@@ -377,7 +386,7 @@
 
           
           
-             <span id="/2017/11/17/设计模式-创建模式之Builder/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Builder">
+             <span id="/2017/11/23/设计模式-创建模式之Singleton/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Singleton">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,98 +415,99 @@
       
 
       
-        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Builder是创建模式的一种，让你可以使用相同的构建过程生成不同类型和对象的表示形式。BUilder允许一步一步构建复杂对象。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设有一个复杂对象需要一步一步的初始化许多字段和嵌套对象。这些代码通常放在一个有很多参数的构造方法中，或者更糟糕，分散在客户端代码中。</p>
-<p>比如，让我们考虑下如何创建一个House对象。创建一个简单的房子，你需要盖四面墙，安装一个门和两个窗户，构建房顶。但是，如果你想要一个更大，更亮堂，并且有后院和其他好吃的东西的房子呢？<br><a id="more"></a><br>想到的最简单的解决方式是从Hose类扩展，通过创建子类来覆盖所有参数的组合。这种处理方式明显会导致创建许多子类。任何新的参数，比如阳台风格，都需要扩张这个层级甚至扩张很多。</p>
-<p>这些参数大多时候是无用的，导致<a href="https://refactoring.guru/smells/long-parameter-list" target="_blank" rel="external">构造方法看起来很丑陋</a>。比如，很多房子没有游泳池。因此，和游泳池相关的所有参数99%情况下都是无用的。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Builder模式建议抽离出类自身的构造代码到不同的对象中，这种对象叫做builder。</p>
-<p>模式把对象的构造组织称一系列步骤（比如：buildWalls，BuildDoor等）。创建这个对象，你需要调用一个构造类中的几个构造步骤。最重要的一点是你不需要调用所有的步骤。你只能使用生成对象的特定配置所需的步骤。</p>
-<p>通常，对于你正在尝试构建的各种产品，相同的构建步骤将会有所不同（一样步骤，但是每个步骤完成的方式不同）。比如，一个机舱可以用木日志建造，但是一座城堡必须用石头。</p>
-<p>在这种情况下，你可以在不同的方式下，创建几个不同的实现了相同构建步骤的builder类。然后，你就可以使用这些builder在相同的构建处理中生产不同类型的对象。</p>
-<p>比如，有一个StoneBuilder类来处理所有和石头相关的事情，一个WoodBuilder类来处理木头的。你可以使用它们中的一个通过一系列构造步骤来生产一个石头或者木头房子。这种方式仅在客户端代码通过通用接口来和builder交互时可用。</p>
-<p>你可以进一步抽离出整个构建过程到一个特别的类：Director。在这种情况下，Director（Director关联了一个Builder对象）可以定义构建步骤的顺序并执行他们。这种结构下将会向客户端隐藏所有构建细节。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171118161105405?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Singleton是创建模式的一种，让你可以确保一个类只有一个实例，并为此实例提供一个全局访问点。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>Singleton同时解决了两个问题（违反了单一职责原则）：</p>
 <ol>
-<li><p>Builder声明构建一个产品需要的步骤。</p>
-</li>
-<li><p>Concrete Builder提供构造步骤的不同实现。Builder也可以提供获取构造结果的方法。这个方法不需要声明在builder接口中，因为builder可能生产没有遵循通用接口的产品。但是如果你处理的产品是单一层次的，你可以安全的把这个方法描述在基本接口中。</p>
-</li>
-<li><p>Product是创建结果的一个对象。Builder可以生产不属于同一个类层级或者接口的产品。这是Builder和其他创建模式的不同之处。</p>
-</li>
-<li><p>Director使用Builder对象构建产品。通常，客户端通过构造方法参数传给director一个builder实例。Director使用这个单一的builder对象完成所有的进一步构建。但是也有替代的方式，把builder传递给director的主要生产方法。</p>
-</li>
-<li><p>注意，Builder不需要创建一了director类。当你有几个需要不同构建流程的产品变种时，用不同的director类是很方便的。Director把代码都封装在一个单独的类中。</p>
+<li><p>确保一个类只有一个实例。最常见原因是控制一些共享资源，比如，数据库。</p>
+<p> 假设你已经创建了一个新对象，不久，又尝试创建一个新的。在这种秦光下，你想要老的那个对象而不是新创建一个实例。</p>
+<p> 它不能通过正常的构造方法完成，因为在设计上每个构造方法总是返回一个新对象。</p>
+<a id="more"></a></li>
+<li><p>为实例提供一个全局的访问点。听起来像一个全局变量，不是吗？但是你无法做一个只读的全局变量。任何可以访问这个变量的人都可以替换他的值。</p>
+<p> 还有另外一个问题：你不希望解决以前的问题的代码分散在你的程序中。它们最好放在一个类中，特别当你的代码已经依赖那个类时。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子展示了Builder是如何一步一步的构造出汽车。Director类使用不同的构建步骤生产不同类型的汽车。Director使用给他们的build对象工作。这种方式允许你重用已经存在的代码来生产不同种类汽车的用户手册。为了达到这个目的，你只需要一个新的builder类。</p>
-<p>因此，Builder模式允许你只通过简单的改变构造步骤的数量和顺序就可以创建产品的不同变种。另外，通过提交构建器对象的替代版本，您可以使用相同的构造代码生成完全不同类型的产品。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">// Builder can create different products using the same building process.</div><div class="line">class Car is</div><div class="line">    Can have GPS, trip computer and various numbers of seats.</div><div class="line">    Can be a city car, a sports car, or a cabriolet.</div><div class="line"></div><div class="line">class Manual is</div><div class="line">    Textual representation of a car.</div><div class="line"></div><div class="line"></div><div class="line">// Builder interface defines all possible ways to configure a product.</div><div class="line">interface Builder is</div><div class="line">    method reset()</div><div class="line">    method setSeats(number)</div><div class="line">    method setEngine(engine: Engine)</div><div class="line">    method setTripComputer()</div><div class="line">    method setGPS()</div><div class="line"></div><div class="line">// Concrete builders implement that interface differently.</div><div class="line">class CarBuilder implements Builder is</div><div class="line">    private field car:Car</div><div class="line">    method reset()</div><div class="line">        Put a new Car instance into the "car" field.</div><div class="line">    method setSeats(number) is</div><div class="line">        Set the number of seats in car.</div><div class="line">    method setEngine(engine: Engine) is</div><div class="line">        Install a given engine.</div><div class="line">    method setTripComputer() is</div><div class="line">        Install a trip computer.</div><div class="line">    method setGPS() is</div><div class="line">        Install a global positioning system.</div><div class="line">    method getResult(): Car is</div><div class="line">        Return the current car object.</div><div class="line"></div><div class="line">// Unlike other creational patterns, Builder can construct unrelated products,</div><div class="line">// which don't have the common interface.</div><div class="line">class CarManualBuilder implements Builder is</div><div class="line">    private field manual:Manual</div><div class="line">    method reset()</div><div class="line">        Put a new Manual instance into the "manual" field.</div><div class="line">    method setSeats(number) is</div><div class="line">        Document car seats features.</div><div class="line">    method setEngine(engine: Engine) is</div><div class="line">        Add an engine instruction.</div><div class="line">    method setTripComputer() is</div><div class="line">        Add a trip computer instruction.</div><div class="line">    method setGPS() is</div><div class="line">        Add GPS instruction.</div><div class="line">    method getResult(): Manual is</div><div class="line">        Return the current manual object.</div><div class="line"></div><div class="line"></div><div class="line">// Director defines the order of building steps. It works with a builder object</div><div class="line">// through common Builder interface. Therefore it may not know what product is</div><div class="line">// being built.</div><div class="line">class Director is</div><div class="line">    method constructSportsCar(builder: Builder) is</div><div class="line">        builder.reset();</div><div class="line">        builder.setSeats(2);</div><div class="line">        builder.setEngine(new SportEngine());</div><div class="line">        builder.setTripComputer();</div><div class="line">        builder.setGPS();</div><div class="line"></div><div class="line"></div><div class="line">// Director gets the concrete builder object from the client (application code).</div><div class="line">// That's because application knows better which builder to use to get a</div><div class="line">// specific product.</div><div class="line">class Application is</div><div class="line">    method makeCar is</div><div class="line">        director = new Director();</div><div class="line"></div><div class="line">        CarBuilder builder = new CarBuilder();</div><div class="line">        director.constructSportsCar(builder);</div><div class="line">        Car car = builder.getResult();</div><div class="line"></div><div class="line">        CarManualBuilder builder = new CarManualBuilder();</div><div class="line">        director.constructSportsCar(builder);</div><div class="line"></div><div class="line">        // The final product is often retrieved from a builder object, since</div><div class="line">        // Director is not aware and not dependent on concrete builders</div><div class="line">        // and products.</div><div class="line">        Manual manual = builder.getResult();</div></pre></td></tr></table></figure>
+<p>注意，Sigleton同时解决了上面两个问题。但是现在模式很流行，即使他只解决了其中一个问题人们也会把它称为Sigleton。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>单例所有实现的都有以下两个步骤：</p>
+<ul>
+<li><p>创建私有的构造方法。</p>
+</li>
+<li><p>创建静态的创建方法扮演构造方法的角色。这个方法使用私有的构造方法创建一个对象并把它保存在静态变量或者字段中。对这个方法的所有调用都将返回缓存的对象。</p>
+</li>
+</ul>
+<p>Singleton保持把单实例的生产代码放在一个地方–Singlton类的创建方法中。任何可以访问Singleton类的客户端也都可以访问他的创建方法。因此，他提供给我们Singleton实例的一个全局访问点。</p>
+<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="政府"><a href="#政府" class="headerlink" title="政府"></a>政府</h4><p>政府是Singleton模式的一个很好的例子。一个国家只能有一个官方政府。不管组件政府的个人身份如何，“X的政府”这个称号是全球的一个访问点，他可以识别这个组织的负责人。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171126114958048?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<ol>
+<li>Singleton声明静态的方法getInstance()，这个方法返回相同的Singleton类实例。</li>
+</ol>
+<p>Singleton的构造方法对客户端代码应当不可见。getInstance()应该是唯一的可以创建并获得Singleton对象的途径。</p>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，数据库连接类扮演Singleton角色。这个类没有公开的构造方法，所以只有调用getInstance方法可以获取这个对象。这个方法混存第一次创建的对象，在随后所有的调用中都返回它。</p>
+<p>单例模式保证他的类只有一个实例被创建。并且，他提供了实例全局访问点：这个静态方法getInstance。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">class Database is</div><div class="line">    private field instance: Database</div><div class="line"></div><div class="line">    static method getInstance() is</div><div class="line">        if (this.instance == null) then</div><div class="line">            acquireThreadLock() and then</div><div class="line">                // Ensure that instance has not yet been initialized by other</div><div class="line">                // thread while this one has been waiting for the lock release.</div><div class="line">                if (this.instance == null) then</div><div class="line">                    this.instance = new Database()</div><div class="line">        return this.instance</div><div class="line"></div><div class="line">    private constructor Database() is</div><div class="line">        // Some initialization code, such as the actual connection to a</div><div class="line">        // database server.</div><div class="line">        // ...</div><div class="line"></div><div class="line">    public method query(sql) is</div><div class="line">        // All database queries of an app will go through this methods.</div><div class="line">        // Therefore, you can place a throttling or caching logic here.</div><div class="line">        // ...</div><div class="line"></div><div class="line">class Application is</div><div class="line">    method main() is</div><div class="line">        Database foo = Database.getInstance()</div><div class="line">        foo.query("SELECT ...")</div><div class="line">        // ...</div><div class="line">        Database bar = Database.getInstance()</div><div class="line">        bar.query("SELECT ...")</div><div class="line">        // The variable `bar` will contain the same object as the variable `foo`.</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你有一个“伸缩”的构造方法。</p>
-<p>  调用一个有许多可选参数的构造方法很不方便。你必须指定所有的参数，即使你不需要。</p>
-<p>  解决这个痛点，可以重载一个长的构造方法，创建几个参数较少的构造方法。它们仍然调用主构造方法，只是把省略的参数传入了默认值。</p>
-<p>  Builder模式允许一步一步构建对象。在构建一个简单对象时，你可以只使用必要的步骤，跳过可选步骤。</p>
+<li><p>当程序需要提供给所有客户端一个类的一个可以实例。比如，一个单独的数据库对象，在程序的不同模块贡献。</p>
+<p>  除了特别的的创建方法，Singleton对客户端隐藏了所有创建类的新对象的方法。这个方法创建一个新对象或者返回之前已经创建过的已经存在的对象。</p>
 </li>
-<li><p>当你的代码必须要创建一个产品的不同表示时（比如，石头和木头房子）。产品的构造步骤一样，但细节不同。另外，尽管这个产品是相似的，它们没有必要必须遵循一个通用基类或者接口。</p>
-<p>  Builder可以用相同的过程构建不同的产品。</p>
-<p>  不同的产品被不同的builder类表示。控制构建顺序的代码应该放在一个单独的director类中。</p>
-</li>
-<li><p>当你必须构建一个Composite树或者其他复杂对象时。</p>
-<p>  Builder一步一步的构建产品。他循序延时甚至递归构建，这在使用树结构时很有用。Builder在运行构建步骤时不能导出位完成的产品。这样可以阻止客户端代码拿到损坏的结果。</p>
+<li><p>当你需要严格控制全局变量。</p>
+<p>  不想全局变量，Singleton保证只有一个类实例。除了Singleton本身，没有任何类可以替换缓存的实例。</p>
+<p>  Sigleton让你可以轻松改变这个限制。比如，允许任何数量的实例，你只需要在一个地方修改代码–getInstance()方法体内。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>确保你有构建产品的共同步骤和导致创建各种产品代表的步骤的变化（？）。</p>
+<li><p>在类中添加一个静态字段用来持有单实例。</p>
 </li>
-<li><p>创建Builder接口并声明生产步骤。</p>
+<li><p>声明静态的公开创建方法，它将用来检索单实例。</p>
 </li>
-<li><p>为每一个产品表示创建Concrete Builder类。并实现它们的创建步骤。</p>
+<li><p>在创建方法中实现“懒初始化”。它应该在第一次调用时创建一个新实例，并把它放到静态变量中。在随后的调用中这个方法都返回这个实例。</p>
 </li>
-<li><p>考虑创建一个Director类。他的方法用相同的builder实例，不同的步骤来创建不同的产品配置。</p>
+<li><p>把类的构造方法声明为私有。</p>
 </li>
-<li><p>客户端代码创建Builder和Director对象。它首先床架你个builder实例，然后把它传给director的构造方法或者他的生产方法。</p>
-</li>
-<li><p>客户端应该调用Director对象的生产方法开始构建过程。</p>
-</li>
-<li><p>是有在所有产品遵循一个通用接口时可以从Director对象中获取构建结果。相反，每个Builder必须有他自己检索结果的方法。</p>
+<li><p>把客户端代码中所有直接对构造方法的调用替换为对创建方法的调用。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li><p>允许一步一步构建产品。</p>
+<li><p>保证类只有一个实例。</p>
 </li>
-<li><p>允许使用相同的代码构建不同产品。</p>
+<li><p>提供实例的全局访问点。</p>
 </li>
-<li><p>把产品的核心业务逻辑与复杂的构建代码隔离。</p>
+<li><p>允许懒实例。</p>
 </li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>创建多个额外类增加了代码的复杂度。</li>
+<li><p>违背单一职责原则。</p>
+</li>
+<li><p>面具坏设计（Masks bad design？）。</p>
+</li>
+<li><p>在多线程的环境下需要特别处理。</p>
+</li>
+<li><p>在单元测试中要无尽mock。</p>
+</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
+<li><p>Facade可以改造成Singleton，因为大多情况下，一个门面对象就足够了。</p>
 </li>
-<li><p>Builder关注点在一步一步的构造出一个复杂对象。Abstract Factory创建产品对象的系列（不管是简单的还是复杂的）。Builder在最后一步返回产品，但是Abstrct Factory立刻返回结果。</p>
-</li>
-<li><p>Builder可以一步一步的构建一个复杂的Composite树。</p>
-</li>
-<li><p>Builder可已才有Bridge结构模式：Director当作接口，Builder当作实现。</p>
+<li><p>在一些情况下Flyweight和Sigleton很像，Flyweight把什么事情都减少到一个享元对象。但是记住，它们之间有两个基本的不同：</p>
+<p>  1.Singleton对象时易变的。Flyweight对象时不变的。</p>
+<ol>
+<li>单例类只有一个类实例，而享元类有多个不同状态的实例。</li>
+</ol>
 </li>
 <li><p>Abstract Factory，Builder和Prototype都可以实现为Singleton。</p>
 </li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Builder是创建型模式的一种，允许你一步一步构造出来复杂的对象。</p>
-<p>不想其他的创建型模式，Builder不需要产品遵循一个通用的接口。他可以使用相同的构造过程生成不同的产品。</p>
-<p>用例：Builder模式在你需要创建一个有很多可选配置的对象相当有用。</p>
-<p>Builder在Java核心库中也有广泛应用：</p>
-<pre><code>java.lang.StringBuilder#append() (unsynchronized)
-
-java.lang.StringBuffer#append() (synchronized)
-
-java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuffer, FloatBuffer and DoubleBuffer)
-
-所有java.lang.Appendable接口的实现
-</code></pre><p>鉴定：Builder模式可以在类中识别，它有一个创建方法和几个方法来配置结果对象。Builder方法通常是支持链式调用（比如，someBuilder-&gt;setValueA(1)-&gt;setValueB(2)-&gt;create()）。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/builder" target="_blank" rel="external">https://refactoring.guru/design-patterns/builder</a></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Singleton在优缺点方面几乎和全局变量一样。尽管它们很好用，但却破坏了你代码的模块化。</p>
+<p>在其他的上下文中，你可以使用一个依赖于Singleton的类。你将不得不携带Singleton类。大多数时候，在创建单元测试时会出现这个限制。</p>
+<p>尽管许多开发着认为Singleton是反模式，但是在Java的核心类中也有许多例子：</p>
+<ul>
+<li><p>java.lang.Runtime#getRuntime()</p>
+</li>
+<li><p>java.awt.Desktop#getDesktop()</p>
+</li>
+<li><p>java.lang.System#getSecurityManager()</p>
+</li>
+</ul>
+<p>Singleton可以通过一个返回相同缓存对象的静态创建方法来识别。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/singleton" target="_blank" rel="external">https://refactoring.guru/design-patterns/singleton</a></p>
 
       
     </div>
@@ -527,7 +537,7 @@ java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuff
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Factory-Method/" rel="tag"># Factory Method</a>
+            <a href="/tags/singleton/" rel="tag"># singleton</a>
           
         </div>
       
@@ -540,8 +550,8 @@ java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuff
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/14/设计模式-创建模式之AbstractFactory/" rel="next" title="译-设计模式-创建模式之Abstract Factory">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Abstract Factory
+              <a href="/2017/11/22/设计模式-创建模式之Prototype/" rel="next" title="译-设计模式-创建模式之Prototype(Clone)">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Prototype(Clone)
               </a>
             
           </div>
@@ -549,10 +559,6 @@ java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuff
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/22/设计模式-创建模式之Prototype/" rel="prev" title="译-设计模式-创建模式之Prototype(Clone)">
-                译-设计模式-创建模式之Prototype(Clone) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -692,7 +698,7 @@ java.nio.ByteBuffer#put() (also in CharBuffer, ShortBuffer, IntBuffer,  LongBuff
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#政府"><span class="nav-number">4.1.</span> <span class="nav-text">政府</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
