@@ -1,0 +1,1137 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Chain Of Responsibility," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="意图责任链（Chain Of Responsibility）是一种行为模式，通过给多个对象一个机会去处理请求的的方式来避免请求发送者和接受者的耦合。责任链接收对象并且沿着链条传递它，直到一个对象来处理它。
+问题假设你在做一个订单系统。你第一个任务就是限制用户对系统的访问，只有已经授权的用户可以创建订单。另外，一些用户拥有管理员权限，可以访问全部的订单。
+你意识到这些检查必须顺序处理。程序能够在任何">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译-设计模式-行为模式之Chain-Of-Responsibility">
+<meta property="og:url" content="http://yoursite.com/2017/12/12/设计模式-行为模式之chain-of-responsibility/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="意图责任链（Chain Of Responsibility）是一种行为模式，通过给多个对象一个机会去处理请求的的方式来避免请求发送者和接受者的耦合。责任链接收对象并且沿着链条传递它，直到一个对象来处理它。
+问题假设你在做一个订单系统。你第一个任务就是限制用户对系统的访问，只有已经授权的用户可以创建订单。另外，一些用户拥有管理员权限，可以访问全部的订单。
+你意识到这些检查必须顺序处理。程序能够在任何">
+<meta property="og:image" content="http://img.blog.csdn.net/20171216142927407?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-12-16T06:31:46.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译-设计模式-行为模式之Chain-Of-Responsibility">
+<meta name="twitter:description" content="意图责任链（Chain Of Responsibility）是一种行为模式，通过给多个对象一个机会去处理请求的的方式来避免请求发送者和接受者的耦合。责任链接收对象并且沿着链条传递它，直到一个对象来处理它。
+问题假设你在做一个订单系统。你第一个任务就是限制用户对系统的访问，只有已经授权的用户可以创建订单。另外，一些用户拥有管理员权限，可以访问全部的订单。
+你意识到这些检查必须顺序处理。程序能够在任何">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171216142927407?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/12/设计模式-行为模式之chain-of-responsibility/"/>
+
+
+
+
+
+  <title> 译-设计模式-行为模式之Chain-Of-Responsibility | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/12/设计模式-行为模式之chain-of-responsibility/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                译-设计模式-行为模式之Chain-Of-Responsibility
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T20:39:18+08:00">
+                2017-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/12/12/设计模式-行为模式之chain-of-responsibility/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Chain-Of-Responsibility">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>责任链（Chain Of Responsibility）是一种行为模式，通过给多个对象一个机会去处理请求的的方式来避免请求发送者和接受者的耦合。责任链接收对象并且沿着链条传递它，直到一个对象来处理它。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你在做一个订单系统。你第一个任务就是限制用户对系统的访问，只有已经授权的用户可以创建订单。另外，一些用户拥有管理员权限，可以访问全部的订单。</p>
+<p>你意识到这些检查必须顺序处理。程序能够在任何时候对用户进行尝试认证，只要用户的证书被请求传递。但是，如果未能对用户进行身份验证，则无法检查用户的权限。<br><a id="more"></a><br>几个月后，你已经实现了这些顺序检查。</p>
+<ul>
+<li><p>你的同时建议，将原始数据直接交给代码处理不安全。所以你添加了一个额外校验步骤来验证请求数据。</p>
+</li>
+<li><p>之后，其他人建议协同无法应对暴力的密码破解。为了解决这个问题，你添加了另一个检查来过滤重复使用相同用户名但是失败的请求。</p>
+</li>
+<li><p>你甚至添加了缓存来提升订单在高负载下的性能。</p>
+</li>
+</ul>
+<p>不幸的是，随着新特性的增加，代码变得越来越臃肿。甚至，你为了保护其他页面，把这些检查代码的一部分做了拷贝，导致出现重复代码片段。</p>
+<p>这个系统变得难以维护。但是，一天你收到了重构系统的任务…</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>和其他行为模式很像，责任链依赖于将行为转化为独立的对象。在我们的例子中，每个检查都将被移动到不同的类中，这些类只有一个方法来执行这些检查。这个方法通过参数来接收请求数据。</p>
+<p>现在，到了有趣的部分。模式建议连接这些对象到一个链条中。 每个处理者都有一个字段来存储这个链条中下一个处理者的引用。不管什么时候，一个处理者接收到一个请求，它可以把请求传递给链条中在其之后的处理者。这个请求沿着链条旅行知道所有的处理者都有机会来处理它。</p>
+<p>最后，一个处理者不需要在继续传递这个请求。有两种流行的方式来处理这个想法。</p>
+<p>在我们访问过滤的例子中，处理者排队并挨个处理他们的检查。流的终点只可能是某个检查失败或者到达链条尾部。</p>
+<p>但还有一个略微不同的方式，处理者只会传递那些它们自己无法处理的请求。否则，它们执行自己的业务并且终止链条的执行。这个选项在处理GUI组件事件时很常见。</p>
+<p>比如，当用户点击一个按钮，这个事件便沿着由按钮开始的组件链传播，传到他们的父组件，像form和panel，直到应用的窗口停止。这个事件被链条中第一个可以处理它的组件处理。这个例子值得一提，因为它告诉我们一个链条可以从一个树结构中抽离出来。</p>
+<p>所有的处理者类都需要遵循一样的接口。这将让你可以在运行时使用各个处理者组合一个链条，而代码不会和处理者的具体实现类耦合。每个具体的处理者应该只关心自己的execute方法。</p>
+<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><h4 id="技术支持"><a href="#技术支持" class="headerlink" title="技术支持"></a>技术支持</h4><p>你为你的PC买了一个新的显卡。Windows可以自动检测并启用他。但你钟爱的Linux却无法使用新硬件。抱着微小的希望，你打电话给技术支持。</p>
+<p>首先，你听到了自动应答的机器人声音。它提出了九种解决各种问题的流行解决方案，但没有一个与你的问题有关。过了一会，机器把你转给在线客服。</p>
+<p>客服也没有给出有用的解决方法，于是你请求联系一个正确的工程师。</p>
+<p>客服把你转给了工程师。最后，这个工程师告诉你到哪下载显卡驱动及如何在Linux中怎么安装。于是，你愉快的结束了这通电话。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171216142927407?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure.png"></p>
+<ol>
+<li><p>Handler为所有具体的处理者声明一个通用接口。通常，它只有一个处理请求的方法，但有时候也会有设置链条下一个处理者的方法。</p>
+</li>
+<li><p>Base Handler是可选的类，它可以包含负责构建维护对象责任链的模版代码。</p>
+<p> 这个类可以包含一个字段来存储链条中下一个处理者。使用这个字段，客户端可以将多个处理者链接到一个链中。这个字段可以通过构造方法或者一个set方法来控制。这个类也可能有一个基本处理方法的实现，这个方法检查下一个处理者是否存在然后把执行传递给它。</p>
+</li>
+<li><p>Concrete Handlers包含处理请求的实际代码。接收到请求后，处理者必须决定是否处理该请求，另外还要决定是否在链条中继续传递它。</p>
+<p> 处理者通常是独立的和不可变的，通过构造函数参数一次性接收所有必要的数据。</p>
+</li>
+<li><p>Client可以只组装一次链条或者依赖于程序逻辑动态组装。注意，一个请求可以被发送到链中的任何处理者，它并不总必须是第一个。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，责任链负责显示活动UI元素关联的一个上下文帮助。</p>
+<p>这些GUI元素是树状结构。Dialog类渲染树根的主窗口。中间层由Panel组成。叶子结点有：Component、Button、TextEdit等。</p>
+<p>一个Component能够显示上下文提示，只要它有帮助文本。一些复杂的组件有他们自己的方式来显示上下文帮助。</p>
+<p>当用户将鼠标光标指向组件并按下F1时，应用抓取这个组件并发送帮助请求。这个请求向上传递给所有父容器知道这个组件可以显示帮助。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line">// Handler interface.</div><div class="line">interface ComponentWithContextualHelp is</div><div class="line">    method showHelp() is</div><div class="line"></div><div class="line"></div><div class="line">// Base class for simple components.</div><div class="line">abstract class Component implements ContextualHelp is</div><div class="line">    field tooltipText: string</div><div class="line"></div><div class="line">    // Container, which contains component, severs as a following object</div><div class="line">    // in chain.</div><div class="line">    protected field container: Container</div><div class="line"></div><div class="line">    // Component shows tooltip if there is a help text assigned to it. Otherwise</div><div class="line">    // it forwards the call to the container if it exists.</div><div class="line">    method showHelp() is</div><div class="line">        if (tooltipText != null)</div><div class="line">            Show tooltip.</div><div class="line">        else</div><div class="line">            container.showHelp()</div><div class="line"></div><div class="line"></div><div class="line">// Containers can contain both simple components and other container as</div><div class="line">// children. The chain relations are established here. The class inherits</div><div class="line">// showHelp behavior from its parent.</div><div class="line">abstract class Container extends Component is</div><div class="line">    protected field children: array of Component</div><div class="line"></div><div class="line">    method add(child) is</div><div class="line">        children.add(child)</div><div class="line">        child.container = this</div><div class="line"></div><div class="line"></div><div class="line">// Primitive components may be fine with default help implementation...</div><div class="line">class Button extends Component is</div><div class="line">    // ...</div><div class="line"></div><div class="line">// But complex components may override the default implementation. If a help can</div><div class="line">// not be provided in a new way, the component can always call the base</div><div class="line">// implementation (see Component class).</div><div class="line">class Panel extends Container is</div><div class="line">    field modalHelpText: string</div><div class="line"></div><div class="line">    method showHelp() is</div><div class="line">        if (modalHelpText != null)</div><div class="line">            Show modal window with a help text.</div><div class="line">        else</div><div class="line">            parent::showHelp()</div><div class="line"></div><div class="line">// ...same as above...</div><div class="line">class Dialog extends Container is</div><div class="line">    field wikiPage: string</div><div class="line"></div><div class="line">    method showHelp() is</div><div class="line">        if (wikiPage != null)</div><div class="line">            Open a wiki help page.</div><div class="line">        else</div><div class="line">            parent::showHelp()</div><div class="line"></div><div class="line"></div><div class="line">// Client code.</div><div class="line">class Application is</div><div class="line">    // Each application configures the chain differently.</div><div class="line">    method createUI() is</div><div class="line">        dialog = new Dialog("Budget Reports")</div><div class="line">        dialog.wikiPage = "http://..."</div><div class="line">        panel = new Panel(0, 0, 400, 800)</div><div class="line">        panel.modalHelpText = "This panel does..."</div><div class="line">        ok = new Button(250, 760, 50, 20, "OK")</div><div class="line">        ok.tooltipText = "This is a OK button that..."</div><div class="line">        cancel = new Button(320, 760, 50, 20, "Cancel")</div><div class="line">        // ...</div><div class="line">        panel.add(ok)</div><div class="line">        panel.add(cancel)</div><div class="line">        dialog.add(panel)</div><div class="line"></div><div class="line">    // Imagine what happens here.</div><div class="line">    method onF1KeyPress() is</div><div class="line">        component = this.getComponentAtMouseCoords()</div><div class="line">        component.showHelp()</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当一个程序有几个处理不同请求的处理者，但事先并不知道过来的是什么类型的请求。</p>
+<p>  你要把几个处理者放到一个链条中。请求沿着链条传递直到有个处理者能够处理它。</p>
+</li>
+<li><p>当要以特定顺序执行处理程序。</p>
+<p>  责任链允许按照给定的顺序依次执行处理者。</p>
+</li>
+<li><p>当有很多对象来处理请求，并且它们的顺序动态改变。</p>
+<p>  责任链允许对一个存在的链条中的处理者进行新增、移除或者排序操作。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>声明Handler接口，包含一个处理请求的方法。决定如何传递请求的信息到方法中。最灵活的方法是将请求数据转换为对象并传递给处理方法。</p>
+</li>
+<li><p>为了减少重复的样板代码，从Handler接口派生出一个抽象BaseHandler类是很值得的。</p>
+<p> 添加一个字段来保存下一个处理者的引用。这个字段可以从构造参数中获得初始化数据。你也可以定义一个set方法来修改这个字段。但仅当你想要在运行时想要修改链条才需要这么做。</p>
+<p> 实现处理方法，以便将请求转发给链中的下一个对象（如果有的话）。具体的处理者能够通过调用父类方法来转发请求。因此，它们不需要访问引用字段，你就可以把它声明为private了。</p>
+</li>
+<li><p>创建ConcreteHandler子类并且实现它们的处理方法。每个处理者在收到请求时应做出两个决定：</p>
+<ul>
+<li>是否要处理这个请求。</li>
+<li>是否要继续传递这个请求。</li>
+</ul>
+</li>
+<li><p>Client可以自己组装链条也可以从其他对象接收已经构造好的链条。在后一种情况下，可以采用工厂对象通过应用配置护着环境变量来构建链条。</p>
+</li>
+<li><p>Client可能触发链条中任意一个处理者，不仅仅只是第一个。这个调用将会沿着链条传递直到链条结尾或者一些处理者拒绝进一步传递它。</p>
+</li>
+<li><p>由于链条的动态特性，Client应该准备好处理以下情况：</p>
+<ul>
+<li>有时一个链可能包含一个单一的链接。</li>
+<li>一些请求可能无法到达链条的尾部。</li>
+<li>一些请求到达链条尾部还未被处理。</li>
+</ul>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>减少请求发送者和接受者的耦合。</p>
+</li>
+<li><p>遵循单一职责原则。</p>
+</li>
+<li><p>遵循开闭原则。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>一些请求肯能到链条尾部仍未被处理。</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>Chain Of Responsibility，Command，Mediator和Observer处理连接请求的发送者和接收者的各种方式： </p>
+<ul>
+<li><p>责任链沿着潜在接收者的动态链顺序传递一个请求，直到其中一个处理这个请求。</p>
+</li>
+<li><p>命令模式建立从发送者到接收者的单向连接。</p>
+</li>
+<li><p>调解模式持有发送者和接收者间接引用。</p>
+</li>
+<li><p>观察者会在同一时间把一个请求发送给所有关心的接受者，但是允许它们动态的确定是否继续订阅和取消订阅后面的请求。</p>
+</li>
+</ul>
+</li>
+<li><p>责任链通常和组合（Composite）结合使用。在这种情况下，一个组件的父类可以看作是他的后继者。</p>
+</li>
+<li><p>责任链中的处理者可以表示为命令（Command）。在这种情况下，许多不同的操作可以在由请求表示的相同上下文中执行。</p>
+<p>  但还有另外一种方式，请求本身就是一个Command对象，沿着对象链传递。这种情况下，相同的操作可以在由链条对象表示的不同上下文中执行。</p>
+</li>
+<li><p>责任链和装饰者（Decorator）的类结构很相似。它们都依赖于递归组合来在一系列对象中传递执行。但是它们也有几个关键区别。</p>
+<p>  责任链的处理者能够随意执行动作，之间相互独立。它们也能够随意终止请求的进一步传递。另一方面，各个装饰者扩展一个特定行为并应该保持其接口一致。另外，装饰者不允许随意中断链条的执行。</p>
+</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>责任链允许请求烟盒潜在的处理链传递直到某个处理者处理这个请求。这种模式允许多个对象处理这个请求而不发送者类不需要和具体接受者类耦合。这个链可以在运行时动态组合遵循标准处理者接口的任何处理者。</p>
+<p>在Java中比较流行的使用样例：在GUI类中向父组件传递事件；过滤访问请求。</p>
+<p>在Java的核心类库中有些例子：</p>
+<ul>
+<li>javax.servlet.Filter#doFilter()</li>
+<li>java.util.logging.Logger#log()</li>
+</ul>
+<p>当我们发现组织结构类似以下描述时，可能就采用了责任链模式：一个对象的行为方法间接调用其他对象中的相同方法，而所有对象都遵循共同的接口。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/chain-of-responsibility" target="_blank" rel="external">https://refactoring.guru/design-patterns/chain-of-responsibility</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          
+            <a href="/tags/Chain-Of-Responsibility/" rel="tag"># Chain Of Responsibility</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/23/设计模式-创建模式之Singleton/" rel="next" title="译-设计模式-创建模式之Singleton">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Singleton
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#技术支持"><span class="nav-number">4.1.</span> <span class="nav-text">技术支持</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
