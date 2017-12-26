@@ -98,7 +98,7 @@
 问题假设你在做一个新的文本编辑器。你创建了一个Button类，可以被用做工具栏的按钮，也可以用作对话框的通用按钮。
 这些按钮看起来很像，但是它们做不同的事情。此时我们要把针对不同按钮点击的处理代码放在哪里呢？简单的解决方法是为每个按钮创建一个Button的子类">
 <meta property="og:image" content="http://img.blog.csdn.net/20171226224044490?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-12-26T14:42:29.620Z">
+<meta property="og:updated_time" content="2017-12-26T14:45:15.383Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式-行为模式之Command">
 <meta name="twitter:description" content="意图Command（命令）是一种行为模式，让你可以把请求转换到单独的对象，可以用来把不同的请求参数化，排队或者记录请求，并且支持撤销操作。
@@ -428,7 +428,7 @@
 </li>
 <li><p>Receiver包含特定命令所必需的业务逻辑或数据。命令可以查询这些对象的其他信息或整个操作委托给他们。在某些情况下，为了简单起见，可以将接收者的代码合并到命令类中。</p>
 </li>
-<li><p>Client创建并【诶之具体的Command对象。然后把他们传给适当的Invoker。</p>
+<li><p>Client创建并配置具体的Command对象。然后把他们传给适当的Invoker。</p>
 </li>
 </ol>
 <h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，Command模式用来记录操作历史，还可以还原它。不想之前的例子，这个应用每次用户操作都创建一个新的command。之后在帮助列表中会展示这些个性的命令。</p>
