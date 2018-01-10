@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Adapter," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Iterator," />
 
 
 
@@ -87,24 +87,24 @@
 
 
 
-<meta name="description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
+<meta name="description" content="意图Iterator是行为模式的一种，允许在不暴露底层结构的情况下顺序访问聚合对象中的元素。
+问题集合是编程中最常用的数据结构。它把一组对象放到一个单独的容器中。
+大多集合看起来都像元素的列表。然而，一些集合以树、图或者其他复杂数据结构组织数据。并且每个集合都必须提供一个方法让用户可以按照顺序处理集合中的元素。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Decorator">
-<meta property="og:url" content="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/index.html">
+<meta property="og:title" content="译-设计模式-行为模式之Iterator">
+<meta property="og:url" content="http://yoursite.com/2018/01/08/设计模式-行为模式之Iterator/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
-<meta property="og:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-26T11:13:52.000Z">
+<meta property="og:description" content="意图Iterator是行为模式的一种，允许在不暴露底层结构的情况下顺序访问聚合对象中的元素。
+问题集合是编程中最常用的数据结构。它把一组对象放到一个单独的容器中。
+大多集合看起来都像元素的列表。然而，一些集合以树、图或者其他复杂数据结构组织数据。并且每个集合都必须提供一个方法让用户可以按照顺序处理集合中的元素。">
+<meta property="og:image" content="http://img.blog.csdn.net/20180110171726992?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-10T09:18:47.044Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Decorator">
-<meta name="twitter:description" content="目的Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。
-问题你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。
-当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-行为模式之Iterator">
+<meta name="twitter:description" content="意图Iterator是行为模式的一种，允许在不暴露底层结构的情况下顺序访问聚合对象中的元素。
+问题集合是编程中最常用的数据结构。它把一组对象放到一个单独的容器中。
+大多集合看起来都像元素的列表。然而，一些集合以树、图或者其他复杂数据结构组织数据。并且每个集合都必须提供一个方法让用户可以按照顺序处理集合中的元素。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180110171726992?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/08/设计模式-行为模式之Iterator/"/>
 
 
 
 
 
-  <title> 译-设计模式-结构模式之Decorator | 凡隐的博客 </title>
+  <title> 译-设计模式-行为模式之Iterator | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +301,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/20/设计模式-结构模式之Decorator/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/设计模式-行为模式之Iterator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -322,7 +322,7 @@
             
             
               
-                译-设计模式-结构模式之Decorator
+                译-设计模式-行为模式之Iterator
               
             
           </h2>
@@ -337,8 +337,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-20T16:24:57+08:00">
-                2017-09-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-08T20:20:58+08:00">
+                2018-01-08
               </time>
             
 
@@ -377,7 +377,7 @@
 
           
           
-             <span id="/2017/09/20/设计模式-结构模式之Decorator/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Decorator">
+             <span id="/2018/01/08/设计模式-行为模式之Iterator/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Iterator">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,102 +406,83 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Decorator（装饰器）是一个结构设计模式，可以让你在封装包涵对象原有行为的基础上增加新的行为。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你需要动态的添加或者移除一个对象的责任，但是你要做到和应用中其他代码的兼容。</p>
-<p>当你需要扩展一个类的行为时继承时第一个想到的处理方式。然而，继承是静态的。你不能够增加一个新的类到程序中当它已经编译或者执行完成。<br><a id="more"></a></p>
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>装饰器模式依赖一个叫做装饰者（或者包装者）的特别类。他们和被封装的类拥有一样的接口，所以客户端代码不会注意到你用封装者替换了源对象。</p>
-<p>所有的封装者这都持有一个源对象实例的强引用。大多数包装器使用传入其构造函数的对象初始化该字段。</p>
-<p>所以，该如何动态改变他的行为呢？正如我提到的，封装者何和目标对象拥有一样的接口。当你调用装饰者的方法时，他执行被封装对象中同样方法并且在返回的结果中添加一些东西。它也可以在原始方法之前调用，但这取决于业务逻辑。</p>
-<p>这里是有趣的一部分：你可以使用装饰者封装一个对象，然后再使用另外一个装饰器封装这个包装结果，等等。最终的行为结果是所有装饰器和源对象组合得到的。</p>
-<h3 id="现实世界的类比"><a href="#现实世界的类比" class="headerlink" title="现实世界的类比"></a>现实世界的类比</h3><p>穿衣服就是使用装饰者的例子。当你冷的时候，你用毛衣包裹自己。如果你还是冷，你可以在外边套一个夹克。如果下雨了，你还可以再传一件雨衣。</p>
-<p>所有的服装“扩展”自你基本的行为，但不是你的一部分。因此，在你不需要他们的时候，可以轻松的移除它们。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20170924174824546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Structure"></p>
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Iterator是行为模式的一种，允许在不暴露底层结构的情况下顺序访问聚合对象中的元素。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>集合是编程中最常用的数据结构。它把一组对象放到一个单独的容器中。</p>
+<p>大多集合看起来都像元素的列表。然而，一些集合以树、图或者其他复杂数据结构组织数据。并且每个集合都必须提供一个方法让用户可以按照顺序处理集合中的元素。<br><a id="more"></a><br>但是，要怎么顺序遍历一个复杂结构呢？必须有几个方法来做到这一点。比如，今天想要深度优先来遍历树。但是，明天又想宽度优先来遍历。下周，又可能需要随机访问集合元素。</p>
+<p>添加越来越多的遍历算法使其丧失了它主要的职责，即高效存储数据。另一方面，一些特定的算法只只在指定的应用场景中适用。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Iterator模式建议抽出集合遍历方法到一个叫做“Iterator”的独立对象中。</p>
+<p>迭代器封装遍历细节，像当前位置及还有多少元素需要遍历。允许几个迭代器去独立遍历相同的集合。集合本身甚至不知道有人在访问它的元素。</p>
+<p>甚至，如果你需要一个特别的方式来遍历一个集合，你只需要创建一个新的迭代器类而不需要改动集合代码。</p>
+<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="旅游向导"><a href="#旅游向导" class="headerlink" title="旅游向导"></a>旅游向导</h4><p>你计划去罗马一周来参观它所有的景点。但是到那后，你花了很长的时间来找斗兽场。</p>
+<p>另一方面，你还有些备用预算可以请当地的导游。这个导游可以带你去看每个景点并且能给你讲许多有趣的故事。</p>
+<p>如果预算不够，你可以在手机上使用虚拟导游。它虽然没有真正的导游那么有趣，但是便宜。你可以只去你感兴趣的地方。</p>
+<p>真正的导游和虚拟导游都是罗马提供的遍历景点的迭代器。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180110171726992?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structor"></p>
 <ol>
-<li><p>Component为被封装者声明了一个通用的接口。</p>
+<li><p>Iterator定义了遍历集合的接口。通常有获取下/上一个元素方法和用来跟踪是否迭代完毕的方法。</p>
 </li>
-<li><p>Concrete Component是一个包涵基本行为并可以被装饰器修改的类。</p>
+<li><p>具体的Iterator实现遍历集合的特定算法。迭代器对象应当自己追踪遍历进度。它允许几个迭代器独立遍历相同的集合。</p>
 </li>
-<li><p>Base Decorator包涵一个被封装对象的强引用域。这个域应该被声明为Component类型，以便支持Concrete Components 和 Decorators.Base Decorator将所有操作委托给被封装对象。</p>
+<li><p>Collection接口声明了可以被迭代的集合。正如我们之前提到的，不是每一个集合都被表示成一个列表。集合可能把元素存储在一个数据库中，需要通过远程API获取他们；或者存储在一个Composite树中。因此，集合本身可能会创建迭代器，因为有一定数量的迭代器能够处理给定的集合类型。</p>
 </li>
-<li><p>Concrete Decorators包涵可以被动态添加的额外行为。装饰器可以在调用被封装对象方法前后执行自己的行为。</p>
+<li><p>具体的Collection在每次客户端请求时都会返回一个新的特定的迭代器实例。注意，这个方法的参数都要返回抽象迭代器类型。这将使得客户端和具体的迭代器独立。</p>
+</li>
+<li><p>客户端通过集合和迭代器的通用接口工作。这种方式让客户端与具体的类解耦。它允许添加新的迭代器并且不要修改现有代码。</p>
+<p> 通常，客户端自己不创建迭代器，而是从集合对象获取。但是客户端总是可以直接创建迭代器如果它需要特定的迭代器。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，装饰器通过加密保护金融数据，对已经存在的代码来讲是透明的。应用对金融数据做了加密和压缩装饰，当我们从硬盘读取数据时返回的是普通的数据，但是当我们写会到磁盘时数据被加密和压缩。</p>
-<p>装饰者和金融类都有一个相同的接口，使得它们对客户端来讲是通用的。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">// Common interface for all components.</div><div class="line">interface DataSource is</div><div class="line">    method writeData(data)</div><div class="line">    method readData():data</div><div class="line"></div><div class="line">// One of the concrete components can act as a base layer.</div><div class="line">class FileDataSource implements DataSource is</div><div class="line">    constructor FileDataSource(filename) &#123; ... &#125;</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        Write data to file.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Read data from file.</div><div class="line"></div><div class="line">// All other concrete components may act as wrappers.</div><div class="line">class DataSourceDecorator implements DataSource is</div><div class="line">    protected field wrappee: DataSource</div><div class="line"></div><div class="line">    constructor DataEncyptionDecorator(source: DataSource) is</div><div class="line">        wrappee = source</div><div class="line"></div><div class="line">    method writeData(data) is</div><div class="line">        wrappee.writeData(data)</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        return wrappee.readData()</div><div class="line"></div><div class="line">// Concrete Decorators extend the functionality of a component they wrap.</div><div class="line">class EncyptionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Encrypt passed data.</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Decrypt and return that data.</div><div class="line"></div><div class="line">// You can wrap objects in several layers of decorators.</div><div class="line">class CompressionDecorator extends DataSourceDecorator is</div><div class="line">    method writeData(data) is</div><div class="line">        Compress passed data</div><div class="line">        Pass the compressed data to wrappee's writeData() method.</div><div class="line"></div><div class="line">    method readData():data is</div><div class="line">        Get the data from wrappee's readData() method.</div><div class="line">        Uncompress and return that data.</div><div class="line"></div><div class="line"></div><div class="line">// Option 1. A simple example of decorator assembly.</div><div class="line">class Application is</div><div class="line">    method dumbUsageExample() is</div><div class="line">        source = new FileDataSource('somefile.dat')</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // a file with plain data</div><div class="line"></div><div class="line">        source = new CompressionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed file</div><div class="line"></div><div class="line">        source = new EncyptionDecorator(source)</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">        // compressed and encrypted file</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">// Option 2. Client code, which uses an external data source. SalaryManager</div><div class="line">// neither knows not cares about data storage specifics. It receives already</div><div class="line">// configured data source.</div><div class="line">class SalaryManager is</div><div class="line">    field source: DataSource</div><div class="line"></div><div class="line">    constructor SalaryManager(source: DataSource) &#123; ... &#125;</div><div class="line"></div><div class="line">    method load() is</div><div class="line">        return source.readData()</div><div class="line"></div><div class="line">    method save() is</div><div class="line">        source.writeData(salaryRecords)</div><div class="line">    // ...Other useful methods...</div><div class="line"></div><div class="line"></div><div class="line">// Application can assemble objects with a different set of functionality using</div><div class="line">// the same decorators at run time, depending on the configuration</div><div class="line">// or environment.</div><div class="line">class ApplicationConfigurator is</div><div class="line">    method configurationExample() is</div><div class="line">        source = new FileDataSource("salary.dat");</div><div class="line">        if (enabledEncryption)</div><div class="line">            source = new EncyptionDecorator(source)</div><div class="line">        if (enabledCompression)</div><div class="line">            source = new CompressionDecorator(source)</div><div class="line"></div><div class="line">        logger = new SalaryLogger(source)</div><div class="line">        salary = logger.load();</div><div class="line">    // ...Rest of an application code.</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，迭代器模式被用来遍历封装了访问Facebook社交关系的集合。这个集合提供了几种可以以不同方式遍历配置文件的迭代器。</p>
+<p>friend迭代器遍历给定配置集合中所有的朋友。colleague迭代器遍历同样遍历给定配置文件集合中的朋友但跳过了那些不是同事的朋友。所有的迭代器遵循相同的接口，这些接口允许客户端在不深入社交网络细节的情况下获取配置（比如，认证，发送REST请求等）。</p>
+<p>因为客户端代码通过通用接口同集合、迭代器协作，所以，需要支持新的社交网络时仅需要添加新的集合类，而不用改变现有代码。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div></pre></td><td class="code"><pre><div class="line">// The collection interface must declare a factory method for producing</div><div class="line">// iterators. You can declare several methods if there are different kinds</div><div class="line">// of iteration available in your program.</div><div class="line">interface SocialNetwork is</div><div class="line">    method createFriendsIterator(profileId): ProfileIterator</div><div class="line">    method createCoworkersIterator(profileId): ProfileIterator</div><div class="line"></div><div class="line"></div><div class="line">// Each concrete collection will be coupled to a set of concrete iterator</div><div class="line">// classes it returns. But the client will not be, since the signature of these</div><div class="line">// methods returns iterator interfaces.</div><div class="line">class Facebook implements SocialNetwork is</div><div class="line">    // ... The bulk of the collection's code should go here ...</div><div class="line"></div><div class="line">    // Iterator creation code.</div><div class="line">    method createFriendsIterator(profileId) is</div><div class="line">        return new FacebookIterator(this, profileId, "friends")</div><div class="line">    method createCoworkersIterator(profileId) is</div><div class="line">        return new FacebookIterator(this, profileId, "coworkers")</div><div class="line"></div><div class="line"></div><div class="line">// The common interface for all iterators.</div><div class="line">interface ProfileIterator is</div><div class="line">    method getNext(): Profile</div><div class="line">    method hasMore(): bool</div><div class="line"></div><div class="line"></div><div class="line">// The concrete iterator class.</div><div class="line">class FacebookIterator implements ProfileIterator is</div><div class="line">    // The iterator needs a reference to the collection that it traverses.</div><div class="line">    private field facebook: Facebook</div><div class="line">    private field profileId, type: string</div><div class="line"></div><div class="line">    // An iterator object traverses collection independently from other</div><div class="line">    // iterators. Therefore it has to store the iteration state.</div><div class="line">    private field currentPosition</div><div class="line">    private field cache: array of Profile</div><div class="line"></div><div class="line">    constructor FacebookIterator(facebook, profileId, type) is</div><div class="line">        this.facebook = network</div><div class="line">        this.profileId = profileId</div><div class="line">        this.type = type</div><div class="line"></div><div class="line">    private method lazyInit() is</div><div class="line">        if (cache == null)</div><div class="line">            cache = facebook.sendSophisticatedSocialGraphRequest(profileId, type)</div><div class="line"></div><div class="line">    // Each concrete iterator class has its own implementation of the common</div><div class="line">    // iterator interface.</div><div class="line">    method getNext() is</div><div class="line">        if (hasMore())</div><div class="line">            currentPosition++</div><div class="line">            return cache[currentPosition]</div><div class="line"></div><div class="line">    method hasMore() is</div><div class="line">        lazyInit()</div><div class="line">        return cache.length &lt; currentPosition</div><div class="line"></div><div class="line"></div><div class="line">// Here is another useful trick: you can pass an iterator to a client class,</div><div class="line">// instead of giving it access to a whole collection. This way, you do not</div><div class="line">// expose the collection to the client.</div><div class="line">//</div><div class="line">// But there is another benefit: you can change the way the client works with</div><div class="line">// the collection at run time by passing it a different iterator. This is</div><div class="line">// possible because the client code is not coupled to concrete iterator classes.</div><div class="line">class SocialSpammer is</div><div class="line">    method send(iterator: ProfileIterator, message: string) is</div><div class="line">        while (iterator.hasNext())</div><div class="line">            profile = iterator.getNext()</div><div class="line">            System.sendEmail(profile.getEmail(), message)</div><div class="line"></div><div class="line"></div><div class="line">// The application class configures collections and iterators and then passes</div><div class="line">// them to the client code.</div><div class="line">class Application is</div><div class="line">    field network: SocialNetwork</div><div class="line">    field spammer: SocialSpammer</div><div class="line"></div><div class="line">    method config() is</div><div class="line">        if working with Facebook</div><div class="line">            this.network = new Facebook()</div><div class="line">        if working with LinkedIn</div><div class="line">            this.network = new LinkedIn()</div><div class="line">        this.spammer = new SocialSpammer()</div><div class="line"></div><div class="line">    method sendSpamToFriends(profile) is</div><div class="line">        iterator = network.createFriendsIterator(profile.getId())</div><div class="line">        spammer.send(iterator, "Very important message")</div><div class="line"></div><div class="line">    method sendSpamToCoworkers(profile) is</div><div class="line">        iterator = network.createCoworkersIterator(profile.getId())</div><div class="line">        spammer.send(iterator, "Very important message")</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你需要动态赋予某个对象行为并且不需要破坏这个对象的代码。<br>  装饰器模式允许给某个对象动态的赋予新的行为，而且对客户端代码是隐式的。对象可以同时封装多个wrapper（译者注：就像同时穿了背心、衬衣和西装），结果是所有封装的堆叠结果。</p>
+<li><p>当你有一个复杂的数据结构，并且你想对客户端隐藏它的复杂性（为了安全或者方便）。</p>
+<p>  迭代器封装与复杂数据结构的交互并保护它免受粗心和恶意行为。迭代器模式允许客户端和集合元素协作而不必暴露集合对象。</p>
 </li>
-<li><p>当不可能活着不合适通过继承来扩展对象的行为。<br>  许多编程语言都有<code>final</code>关键字来阻止未来对一个类的扩展。当处理这些代码，进行扩展的唯一选项就是适用装饰器模式。</p>
+<li><p>当你需要几种不同的遍历数据结构的方式，但是你不能把它加到集合中或者这个代码和业务逻辑关联。</p>
+<p>  遍历数据结构的算法可能很大。把它放在集合或者主业务逻辑代码中，导致原有代码责任不明确且难以维护。把这些代码放在迭代器中让应用代码简洁和清晰。</p>
+</li>
+<li><p>当你想要一个单独接口来遍历不同的数据结构。</p>
+<p>  迭代器为所有实现者提供了通用的接口，允许在客户端代码中更换不同的迭代器。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>确保您的任务可以表示为一个主要组件和几个可选扩展。</p>
+<li><p>定义Iterator接口。它至少包含用来获取容器中下一个元素的方法。方便起见，它还可以包含获取上一个元素，追踪当前位置，检查是否到达迭代器尾部等方法。</p>
 </li>
-<li><p>创建Component（组件）接口，它需要描述该组件所有可被扩展的方法。</p>
+<li><p>创建Collection接口，它要提供获取一个新迭代器的方法。注意，它应当返回抽象迭代器类型。</p>
 </li>
-<li><p>创建Concrete Component（具体组件）类并且实现业务逻辑。</p>
+<li><p>为一个可迭代的集合实现一个具体的迭代器类。一个迭代器只能关联一个集合实例。通常通过迭代器的构造方法产生关联。</p>
 </li>
-<li><p>创建Base Decorator（基础装饰）类。创建一个域来保存被封装对象的强引用。该域应该是Component类型，这样强引用就可以持有组件类和装饰器的强引用（译者注：即变量声明为接口类型，这样可以持有所有Component的所有子类）。</p>
+<li><p>在相应的集合类中实现Collection接口。他们应当创建并返回一个适当的迭代器实例。集合通过迭代器的构造方法和迭代器建立关联。</p>
 </li>
-<li><p>确保所有子类实现了Component接口。</p>
-</li>
-<li><p>确保Base Decorator类的所有方法都将方法执行委托给了被包装对象。它将允许Concrete Decorators（具体装饰器）仅扩展一部分组件行为，并且不需要修改其他行为。</p>
-</li>
-<li><p>创建Concrete Decorators类，该类从Base Decorator扩展。</p>
-</li>
-<li><p>一个Concrete Decorator可以在调用被封装对象相同方法前后执行它自己的的行为（你可以仅仅只调用弗雷德方法，因为它将最终调用封装方法）。</p>
-</li>
-<li><p>Client代码必须负责配置包装层。Client应该通过Component的接口和其他类一起工作，使装饰器可以互换。</p>
+<li><p>在使用了这个模式后，在集合和客户端代码中应该不会再有遍历的代码。客户端每次需要迭代集合元素时都要通过集合获取新的迭代器。</p>
 </li>
 </ol>
-<p><code>不必完全拘泥于以上步骤，一些情况下译者认为完全可以省略掉Base Decorator。</code></p>
-<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><ul>
-<li><p>优点</p>
-<ol>
-<li>比继承灵活</li>
-<li>允许在运行时添加和删除行为</li>
-<li>通过使用多层封住，组合几个额外的行为。</li>
-<li>可以组合多个单行为实现使其实现更加复杂的行为。</li>
-</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>简化集合代码。</p>
 </li>
-<li><p>缺点</p>
-<ol>
-<li>配置一个多封装对象是困难的。</li>
-<li>导致很多小类。</li>
-</ol>
+<li><p>提供不同的方式遍历相同的数据结构。</p>
 </li>
+<li><p>允许并行遍历相同的集合。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>对于使用简单集合的程序来说，有些导致矫枉过正。</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>Adapter提供不同的接口来达到目的。Proxy提供相同的接口。Decorator提供增强的接口。</p>
+<li><p>Iterator可以用来遍历Composite树。</p>
 </li>
-<li><p>Adapter意味着改变一个存在对象的接口。Decorator在不改变原有接口的情况下增强另外一个对象。Decorator对应用来讲比Adapter更加透明。因此，Decorator支持递归组合，这对于纯Adapter是不可能的。</p>
+<li><p>Factory Method可以和Iterator一起使用，让集合的子类返回合适的迭代器。</p>
 </li>
-<li><p>Chain of Responsibility（责任链）和Decorator具有非常普通的类机构。它们都依赖于一系列对象的递归组合来执行。但是它们也有几个关键的不同点。</p>
-<p>  Chain of Responsibility的处理者可以执行随意的行为操作，处理者之间相互独立。它们可以随意的终端下一步的调用。另一方面，各种Decorator扩展一个特别的行为并且假设保持接口一致。并且，Decorator不允许随意中断执行链。</p>
+<li><p>Memento可以和Iterator一起使用来捕捉迭代器的当前状态，后面如果需要可以进行回滚。</p>
 </li>
-<li><p>Composite和Decorator拥有类似的结构图，因为它们都依赖递归组合来组织一个对象开闭的数量。<br>  装饰器可以看作只有一个组件的退化组合。然而，Decorator向对象增加了额外的责任，而Composite只是对其子类执行相同的行为的“summs up”。</p>
-<p>  但是它们也可以协作：Composite可以使用Decorator来改变树组件的行为。</p>
-</li>
-<li><p>大量使用Composite和Decorator模式的设计通常可以从Prototype中受益。它允许克隆复杂的结构，而不是从头重新构建它们。</p>
-</li>
-<li><p>装饰器可以让您更改对象的皮肤。策略让你改变勇气。</p>
-</li>
-<li><p>Decorator和Proxy有相似的结构，但是目的不同。两种模式都建立在将工作委托给其他对象的组合原则上。然而，Proxy自己管理他持有服务对象的生命周期，而Decorator结构由客户端控制。</p>
+<li><p>Visitor可以和Iterator一起使用来遍历一个复杂的数据结构，并在这些元素上执行一些操作，即使他们类型不同。</p>
 </li>
 </ul>
-<h3 id="Java中模式的使用"><a href="#Java中模式的使用" class="headerlink" title="Java中模式的使用"></a>Java中模式的使用</h3><p>用例：Decorator在Java中是十分标准的，尤其是和流相关的代码。</p>
-<p>这有几个Java核心库中使用Decorator的例子：</p>
-<ul>
-<li><p>java.io.InputStream，OutputStream，Reader和Writer的所有子类都有接受它们自己类型的构造方法。</p>
-</li>
-<li><p>java.util.Collections，方法checkedXXX()，synchronizedXXX()和unmodifiableXXX()。</p>
-</li>
-<li><p>javax.servlet.http.HttpServletRequestWrapper和HttpServletResponseWrapper。</p>
-</li>
-</ul>
-<p>鉴定：可以通过创建方法或构造函数来识别Decorator，它接受与当前类相同的类或接口的对象。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/decorator" target="_blank" rel="external">https://refactoring.guru/design-patterns/decorator</a></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Iterator可以在不暴露复杂数据结构的前提下让客户端顺序访问其元素。</p>
+<p>Iterator模式在Java代码中很常见。很多框架和库都提供一种标准的方式来遍历他们的集合。</p>
+<p>Java核心库中的java.util.Iterator和java.util.Enumeration是很好的例子。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/iterator" target="_blank" rel="external">https://refactoring.guru/design-patterns/iterator</a></p>
 
       
     </div>
@@ -531,7 +512,7 @@
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Adapter/" rel="tag"># Adapter</a>
+            <a href="/tags/Iterator/" rel="tag"># Iterator</a>
           
         </div>
       
@@ -544,8 +525,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/15/设计模式-结构模式之Adapter/" rel="next" title="译-设计模式-结构模式之Adapter">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Adapter
+              <a href="/2018/01/01/设计模式-行为模式之Memento/" rel="next" title="译-设计模式-行为模式之Memento">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-行为模式之Memento
               </a>
             
           </div>
@@ -553,10 +534,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/17/设计模式-结构模式之Bridge/" rel="prev" title="译-设计模式-结构模式之Bridge">
-                译-设计模式-结构模式之Bridge <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -696,7 +673,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#现实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">现实世界的类比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优缺点"><span class="nav-number">9.</span> <span class="nav-text">优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中模式的使用"><span class="nav-number">11.</span> <span class="nav-text">Java中模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#旅游向导"><span class="nav-number">4.1.</span> <span class="nav-text">旅游向导</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
