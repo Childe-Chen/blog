@@ -100,7 +100,7 @@
 表单中元素会相互影响。比如，“我有一条狗”的复选框应当展示隐藏的文本框用来输入狗的名字。另外一个例子是提交按钮在保存数据钱必须娇艳所有字段的数据。
 把这些逻辑直接放在表单元素代码中，使得">
 <meta property="og:image" content="http://img.blog.csdn.net/20180114194032757?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-14T11:42:08.394Z">
+<meta property="og:updated_time" content="2018-01-14T11:43:22.181Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-行为模式之Mediator">
 <meta name="twitter:description" content="意图Meditor是行为模式的一种，允许你定一个对象来封装一些对象的关联关系，以使这些对象相互独立。
@@ -412,7 +412,7 @@
         <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Meditor是行为模式的一种，允许你定一个对象来封装一些对象的关联关系，以使这些对象相互独立。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你有一个对话框用来编辑用户的配置。它是由TextEdit、Checkboxes、Button等组成的表单。</p>
 <p>表单中元素会相互影响。比如，“我有一条狗”的复选框应当展示隐藏的文本框用来输入狗的名字。另外一个例子是提交按钮在保存数据钱必须娇艳所有字段的数据。</p>
-<p>把这些逻辑直接放在表单元素代码中，使得这些类难以被app其他表单复用。比如，你不能使用另一个表单中的复选框，因为它和狗名字的文本框紧密耦合。</p>
+<p>把这些逻辑直接放在表单元素代码中，使得这些类难以被app其他表单复用。比如，你不能使用另一个表单中的复选框，因为它和狗名字的文本框紧密耦合。<br><a id="more"></a></p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Mediator模式阻止单个组件间的直接交。取而代之，他们发行请求到中间人对象，这个对象知道如何引导请求。组件摆脱了相互间的依赖，只和中间人对象有关联。</p>
 <p>在我们的例子中，对话框类可以当这个中间人。可能，甚至不需要在类中添加任何新的依赖关系，因为对话框已经知道它的子表单元素。</p>
 <p>表单元素代码会发生重大的变化。比如，提交按钮之前必须在按钮点击后校验变淡元素，但是现在它只需要发出被点击的通知即可。收到提交通知后，对话框自己完成所有的校验。通过这种方式，按钮将只需要依赖对话框类。</p>
