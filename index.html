@@ -294,6 +294,255 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/设计模式-行为模式之Mediator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/01/13/设计模式-行为模式之Mediator/" itemprop="url">
+                  译-设计模式-行为模式之Mediator
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T14:04:34+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/13/设计模式-行为模式之Mediator/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Mediator">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Meditor是行为模式的一种，允许你定一个对象来封装一些对象的关联关系，以使这些对象相互独立。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>你有一个对话框用来编辑用户的配置。它是由TextEdit、Checkboxes、Button等组成的表单。</p>
+<p>表单中元素会相互影响。比如，“我有一条狗”的复选框应当展示隐藏的文本框用来输入狗的名字。另外一个例子是提交按钮在保存数据钱必须娇艳所有字段的数据。</p>
+<p>把这些逻辑直接放在表单元素代码中，使得这些类难以被app其他表单复用。比如，你不能使用另一个表单中的复选框，因为它和狗名字的文本框紧密耦合。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Mediator模式阻止单个组件间的直接交。取而代之，他们发行请求到中间人对象，这个对象知道如何引导请求。组件摆脱了相互间的依赖，只和中间人对象有关联。</p>
+<p>在我们的例子中，对话框类可以当这个中间人。可能，甚至不需要在类中添加任何新的依赖关系，因为对话框已经知道它的子表单元素。</p>
+<p>表单元素代码会发生重大的变化。比如，提交按钮之前必须在按钮点击后校验变淡元素，但是现在它只需要发出被点击的通知即可。收到提交通知后，对话框自己完成所有的校验。通过这种方式，按钮将只需要依赖对话框类。</p>
+<p>你甚至可以更进一步使得依赖更加宽松，为所有对话框抽离出一个通用接口。这个接口需要声明一个方法去通知对应表单元素相关的事件。这样，我们的提交按钮就可以和任意一个遵循这个接口的的对话框通信。</p>
+<p>通过这种方式，Mediator模式包装各个组件的关联关系到一个单独的中间人对象中。类的依赖越少，修改、扩展或重用它就越容易。</p>
+<h3 id="现实世界类比"><a href="#现实世界类比" class="headerlink" title="现实世界类比"></a>现实世界类比</h3><h4 id="空中管制"><a href="#空中管制" class="headerlink" title="空中管制"></a>空中管制</h4><p>塔台控制机场很形象的展示了Mediator模式。飞行员在降落或者起飞时和塔台通信，而不是和其他飞行员直接通信。塔台控制哪架飞机可以起飞或者降落。</p>
+<p>注意，塔台并不控制整个航程，只对终端区域进行管制。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180114194032757?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<ol>
+<li><p>Components（组件）是包含业务逻辑程序的各种对象。每个组件都持有一个中间人的<br>引用。组件不关心中间人的实际类型，因为他们通过Mediator接口协作。这允许在其他程序中复用组件，只要改变他们的关联中间人即可。</p>
+<p> 组件也不关心其他组件。当它们的状态改变时，它们只需要通知中间人。中间人知道哪些组件需要响应这个事件。</p>
+</li>
+<li><p>Mediator声明了和Component通信的接口，它通常含有一个方法。组件组件使用这个方法通知中间人他们发生了一个重要的事件。组件把他们自己当作事件的一部分传给通知方法。</p>
+<p> 中间人接口是已存在组件可被其他程序崇重用的关键。你需要做的是提供一个新的中间人来控制组件如何在新的上下文中同其他组件协作。</p>
+</li>
+<li><p>Concrete Mediator（具体的中间人）封装了各个组件间的关系。中间人通常持有它它管理的所有组件的引用。</p>
+<p> 具体的中间人常常和他们的组件紧密耦合。当中间人收到一个通知，他可以轻松的识别出发送者。它也知道哪个组件应当被触发。但是对组件而言，它就是一个黑盒。发送者不知道谁来处理它的事件，接受者也不知道谁发出的这个事件。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，Mediator模式帮助消除UI类间的相互依赖：按钮、复选框和文本标签。当用户与元素进行交互时，他们不直接进行通信，而是把这个事件通知给中间人。</p>
+<p>认证对话框扮演了这个中间人。它知道具体的要素应该如何协作并促进其合作。在接收到一个通知事件后，他把事件传递给适当的组件来执行。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">// The mediator interface.</div><div class="line">interface Mediator is</div><div class="line">    method notify(sender: Component, event: string)</div><div class="line"></div><div class="line"></div><div class="line">// The concrete mediator class. All chaotic communications</div><div class="line">// between concrete components were extracted to the</div><div class="line">// mediator class.</div><div class="line">class AuthenticationDialog implements Mediator is</div><div class="line">    private field title: string</div><div class="line">    private field loginOrRegister: Checkbox</div><div class="line">    private field loginUsername, loginPassword: Textbox</div><div class="line">    private field registrationUsername, registrationPassword</div><div class="line">    private field registrationEmail: Textbox</div><div class="line">    private field ok, cancel: Button</div><div class="line"></div><div class="line">    constructor AuthenticationDialog() is</div><div class="line">        Create all component objects.</div><div class="line">        Link meditor with components via constructor params.</div><div class="line"></div><div class="line">    // When something happens with a component, it notifies</div><div class="line">    // the mediator. Upon receiving a notification, the</div><div class="line">    // mediator may do something on its own or pass the</div><div class="line">    // request to another component.</div><div class="line">    method notify(sender, event) is</div><div class="line">        if (sender == loginOrRegister and event == "check")</div><div class="line">            if (loginOrRegister.checked)</div><div class="line">                title = "Log in"</div><div class="line">                Show login components</div><div class="line">                Hide registration components.</div><div class="line">            else</div><div class="line">                title = "Register"</div><div class="line">                Show registration components.</div><div class="line">                Hide login components</div><div class="line">        if (sender == ok and event == "click")</div><div class="line">            if (loginOrRegister.checked)</div><div class="line">                Try to find user using login credentials.</div><div class="line">                if (!found)</div><div class="line">                    Show errors over login fields.</div><div class="line">            else</div><div class="line">                Create account using registration fields.</div><div class="line">                Log user in.</div><div class="line">        // ...</div><div class="line"></div><div class="line"></div><div class="line">// Components communicate with a mediator using the mediator</div><div class="line">// interface. Thanks to that, you can use the same</div><div class="line">// components in other contexts by linking them with a</div><div class="line">// different mediator object.</div><div class="line">class Component is</div><div class="line">    field dialog: Mediator</div><div class="line"></div><div class="line">    constructor Component(dialog) is</div><div class="line">        this.dialog = dialog</div><div class="line"></div><div class="line">    method click() is</div><div class="line">        dialog.notify(this, "click")</div><div class="line"></div><div class="line">    method keypress() is</div><div class="line">        dialog.notify(this, "keypress")</div><div class="line"></div><div class="line">// Concrete components do not talk to each other. They have</div><div class="line">// only one communication channel, which is sending</div><div class="line">// notifications to the mediator.</div><div class="line">class Button extends Component is</div><div class="line">    // ...</div><div class="line"></div><div class="line">class Textbox extends Component is</div><div class="line">    // ...</div><div class="line"></div><div class="line">class Checkbox extends Component is</div><div class="line">    method check() is</div><div class="line">        dialog.notify(this, "check")</div><div class="line">    // ...</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当组件间依赖混乱，某个组件简单的改变导致其关联的组件都需要改变。</p>
+<p>  中间人把类之间的关系抽离到一个单独的类中，使得一个组件的改变对其他代码是隔离的。</p>
+</li>
+<li><p>当你无法在不同的程序中复用一个组件，因为它太依赖其他组件。</p>
+<p>  使用了中间人后，组件个体不在关心其他组件。他们通过中间人间接通信。在不同的app中复用一个组件只需要创建一个新的中间人类。</p>
+</li>
+<li><p>当你必须创建组件的多个子类但只是为了在不同的上下文中使用相同的组件时。</p>
+<p>  中间人封装了组件之间的关系。因此，完全可以创建一个新的中间人子类为同一群组件定义一个新的关系。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>确定一组紧密联系的类，他们如果相互更加独立，我们能从中获得收益。</p>
+</li>
+<li><p>创建Mediator接口并且声明其和各个组件间的通讯协议。大多情况下，定义一个从组件接收通知的方法就足够了。</p>
+</li>
+<li><p>在具体的Mediator中实现这个方法。Mediator类最好持有它管理的所有组件的引用。</p>
+</li>
+<li><p>你甚至可以把创建组件的代码挪到Mediator中。这将使中间人变成一个工厂。</p>
+</li>
+<li><p>组件也应当持有中间人的引用。这个链接通常在组件的构造方法中建立，中间人对象是组件构造方法的一部分。</p>
+</li>
+<li><p>改变组件的代码以便当一些事情发生时它能够调用中间人的通知方法。剥离真正的业务代码到Mediator类中，并在其接收到组件的通知后执行它。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>减少一个程序中组件的耦合。</p>
+</li>
+<li><p>允许复用单个组件。</p>
+</li>
+<li><p>集中各个组件之间的通信。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>Mediator可能会发展成God Object。</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>CoR、Command、Mediator和Observer处理各种方式的发送者和接受者：</p>
+<ul>
+<li><p>CoR让请求沿着一个动态的潜在接受者链条传递直到某个接口者处理它。</p>
+</li>
+<li><p>Command建立了发送者和接受者的单项链接。</p>
+</li>
+<li><p>Mediator让发送者和接受者相互间简介关联。</p>
+</li>
+<li><p>Observer在同一时间把请求发送给所有关心的接收者，但是允许他们动态的订阅和取消订阅之后的请求。</p>
+</li>
+</ul>
+</li>
+<li><p>Mediator和Facade在抽象已存在类的功能这点上很像。Mediator 抽象/集中同事间的任意通信。它通常“添加值”并且是同事对象所知道/参考的。相比之下，Facade为子系统定义了一个更简单的接口，它不会增加新的功能，而且子系统类也不知道它的存在。</p>
+</li>
+<li><p>Mediator和Observer模式的区别常常很模糊。在大多数情况下，模式间是竞争的，但有时他们可以合作。</p>
+<p>  Mediator调模式的主要目标是消除一组系统组件之间的相互依赖关系。所有组件都变成独立的对象。另一方面，Observer的主要目的是建立对象间动态的单向链接，其中一些随想作为其他对象的下属。</p>
+<p>  有一个非常受欢迎的Mediator实现依赖于Observer模式。中间人对象扮演发布者，所有的同事组件扮演订阅者。他们动态的订阅和取消订阅中间人的事件。这种实现方式看起来和两种模式都很像。</p>
+<p>  但是Mediator模式可以有不同的实现方式，比如所有的组件都永久连接到形同的中间人对象。这种实现看起来不像Observer，但仍是Mediator模式的一个例子。</p>
+<p>  现在想象另一个程序，其中所有的组件都是发布者，并允许彼此动态链接。这里没有一个中央中间人对象，而是一个分布式的观察员系统。</p>
+</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Java代码中Mediator模式最流行的用法是促进应用程序的GUI组件之间的通信。Mediator的同义词是MVC模式的控制器部分。</p>
+<p>在Java核心库中有以下使用该模式的例子：</p>
+<ul>
+<li><p>java.util.Timer (所有的scheduleXXX()方法)</p>
+</li>
+<li><p>java.util.concurrent.Executor#execute()</p>
+</li>
+<li><p>java.util.concurrent.ExecutorService (invokeXXX()和submit()方法)</p>
+</li>
+<li><p>java.util.concurrent.ScheduledExecutorService (所有的 scheduleXXX()方法)</p>
+</li>
+<li><p>java.lang.reflect.Method#invoke()</p>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/mediator" target="_blank" rel="external">https://refactoring.guru/design-patterns/mediator</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/设计模式-行为模式之Iterator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1711,168 +1960,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/设计模式-结构模式之小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="childe.chen">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="凡隐的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/02/设计模式-结构模式之小结/" itemprop="url">
-                  设计模式-结构模式之小结
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-02T11:15:24+08:00">
-                2017-11-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/11/02/设计模式-结构模式之小结/" class="leancloud_visitors" data-flag-title="设计模式-结构模式之小结">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>结构设计模式使的我们简单快速的建立类的层级及不同类之间的关系，明确不同层级间的责任和边界，让各个模块、系统间相互独立并很好的协作。</p>
-<h3 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h3><h4 id="Adapter模式"><a href="#Adapter模式" class="headerlink" title="Adapter模式"></a><a href="http://childe.net.cn/2017/09/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E6%A8%A1%E5%BC%8F%E4%B9%8BAdapter/">Adapter模式</a></h4><p>适配器的目的是使不兼容接口间的可正常进行协作，它允许我们新增接口。主要用来解决下面两个问题：</p>
-<ul>
-<li><p>接口间输入输出不匹配的问题，适配器在无法相互直接使用的接口间加入中间转换层，对数据格式进行转换，使接口间可以顺利协作。</p>
-</li>
-<li><p>当你需要复用几个已经存在的类，但是它们缺少一些常用的功能。并且你无法在父类中添加这些功能，因为他是闭源或者被其他代码使用的。可以把这些缺少的功能放到新建的适配器中。</p>
-</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/02/设计模式-结构模式之小结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1922,7 +2009,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1944,7 +2031,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
