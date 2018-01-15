@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Abstract Factory," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Mediator," />
 
 
 
@@ -87,33 +87,27 @@
 
 
 
-<meta name="description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
+<meta name="description" content="意图Observer是行为模式的一种，允许你定义对象间一对多的关系，以便一个对象状态改变后，它的依赖者可以被通知并可以自动更新。
+问题假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。
+客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。
+另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-创建模式之Abstract Factory">
-<meta property="og:url" content="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/index.html">
+<meta property="og:title" content="译-设计模式-行为模式之Observer">
+<meta property="og:url" content="http://yoursite.com/2018/01/15/设计模式-行为模式之Observer/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
-<meta property="og:image" content="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-15T11:53:40.407Z">
+<meta property="og:description" content="意图Observer是行为模式的一种，允许你定义对象间一对多的关系，以便一个对象状态改变后，它的依赖者可以被通知并可以自动更新。
+问题假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。
+客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。
+另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的">
+<meta property="og:image" content="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-15T12:45:49.782Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-创建模式之Abstract Factory">
-<meta name="twitter:description" content="目的Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。
-问题假设你在写一个家具店的模拟器。你的代码由以下构成：
-
-相关产品的系列，像：Chair + Sofa + CoffeeTable。
-
-系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtD">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-行为模式之Observer">
+<meta name="twitter:description" content="意图Observer是行为模式的一种，允许你定义对象间一对多的关系，以便一个对象状态改变后，它的依赖者可以被通知并可以自动更新。
+问题假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。
+客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。
+另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -141,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/15/设计模式-行为模式之Observer/"/>
 
 
 
 
 
-  <title> 译-设计模式-创建模式之Abstract Factory | 凡隐的博客 </title>
+  <title> 译-设计模式-行为模式之Observer | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -310,7 +304,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/14/设计模式-创建模式之AbstractFactory/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/15/设计模式-行为模式之Observer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -331,7 +325,7 @@
             
             
               
-                译-设计模式-创建模式之Abstract Factory
+                译-设计模式-行为模式之Observer
               
             
           </h2>
@@ -346,8 +340,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-14T19:40:51+08:00">
-                2017-11-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-15T10:05:49+08:00">
+                2018-01-15
               </time>
             
 
@@ -386,7 +380,7 @@
 
           
           
-             <span id="/2017/11/14/设计模式-创建模式之AbstractFactory/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Abstract Factory">
+             <span id="/2018/01/15/设计模式-行为模式之Observer/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Observer">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -415,101 +409,89 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Abstract Factory是创建模式的一种，让你在没有指定具体类的情况下生产相关对象的系列。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你在写一个家具店的模拟器。你的代码由以下构成：</p>
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Observer是行为模式的一种，允许你定义对象间一对多的关系，以便一个对象状态改变后，它的依赖者可以被通知并可以自动更新。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。</p>
+<p>客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。</p>
+<p>另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的用户来说是不必要的。</p>
+<p>因此，我们遇到了一个冲突：是客户浪费时间来顶起检查还是商店浪费时间来通知到错误的客户。</p>
+<a id="more"></a>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>我们把有一些有趣状态的对象叫做Publisher。把另外那些想要追踪状态改变的对象叫做Subscriber。</p>
+<p>Observer模式提供一个发布者，他有要追踪状态订阅者的列表。这个列表可以通过几个订阅方法来供订阅者修改。因此，在任何时候，每个订阅者都能够把自己从列表中添加或者移除。<br>发布者每次有新的事件发布，它会遍历它的订阅者列表并调用订阅者的通知方法。</p>
+<p>发布者可以和任何订阅者协作，因为他们都遵循通用的接口。这个接口生命力一个带有一些参数的通知方法，这些参数提供给订阅者事件的细节。</p>
+<p>如果应用有几个发布者类型，通用的发布者接口也需要提取出来。它由几个订阅方法组成。这个接口允许订阅者观察发布者的状态却不必和某个具体的实现类耦合。</p>
+<h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><h4 id="杂志订阅"><a href="#杂志订阅" class="headerlink" title="杂志订阅"></a>杂志订阅</h4><p>一旦你订阅了杂志或者报纸，你不在需要去商店检查是否有新的杂志或者报纸发布。相反，发布者将会在期刊发布后直接发送到你的邮箱。</p>
+<p>发布者维护了订阅者的信息，并且知道他们感兴趣的杂志。如果订阅者不想发布者再发送新的杂志给他们，他们可以随时取消对杂志的订阅。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
 <ol>
-<li><p>相关产品的系列，像：Chair + Sofa + CoffeeTable。</p>
+<li><p>Publisher（发布者）发布其他对象感兴趣的事件。这些事件发生在发布者改变了他的状态或者它执行力一些行为时。发布者包含订阅的基本设施，允许新订阅者的加入和老订阅者的退出。</p>
+<p> 当一个新事件发生，发布者遍历订阅者列表并调用他们的通知方法，这些方法声明在Subscriber（订阅者）接口中。</p>
 </li>
-<li><p>系列的几个变种。比如，产品Chair + Sofa + Coffee + CoffeeTable可以有这些变种：IKEA，VictorianStyle,ArtDeco。</p>
+<li><p>Subscriber（订阅者）声明通知接口。大多情况下，它只有update方法。这个方法可能有几个参数让订阅者可以获取到事件详情。</p>
+</li>
+<li><p>具体的订阅者实现通知接口并且响应发布者发布的事件。</p>
+<p> 订阅者只需要一个简单的方法来争取的处理更新。基于这个原因，发布者通常把一些上下文数据当作这个方法的参数传递给订阅者。甚至可能是发布者自身的引用。</p>
+</li>
+<li><p>客户端分别创建发布者和订阅者对象，并且把订阅者注册到发布者。</p>
+<p> 有时候，订阅者可以直接访问发布者是很便利的。这个链接通常通过订阅者的构造方法建立。它允许订阅者在收到通知后直接从发布者抓取更新的状态。</p>
 </li>
 </ol>
-<p>你需要有种方式创建个性化的家具对象，以便它们能够匹配相同系列中的其他对象。在没有匹配到家具时，客户会感到失望。</p>
-<p>另外，你不想在添加新产品或者产品系列时改变已经存在的代码。家具供应商常常会更新他们的目录，并且你不想每次在供货商改目录时修改你的核心代码。<br><a id="more"></a></p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>第一，Abstract Factory模式建议遍历所有不同的产品并且强制这些变种遵循通用的接口。比如，所有的椅子变种必须遵循Chair接口；所有的咖啡桌必须遵循CoffeeTable接口。</p>
-<p>第二步，创建AbstractFactory，一个基础接口，声明了创建产品系列的所有产品的方法（比如：createChair，createSofa和createCoffeeTable）。这步最重要的一件事就是让这些方法返回代表抽象产品类型的接口：Chair，Sofa，CoffeeTable。</p>
-<p>第三步，实现具体的工厂。工厂是返回某种特定产品的类。比如，IKEAFactory，将只会返回IKEAChair，IKEASofa和IKEACoffeeTable对象。所有的工厂在创建同一个变种的产品时必须遵循AbstractFactory接口。</p>
-<p>客户端代码只能通过抽象接口同工厂和产品协作。这样你就可以通过传递不同的工厂对象修改要用的产品类型。</p>
-<p>所以，当客户端像工厂请求创建一把椅子时，它不必关心工厂的具体类。也不必关心它将得到椅子的具体类。不管它将得到一把时尚的IKEA模型还是一把Victorian风格的椅子，它都用使用抽象的Chair接口和椅子协作。客户端代码只需要知道椅子实现了在接口中声明的sit方法。它还知道不管返回哪种椅子，它的类型是和沙发还有咖啡桌匹配的，因为它们是同一个工厂创建的。</p>
-<p>好了，但是谁创建实际的工厂对象呢？通常，程序在初始化阶段创建一个具体的工厂，并且工厂的类型依赖配置或者环境。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171115194812989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
-<ol>
-<li><p>Abstract products为创建产品系列的所有不同产品声明接口。通常，有几个不同的产品接口。</p>
-</li>
-<li><p>Concrete products实现不同Abstract product接口。实现相同接口的具体产品集合代表一个系列的不同变种。</p>
-</li>
-<li><p>Abstract factory声明了创建系列中所有产品的接口。</p>
-</li>
-<li><p>Concrete factory实现了abstract factory的创建方法。每个具体工厂代表一个系列产品的特定变种。</p>
-</li>
-<li><p>虽然具体的工厂实例化具体的产品，但是创建方法的签名必须声明为相应抽象产品类型。<br>通过这种歌方式，客户端代码在使用工厂时就不会和具体的产品变种耦合。它就能通过使用抽象接口和任何工厂/产品协作。</p>
-</li>
-</ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子用来说明Abstract Factory模式可一用来创建跨平台的UI而不需要客户端代码和具体UI类耦合。</p>
-<p>客户端代码从工厂中请求各个UI元素。返回元素的具体类型取决于客户端代码传递的工厂类型。客户端代码通过抽象接口和元素协作。只要它使用相同的工厂对象，它所有的产品都是兼容的。</p>
-<p>Abstract Factory模式使得客户端代码和具体UI元素类独立。另外，当添加一个新的UI变种时，你不需要修改已经存在的代码（比如，实现Linux的UI元素）。你只需要创建一个工厂的新子类，让他返回新类型的UI元素。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">// This pattern assumes that you have several families of products, structured</div><div class="line">// into separate class hierarchies (Button/Checkbox). All products of the same</div><div class="line">// family have the common interface.</div><div class="line">interface Button is</div><div class="line">    method paint()</div><div class="line"></div><div class="line">// All products families have the same varieties (macOS/Windows).</div><div class="line">class WinButton implementing Button is</div><div class="line">    method paint() is</div><div class="line">        Render a button in a Windows style</div><div class="line"></div><div class="line">class MacButton implementing Button is</div><div class="line">    method paint() is</div><div class="line">        Render a button in a Mac OS X style</div><div class="line"></div><div class="line"></div><div class="line">interface Checkbox is</div><div class="line">    method paint()</div><div class="line"></div><div class="line">class WinCheckbox implementing Checkbox is</div><div class="line">    method paint() is</div><div class="line">        Render a checkbox in a Windows style</div><div class="line"></div><div class="line">class MacCheckbox implementing Checkbox is</div><div class="line">    method paint() is</div><div class="line">        Render a checkbox in a Mac OS X style</div><div class="line"></div><div class="line"></div><div class="line">// Abstract factory knows about all (abstract) product types.</div><div class="line">interface GUIFactory is</div><div class="line">    method createButton():Button</div><div class="line">    method createCheckbox():Checkbox</div><div class="line"></div><div class="line"></div><div class="line">// Each concrete factory extends basic factory and responsible for creating</div><div class="line">// products of a single variety.</div><div class="line">class WinFactory implementing GUIFactory is</div><div class="line">    method createButton():Button is</div><div class="line">        return new WinButton</div><div class="line">    method createCheckbox():Checkbox is</div><div class="line">        return new WinCheckbox</div><div class="line"></div><div class="line">// Although concrete factories create the concrete products, they still return</div><div class="line">// them with the abstract type. This fact makes factories interchangeable.</div><div class="line">class MacFactory implementing GUIFactory is</div><div class="line">    method createButton():Button is</div><div class="line">        return new MacButton</div><div class="line">    method createCheckbox():Checkbox is</div><div class="line">        return new MacCheckbox</div><div class="line"></div><div class="line"></div><div class="line">// Factory users don't care which concrete factory they use since they work with</div><div class="line">// factories and products through abstract interfaces.</div><div class="line">class Application is</div><div class="line">    private field button: Button;</div><div class="line">    constructor Application(factory: GUIFactory) is</div><div class="line">        this.factory = factory</div><div class="line">    method createUI();</div><div class="line">        this.button = factory.createButton()</div><div class="line">    method paint();</div><div class="line">        button.paint()</div><div class="line"></div><div class="line"></div><div class="line">// Application picks the factory type and creates it in run time (usually at</div><div class="line">// initialization stage), depending on the configuration or</div><div class="line">// environment variables.</div><div class="line">class ApplicationConfigurator is</div><div class="line">    method main() is</div><div class="line">        Read the configuration file</div><div class="line">        If the OS specified in the configuration file is Windows, then</div><div class="line">            Construct a WinFactory</div><div class="line">            Construct an Application with WinFactory</div><div class="line">        else</div><div class="line">            Construct an MacFactory</div><div class="line">            Construct an Application with MacFactory</div></pre></td></tr></table></figure>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，Observer允许文本编辑器对象通知其他对象状态的变化。订阅者列表是动态编译的。对象可以在运行期间开始或者停止对更新的监听。</p>
+<p>在这个实现中，编辑器自己维护订阅者列表而不是把它委托给特别的helper对象。这允许其他对象复用订阅基础结构。因此，Observer模式允许动态配置对象内发生的各种事件的处理者。</p>
+<p>添加新的订阅者不需要改变已经存在的发布者类，只要他们之间通过通用接口协作。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line">// Base publisher class. It should include the subscription</div><div class="line">// management code and notification methods.</div><div class="line">class EventManager is</div><div class="line">    private field listeners: hash map of event types and listeners</div><div class="line"></div><div class="line">    method subscribe(eventType, listener) is</div><div class="line">        listeners.add(eventType, listener)</div><div class="line"></div><div class="line">    method unsubscribe(eventType, listener) is</div><div class="line">        listeners.remove(eventType, listener)</div><div class="line"></div><div class="line">    method notify(eventType, data) is</div><div class="line">        foreach listener in listeners.of(eventType)</div><div class="line">            listener.update(data)</div><div class="line"></div><div class="line">// Concrete publisher, which contains real business logic</div><div class="line">// interesting for some subscribers. We could derive this</div><div class="line">// class from a base publisher, but that is not always</div><div class="line">// possible in real life, since the concrete publisher might</div><div class="line">// already have a different parent class. In this case, you</div><div class="line">// can patch the subscription logic in with composition,</div><div class="line">// just like we did it here.</div><div class="line">class Editor is</div><div class="line">    private field events: EventManager</div><div class="line">    private field file: File</div><div class="line"></div><div class="line">    constructor Editor() is</div><div class="line">        events = new EventManager()</div><div class="line"></div><div class="line">    // Business logic methods can notify subscribers about</div><div class="line">    // the changes.</div><div class="line">    method openFile(path) is</div><div class="line">        this.file = new File(path)</div><div class="line">        events.notify("open", file.name)</div><div class="line"></div><div class="line">    method saveFile() is</div><div class="line">        file.write()</div><div class="line">        events.notify("save", file.name)</div><div class="line">    // ...</div><div class="line"></div><div class="line"></div><div class="line">// Common subscribers interface. By the way, modern</div><div class="line">// programming languages allow to simplify this code and use</div><div class="line">// functions as subscribers.</div><div class="line">interface EventListener is</div><div class="line">    method update(filename)</div><div class="line"></div><div class="line">// List of concrete listeners. They react to publisher</div><div class="line">// updates by doing some useful work.</div><div class="line">class LoggingListener is</div><div class="line">    private field log: File</div><div class="line">    private field message</div><div class="line"></div><div class="line">    constructor LoggingListener(log_filename, message) is</div><div class="line">        this.log = new File(log_filename)</div><div class="line">        this.message = message</div><div class="line"></div><div class="line">    method update(filename) is</div><div class="line">        log.write(replace('%s',filename,message))</div><div class="line"></div><div class="line">class EmailAlertsListener is</div><div class="line">    private field email: string</div><div class="line"></div><div class="line">    constructor EmailAlertsListener(email, message) is</div><div class="line">        this.email = email</div><div class="line">        this.message = message</div><div class="line"></div><div class="line">    method update(filename) is</div><div class="line">        system.email(email, replace('%s',filename,message))</div><div class="line"></div><div class="line"></div><div class="line">// Application can configure publishers and subscribers even</div><div class="line">// in run time.</div><div class="line">class Application is</div><div class="line">    method config() is</div><div class="line">        editor = new TextEditor()</div><div class="line"></div><div class="line">        logger = new LoggingListener(</div><div class="line">            "/path/to/log.txt",</div><div class="line">            "Someone has opened file: %s");</div><div class="line">        editor.events.subscribe("open", logger)</div><div class="line"></div><div class="line">        emailAlers = new EmailAlertsListener(</div><div class="line">            "admin@example.com",</div><div class="line">            "Someone has changed the file: %s")</div><div class="line">        editor.events.subscribe("save", emailAlers)</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当业务逻辑必须要和同一个产品系列的不同变种协作，并且你不想依赖具体产品类时（或者它们无法预先知道）。</p>
-<p>  Abstract Factory对客户端代码隐藏了创建产品类的信息。客户端代码可以和任何工厂创建出来的任何产品协作，只要客户端通过抽象接口和它们交互。</p>
+<li><p>当一个对象的状态发生变化其他对象也需要改变，但是这些对象事先不知道或者需要动态改变时。比如，你在开发一个专注于按钮的GUI框架。你想你的客户端能够在用户按下按钮时回调一些定制的代码。</p>
+<p>  Observer模式允许任何实现了订阅者接口的对象到发布者订阅事件通知。</p>
 </li>
-<li><p>当一个类拥有多个Factory Method使得它的主要责任不明确时。</p>
-<p>  每个类专注做一件事是很好的程序设计。当一个类需要处理多个产品类型，它就应该使用一个独立的抽象工厂来替代多个工厂方法。</p>
+<li><p>一些对象需要观察其他对象，但只在限定的时间内或者特别的情况下。</p>
+<p>  Observer模式让发布者维护一个动态的订阅列表。所有的订阅者可以在运行时随时加入或者离开这个列表。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>画出不同产品和相同产品不同变种的矩阵。</p>
+<li><p>区分核心（独立的）功能和可选（依赖的）功能。前者扮演发布者，后者扮演订阅者。</p>
 </li>
-<li><p>为所有不同产品类型创建抽象接口并且让所有具体产品遵循这些接口。</p>
+<li><p>创建Subscriber接口。大多情况下，一个update方法足够。</p>
 </li>
-<li><p>声明抽象工厂接口。这个接口应该列出所有不同类型产品的创建方法。</p>
+<li><p>创建Publisher接口并且定义开始和结束订阅操作。切记，发布者和订阅者通过通用接口协作。</p>
+<p> 你必须决定真实的订阅列表和订阅方法的实现放在哪里。通常，这些代码对所有类型的发布者而言都差不多。所以最恰当的地方是放在Publisher接口派生出的抽象基类中。但是如果你在已存在的类结构层次中集成Observer，那么创建一个小的helper类来维护制定发布者的订阅关系会比较方便。</p>
 </li>
-<li><p>为产品系列的每个变种实现不同的工厂类。</p>
+<li><p>创建具体的发布者类。在每次有重要事件发生时，他们都应当通知列表中所有的订阅者。</p>
 </li>
-<li><p>创建一个空场的初始化代码写在客户端中。客户端依赖配置或者当前环境中来决定需要的工厂的类型并创建出来。</p>
+<li><p>在具体的订阅者类中实现update方法。大多订阅者需要事件的上下文数据。可以通过update方法的参数传递给接受者。但是还有另外的方式。在收到通知后，接受者可以直接从发布者对象中抓取任何数据。在这种情况下，发布者必须把它自己当作参数传递给接受者。最不灵活的方法是通过订阅者构造方法持久的建立和发布者的关系。</p>
 </li>
-<li><p>在客户端代码中，把所有调用产品构造方法的地方替换成调用工厂的创建方法。</p>
+<li><p>客户端代码必须创建所有必须的订阅者并把它们注册到正确的发布者上。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li><p>符合开闭原则。</p>
+<li><p>发布者不会和具体的订阅者类耦合。</p>
 </li>
-<li><p>允许构建系列产品对象并担保兼容性。</p>
-</li>
-<li><p>避免具体产品和使用它们的代码的耦合。</p>
-</li>
-<li><p>在多个类间隔离责任。</p>
+<li><p>你可以动态的订阅或者取消订阅。</p>
 </li>
 </ul>
+<p>-遵循开闭原则。</p>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>创建多个额外类，增加代码整体复杂度。</li>
-</ul>
-<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
+<li><p>通知到订阅者的顺序是随机的。</p>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3></li>
+<li><p>CoR、Command、Mediator和Observer处理各种方式的发送者和接受者：</p>
+<ul>
+<li><p>CoR让请求沿着一个动态的潜在接受者链条传递直到某个接口者处理它。</p>
 </li>
-<li><p>Builder关注点在一步一步的构造出一个复杂对象。Abstract Factory创建产品对象的系列（不管是简单的还是复杂的）。Builder在最后一步返回产品，但是Abstrct Factory立刻返回结果。</p>
+<li><p>Command建立了发送者和接受者的单项链接。</p>
 </li>
-<li><p>Abstract Factory类通常用Factory Method来实现，单丝它们也可以用Prototype来实现。</p>
+<li><p>Mediator让发送者和接受者相互间简介关联。</p>
 </li>
-<li><p>Abstract Factory可以用来代替Facade隐藏特定平台的类。</p>
-</li>
-<li><p>Abstract Factory可以和Bridge模式单独使用。当Bridge的“接口”部分只能与特定的“实现”一起工作时非常有用。这种情况下，工厂能够封装这些关系并且对客户端隐藏复杂性。</p>
-</li>
-<li><p>Abstract Factory，Builder和Prototype都可以实现为Singleton。</p>
+<li><p>Observer在同一时间把请求发送给所有关心的接收者，但是允许他们动态的订阅和取消订阅之后的请求。</p>
 </li>
 </ul>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Abstract Factory是创建型模式的一种，用来解决创建没有制定具体类的产品系列。</p>
-<p>Abstract Factory定义了一个创建所有不同产品的接口，但是把创建真正产品的实现放在具体工厂类中。美国工厂类型都代表一个某些产品的变种。</p>
-<p>客户端代码不是直接调用构造方法（new操作）而是调用一个工厂对象的创建方法来创建对象。因为一个工厂代表了一个产品的变种，它的产品都是兼容的。</p>
-<p>客户端只通过抽象接口和工厂还有产品协作。它允许相同的客户端代码和不同的产品协作。你只需要创建一新的具体工厂类，并把它传递给客户端代码就行。如果你分不清楚Factories，Factory Method和Abstract Factory，可以阅读<a href="https://refactoring.guru/design-patterns/factory-comparison" target="_blank" rel="external">工厂比较指南（待译）</a>。</p>
-<h3 id="Java的模式的使用"><a href="#Java的模式的使用" class="headerlink" title="Java的模式的使用"></a>Java的模式的使用</h3><p>用例：许多框架和类库采用抽象工厂模式来提供扩展和定制它们的标准组件。</p>
-<p>Java的核心包中应用如下：</p>
-<pre><code>javax.xml.parsers.DocumentBuilderFactory#newInstance()
-
-javax.xml.transform.TransformerFactory#newInstance()
-
-javax.xml.xpath.XPathFactory#newInstance()
-</code></pre><p>鉴定：该模式很容易通过返回工厂对象的方法来识别。然后，工厂用于创建特定的子组件。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/abstract-factory" target="_blank" rel="external">https://refactoring.guru/design-patterns/abstract-factory</a></p>
+</li>
+<li><p>Mediator和Observer模式的区别常常很模糊。在大多数情况下，模式间是竞争的，但有时他们可以合作。</p>
+<p>  Mediator调模式的主要目标是消除一组系统组件之间的相互依赖关系。所有组件都变成独立的对象。另一方面，Observer的主要目的是建立对象间动态的单向链接，其中一些随想作为其他对象的下属。</p>
+<p>  有一个非常受欢迎的Mediator实现依赖于Observer模式。中间人对象扮演发布者，所有的同事组件扮演订阅者。他们动态的订阅和取消订阅中间人的事件。这种实现方式看起来和两种模式都很像。</p>
+<p>  但是Mediator模式可以有不同的实现方式，比如所有的组件都永久连接到形同的中间人对象。这种实现看起来不像Observer，但仍是Mediator模式的一个例子。</p>
+<p>  现在想象另一个程序，其中所有的组件都是发布者，并允许彼此动态链接。这里没有一个中央中间人对象，而是一个分布式的观察员系统。</p>
+</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/observer" target="_blank" rel="external">https://refactoring.guru/design-patterns/observer</a></p>
 
       
     </div>
@@ -539,7 +521,7 @@ javax.xml.xpath.XPathFactory#newInstance()
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Abstract-Factory/" rel="tag"># Abstract Factory</a>
+            <a href="/tags/Mediator/" rel="tag"># Mediator</a>
           
         </div>
       
@@ -552,8 +534,8 @@ javax.xml.xpath.XPathFactory#newInstance()
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/13/设计模式-创建模式之FactoryMethod/" rel="next" title="译-设计模式-创建模式之Factory Method">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-创建模式之Factory Method
+              <a href="/2018/01/13/设计模式-行为模式之Mediator/" rel="next" title="译-设计模式-行为模式之Mediator">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-行为模式之Mediator
               </a>
             
           </div>
@@ -561,10 +543,6 @@ javax.xml.xpath.XPathFactory#newInstance()
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/17/设计模式-创建模式之Builder/" rel="prev" title="译-设计模式-创建模式之Builder">
-                译-设计模式-创建模式之Builder <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -704,7 +682,7 @@ javax.xml.xpath.XPathFactory#newInstance()
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java的模式的使用"><span class="nav-number">12.</span> <span class="nav-text">Java的模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类比"><span class="nav-number">4.</span> <span class="nav-text">类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#杂志订阅"><span class="nav-number">4.1.</span> <span class="nav-text">杂志订阅</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
