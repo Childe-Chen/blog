@@ -1,0 +1,1110 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,State," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="意图State是行为模式的一种，它允许你在对象内部状态发生变化时改变其行为。这个对象会改变它的类。
+问题状态模式和有限状态机很相似。
+它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。
+类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Mod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译-设计模式-结构模式之State">
+<meta property="og:url" content="http://yoursite.com/2018/01/16/设计模式-结构模式之State/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="意图State是行为模式的一种，它允许你在对象内部状态发生变化时改变其行为。这个对象会改变它的类。
+问题状态模式和有限状态机很相似。
+它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。
+类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Mod">
+<meta property="og:image" content="http://img.blog.csdn.net/20180119172340377?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-19T09:29:46.780Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译-设计模式-结构模式之State">
+<meta name="twitter:description" content="意图State是行为模式的一种，它允许你在对象内部状态发生变化时改变其行为。这个对象会改变它的类。
+问题状态模式和有限状态机很相似。
+它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。
+类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Mod">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180119172340377?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/16/设计模式-结构模式之State/"/>
+
+
+
+
+
+  <title> 译-设计模式-结构模式之State | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/16/设计模式-结构模式之State/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                译-设计模式-结构模式之State
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-16T20:03:57+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/16/设计模式-结构模式之State/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之State">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>State是行为模式的一种，它允许你在对象内部状态发生变化时改变其行为。这个对象会改变它的类。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>状态模式和<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="_blank" rel="external">有限状态机</a>很相似。</p>
+<p>它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。</p>
+<p>类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Moderations（待审）和Publish（发布）。对每种状态而言，publish方法会有不同的处理方式：</p>
+<ul>
+<li><p>第一种状态，它将改变提案的状态到待审。</p>
+</li>
+<li><p>第二种状态，它将使提案变成发布状态，当然只有在当前用户是管理员时。</p>
+</li>
+<li><p>第三种状态，它什么也不做。</p>
+<a id="more"></a>
+<p>状态机通常基于许多条件操作来实现，比如，if或者wsitch来检查当前状态并作出适当的行为。即使你第一次听说状态机，你很可能已经至少实现多一次。下面这段代码看起来是不是很眼熟？</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Document</span></span></div><div class="line"><span class="title">string</span> <span class="title">state</span>;</div><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="function">method <span class="title">publish</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (state) &#123;</div><div class="line">        <span class="string">"draft"</span>:</div><div class="line">            state = <span class="string">"moderation"</span>;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="string">"moderation"</span>:</div><div class="line">            <span class="keyword">if</span> (currentUser.role == <span class="string">'admin'</span>)</div><div class="line">                state = <span class="string">"published"</span></div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="string">"published"</span>:</div><div class="line">            <span class="comment">// Do nothing.</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<p>当你你要添加更多状态或者状态依赖行为到Document中时，使用条件构建起来的状态机最大的限制就展露出来。大多方法需要有很多条件参数来决定这个状态下的正确行为。</p>
+<p>这些代码很难维护，因为任何转换逻辑的改变都需要在每个方法中对每个条件做双重检查。</p>
+<p>项目越老这个问题往往越大，因为在设计阶段事先预测所有可能的状态和转换是相当困难的。因此，一个由少量条件构成的精简状态机随着时间的推移会变的一团糟。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>状态模式建议为上下文对象的所有可能状态创建新类，并将与状态有关的行为提取到这些类中。</p>
+<p>上下文将会包含一个代表当前状态的状态对象。上下文将把执行交给状态对象，而不是自己去处理。</p>
+<p>为了改变上下文对象，一个状态对象可以将另一个状态对象传到上下文中。但是为了让状态可以呼唤，所有的状态类必须遵循相同的接口，并且上下文必须通过状态对象的接口和它通信。</p>
+<p>上面描述的结构看起来有些像Strategy模式，但是它们有一个关键点不同。在状态模式中，上下文和特定的状态都可以发起状态间的转换。</p>
+<h3 id="真实世界类比"><a href="#真实世界类比" class="headerlink" title="真实世界类比"></a>真实世界类比</h3><h4 id="智能手机"><a href="#智能手机" class="headerlink" title="智能手机"></a>智能手机</h4><p>智能手机当前处于不同的状态会有不同的行为：</p>
+<ul>
+<li><p>当手机处于解锁状态，按下按钮会执行一些列功能。</p>
+</li>
+<li><p>当手机被锁定，所有的按钮都会展示解锁画面。</p>
+</li>
+<li><p>当手机电量低，所有按钮都会展示充电画面。</p>
+</li>
+</ul>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180119172340377?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="state.png"></p>
+<ol>
+<li><p>Context（上下文）持有Concrete State（具体状态）对象的引用，并把状态相关的行为委托给它。上下文通过状态通用的接口和状态对象协作。上下文必须报漏出一个方法来接收一个新状态对象。</p>
+</li>
+<li><p>State（状态）为具体状态声明通用的接口。它声明的方法应当对所有的状态都是有意义的。但是每个状态应该提供不同的实现。</p>
+</li>
+<li><p>Concrete State实现特定状态的行为。增加状态基类避免在多个状态中出现重复代码。</p>
+<p> 一个状态可以持有上下文的引用。这不仅让它可以访问上下文数据，也提供了一种法器状态转变的方式。</p>
+</li>
+<li><p>上下文和具体的状态都可以决定何时发起状态转换及决定转换到什么状态。为了处理转换，一个新的状态对象应当被传给上下文。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，状态模式依赖当前不同的播放器的状态来控制播放器不同的行为。Player主类持有一个状态对象的引用，它被用来处理播放器的大多数工作。用户的一些操作会使播放器转换到另一个状态。</p>
+<p>状态模式让播放器改变其行为而对其他对象无感知。转换可以被播放器本身或者特定的状态对象执行。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div></pre></td><td class="code"><pre><div class="line">// Common interface for all states.</div><div class="line">abstract class State is</div><div class="line">    protected field player: Player</div><div class="line"></div><div class="line">    // Context passes itself through the state constructor.</div><div class="line">    // This may help a state to fetch some useful context</div><div class="line">    // data if needed.</div><div class="line">    constructor State(player) is</div><div class="line">        this.player = player</div><div class="line"></div><div class="line">    abstract method clickLock()</div><div class="line">    abstract method clickPlay()</div><div class="line">    abstract method clickNext()</div><div class="line">    abstract method clickPrevious()</div><div class="line"></div><div class="line"></div><div class="line">// Concrete states provide the special implementation for</div><div class="line">// all interface methods.</div><div class="line">class LockedState is</div><div class="line"></div><div class="line">    // When you unlock a locked player, it may assume one of</div><div class="line">    // the two states.</div><div class="line">    method clickLock() is</div><div class="line">        if (player.playing)</div><div class="line">            player.changeState(new PlayingState(player))</div><div class="line">        else</div><div class="line">            player.changeState(new ReadyState(player))</div><div class="line"></div><div class="line">    method clickPlay() is</div><div class="line">        Do nothing.</div><div class="line"></div><div class="line">    method clickNext() is</div><div class="line">        Do nothing.</div><div class="line"></div><div class="line">    method clickPrevious() is</div><div class="line">        Do nothing.</div><div class="line"></div><div class="line"></div><div class="line">// They can also trigger state transitions in the context.</div><div class="line">class ReadyState is</div><div class="line">    method clickLock() is</div><div class="line">        player.changeState(new LockedState(player))</div><div class="line"></div><div class="line">    method clickPlay() is</div><div class="line">        player.startPlayback()</div><div class="line">        player.changeState(new PlayingState(player))</div><div class="line"></div><div class="line">    method clickNext() is</div><div class="line">        player.nextSong()</div><div class="line"></div><div class="line">    method clickPrevious() is</div><div class="line">        player.previousSong()</div><div class="line"></div><div class="line"></div><div class="line">class PlayingState is</div><div class="line">    method clickLock() is</div><div class="line">        player.changeState(new LockedState(player))</div><div class="line"></div><div class="line">    method clickPlay() is</div><div class="line">        player.stopPlayback()</div><div class="line">        player.changeState(new ReadyState(player))</div><div class="line"></div><div class="line">    method clickNext() is</div><div class="line">        if (event.doubleclick)</div><div class="line">            player.nextSong()</div><div class="line">        else</div><div class="line">            player.fastForward(5)</div><div class="line"></div><div class="line">    method clickPrevious() is</div><div class="line">        if (event.doubleclick)</div><div class="line">            player.previous()</div><div class="line">        else</div><div class="line">            player.rewind(5)</div><div class="line"></div><div class="line"></div><div class="line">// Player acts as a context.</div><div class="line">class Player is</div><div class="line">    field state: State</div><div class="line">    field UI, volume, playlist, currentSong</div><div class="line"></div><div class="line">    constructor Player() is</div><div class="line">        this.state = new ReadyState(this)</div><div class="line"></div><div class="line">        // Context delegates handling user's input to a</div><div class="line">        // state object. Naturally, the outcome will depend</div><div class="line">        // on what state is currently active, since all</div><div class="line">        // states can handle the input differently.</div><div class="line">        UI = new UserInterface()</div><div class="line">        UI.lockButton.onClick(this.clickLock)</div><div class="line">        UI.playButton.onClick(this.clickPlay)</div><div class="line">        UI.nextButton.onClick(this.clickNext)</div><div class="line">        UI.prevButton.onClick(this.clickPrevious)</div><div class="line"></div><div class="line">    // Other objects must be able to switch Player's</div><div class="line">    // active state.</div><div class="line">    method changeState(state: State) is</div><div class="line">        this.state = state</div><div class="line"></div><div class="line">    // UI methods delegate execution to the active state.</div><div class="line">    method clickLock() is</div><div class="line">        state.clickLock()</div><div class="line">    method clickPlay() is</div><div class="line">        state.clickPlay()</div><div class="line">    method clickNext() is</div><div class="line">        state.clickNext()</div><div class="line">    method clickPrevious() is</div><div class="line">        state.clickPrevious()</div><div class="line"></div><div class="line">    // State may call some service methods on the context.</div><div class="line">    method startPlayback() is</div><div class="line">        // ...</div><div class="line">    method stopPlayback() is</div><div class="line">        // ...</div><div class="line">    method nextSong() is</div><div class="line">        // ...</div><div class="line">    method previousSong() is</div><div class="line">        // ...</div><div class="line">    method fastForward(time) is</div><div class="line">        // ...</div><div class="line">    method rewind(time) is</div><div class="line">        // ...</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当你有一个对象在不同状态下会有不同行为时。状态的数量有很多。状态关联的代码经常改变。</p>
+<p>  状态模式建议隔离那些和状态相关的代码到不同的类中。源类被叫做“上下文”，它要持有这些状态对象中的其中一个。它应当把工作委托给这个状态对象。这种结构允许通过提供给上下文不同状态对象的方式改变上下文的行为。</p>
+</li>
+<li><p>当一个类被大量的通过当前类字段值来改变方法行为的条件污染。</p>
+<p>  状态模式把条件分支转换成合适状态类中的方法。然后需要依赖多态吧执行委托到关联的状态对象。</p>
+</li>
+<li><p>在基于条件的状态机中有大量重复代码分布在相似状态和转换中时。</p>
+<p>  状态模式允许你组合状态类的层次，通过把通用的代码移动到层级的基类中来减少重复。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>声明那个类来扮演Context角色。这可能是一个存在的类，已经有了状态依赖的相关代码；或者是一个新类，如果状态相关的代码分布在各个类中。</p>
+</li>
+<li><p>创建State接口。大多情况下，他将镜像声明在Context中的方法。</p>
+</li>
+<li><p>为每个真正的状态，创建一个State接口的实现。遍历Context的方法，把所有和状态有关的代码放到对应的状态类中。</p>
+</li>
+<li><p>添加一个State类型的引用字段到Context类中，并且需要提供一个可复写这个字段值的public方法。</p>
+</li>
+<li><p>再一次遍历Context中的方法，用状态对象的相应方法替换剩余的状态条件部分。</p>
+</li>
+<li><p>为了转换Context的状态，必须创建一个状态实例传给上下文。这步可有Context自己，或者通过State，或者Client来完成。注意，创建者将需要依赖具体的State类进行实例化。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>消除状态机条件。</p>
+</li>
+<li><p>把与特定状态相关的代码组织到不同的类中。</p>
+</li>
+<li><p>简化代码上下文。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>如果一个状态机只有少数几个状态或很少发生变化，那么这可能是过度设计。</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>State，Strategy，Bridge（某种意义上的Adapter）有相似的解决结构。他们都共享“handle/body”元素。他们的意图有所不同 - 也就是说，他们解决不同的问题。</p>
+</li>
+<li><p>State可以看作是Strategy模式的扩展。这两种模式都使用组合把工作委托给辅助对象来改变主对象的行为。但是，State模式允许状态对象用另一个状态改变当前上下文的状态，使得它们相互依赖。</p>
+</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>State是一种行为设计模式，允许对象在其内部状态改变时改变行为。该模式将与状态相关的行为提取为单独的状态类，并强制原始对象将工作委派给状态类的实例，而不是自行处理。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/state" target="_blank" rel="external">https://refactoring.guru/design-patterns/state</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          
+            <a href="/tags/State/" rel="tag"># State</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/15/设计模式-行为模式之Observer/" rel="next" title="译-设计模式-行为模式之Observer">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-行为模式之Observer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#智能手机"><span class="nav-number">4.1.</span> <span class="nav-text">智能手机</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
