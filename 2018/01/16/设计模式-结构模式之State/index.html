@@ -100,7 +100,7 @@
 它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。
 类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Mod">
 <meta property="og:image" content="http://img.blog.csdn.net/20180119172340377?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-19T09:29:46.780Z">
+<meta property="og:updated_time" content="2018-01-19T09:38:23.955Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之State">
 <meta name="twitter:description" content="意图State是行为模式的一种，它允许你在对象内部状态发生变化时改变其行为。这个对象会改变它的类。
@@ -413,16 +413,16 @@
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>状态模式和<a href="https://en.wikipedia.org/wiki/Finite-state_machine" target="_blank" rel="external">有限状态机</a>很相似。</p>
 <p>它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。</p>
 <p>类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Moderations（待审）和Publish（发布）。对每种状态而言，publish方法会有不同的处理方式：</p>
+<a id="more"></a>
 <ul>
 <li><p>第一种状态，它将改变提案的状态到待审。</p>
 </li>
 <li><p>第二种状态，它将使提案变成发布状态，当然只有在当前用户是管理员时。</p>
 </li>
 <li><p>第三种状态，它什么也不做。</p>
-<a id="more"></a>
-<p>状态机通常基于许多条件操作来实现，比如，if或者wsitch来检查当前状态并作出适当的行为。即使你第一次听说状态机，你很可能已经至少实现多一次。下面这段代码看起来是不是很眼熟？</p>
 </li>
 </ul>
+<p>状态机通常基于许多条件操作来实现，比如，if或者wsitch来检查当前状态并作出适当的行为。即使你第一次听说状态机，你很可能已经至少实现多一次。下面这段代码看起来是不是很眼熟？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Document</span></span></div><div class="line"><span class="title">string</span> <span class="title">state</span>;</div><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="function">method <span class="title">publish</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (state) &#123;</div><div class="line">        <span class="string">"draft"</span>:</div><div class="line">            state = <span class="string">"moderation"</span>;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="string">"moderation"</span>:</div><div class="line">            <span class="keyword">if</span> (currentUser.role == <span class="string">'admin'</span>)</div><div class="line">                state = <span class="string">"published"</span></div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="string">"published"</span>:</div><div class="line">            <span class="comment">// Do nothing.</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
 <p>当你你要添加更多状态或者状态依赖行为到Document中时，使用条件构建起来的状态机最大的限制就展露出来。大多方法需要有很多条件参数来决定这个状态下的正确行为。</p>
 <p>这些代码很难维护，因为任何转换逻辑的改变都需要在每个方法中对每个条件做双重检查。</p>

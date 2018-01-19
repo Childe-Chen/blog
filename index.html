@@ -407,12 +407,6 @@
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>状态模式和<a href="https://en.wikipedia.org/wiki/Finite-state_machine">有限状态机</a>很相似。</p>
 <p>它主要的思想是程序是几个状态之一，这些状态相互关联。状态的数量和它们之间的转换是有限的并且是预先定义的。根据当前的状态，程序对相同的事件会有不同的响应。</p>
 <p>类似的方法可以应用到对象上。比如，Document（提案）对象可以是以下三种状态之一：Draft（草案），Moderations（待审）和Publish（发布）。对每种状态而言，publish方法会有不同的处理方式：</p>
-<ul>
-<li><p>第一种状态，它将改变提案的状态到待审。</p>
-</li>
-<li><p>第二种状态，它将使提案变成发布状态，当然只有在当前用户是管理员时。</p>
-</li>
-<li><p>第三种状态，它什么也不做。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/01/16/设计模式-结构模式之State/#more" rel="contents">
