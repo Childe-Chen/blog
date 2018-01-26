@@ -1,0 +1,1105 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Strategy," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="意图Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。
+问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
+第一个版本的应用只能规划道路上的路线，适合汽车旅客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="译-设计模式-结构模式之Strategy">
+<meta property="og:url" content="http://yoursite.com/2018/01/22/设计模式-结构模式之Strategy/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="意图Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。
+问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
+第一个版本的应用只能规划道路上的路线，适合汽车旅客">
+<meta property="og:image" content="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-26T09:24:35.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="译-设计模式-结构模式之Strategy">
+<meta name="twitter:description" content="意图Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。
+问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
+第一个版本的应用只能规划道路上的路线，适合汽车旅客">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/22/设计模式-结构模式之Strategy/"/>
+
+
+
+
+
+  <title> 译-设计模式-结构模式之Strategy | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/22/设计模式-结构模式之Strategy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                译-设计模式-结构模式之Strategy
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-22T11:05:43+08:00">
+                2018-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/22/设计模式-结构模式之Strategy/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Strategy">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。</p>
+<p>第一个版本的应用只能规划道路上的路线，适合汽车旅客。但显然不是所有的人都喜欢在休假时开车。所以下一次更新，你添加了规划步行路线的选项。之后，你又增加了一个选项，允许用户规划基于公共交通的路线。</p>
+<p>但这仅是一个开始。最近的版本中你计划增加一个可以规划自行车路线的特性。之后，根据沿途景点规划路线成为可选项。</p>
+<p>这款应用的业务是成功的，但是技术部分让你头疼不已。<br><a id="more"></a><br>每次增加一个新的路线算法，<code>Map</code>类的大小就会增长。至此，应用开始变得难以维护。</p>
+<p>任何搜索算法的改变，比如修复一个BUG或者微调算法行为，都会影响整个类，增加了让已存在代码出错的风险。</p>
+<p>最终，团队合作变得低效。你的队友在你成功发布一次之后都会抱怨要花费大量的时间在处理代码合并冲突上，因为它们都和一个大类相关联。</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>策略模式建议采使用一个以许多不同方式做重要事情的类，并将这些算法分别提取到单独的被称为策略的类中。</p>
+<p>源类被称为<em>context</em>，它有一个字段来接受存储所有策略中的一种。上下文把工作委托给关联的策略，而不是自己去执行。</p>
+<p>上下文没有选择合适算法的职责，客户端负责传递一个适当的策略到上下文中。</p>
+<p>事实上，上下文不知道策略的细节。上下文只通过策略基本接口暴漏出来的方法和它通信。这是的上下文独立与策略，允许你在不修改上下文或者其他策略的情况下添加新的策略。</p>
+<p>在我们导航应用中，每个路线算法都将被抽离到它们自己对应的只有一个<code>buildRoute</code>方法的类中。这个方法接受出发地和目的地，返回路线检查点的集合。</p>
+<p>甚至每个路线类在相同的参数下会给出不同的路线。<code>Map</code>类不需要在关心那个策略被选中，因为它唯一的工作就是把检查点渲染到地图上。</p>
+<p>这个<code>Map</code>将会提供出一个方法来切换路线策略，这样客户端就可以提供出一个按钮给用户来修改当前规划路线的方式。</p>
+<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="运输"><a href="#运输" class="headerlink" title="运输"></a>运输</h4><p>你必须到机场去。你可以坐巴士，打的或者骑单车。出行方式就是策略。你根据上下文来选择一个策略，比如预算或者时间限制。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<ol>
+<li><p><strong>Context</strong>存储一个<em>Concrete Strategy</em>对象，但是只通过通用的<em>Strategy</em>接口和其协作。上下文应当报漏出一个setter方法让其他对象可以替换关联的策略对象。</p>
+</li>
+<li><p><strong>Strategy</strong>为所有的策略声明了一个通用接口。这个接口让具体的策略在上下文中是可替换的。</p>
+</li>
+<li><p><strong>Concrete Strategy</strong>实现了不同的算法，旨在以不同的方式完成相同的工作。</p>
+</li>
+<li><p>上下文只在它需要的时候去调用策略来执行任务。但它并不知道到底是那个策略在执行。</p>
+</li>
+<li><p><strong>Client</strong>会根据不同的场景选择不同的策略。他们可以在运行时根据需要来配置上下文的策略。</p>
+</li>
+</ol>
+<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，上下文使用策略来进行不同的算数运算。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">// Common interface for all strategies.</div><div class="line">interface Strategy is</div><div class="line">    method execute(a, b)</div><div class="line"></div><div class="line">// Each concrete strategy provides unique implementation.</div><div class="line">class ConcreteStrategyAdd implements Strategy is</div><div class="line">    method execute(a, b) is</div><div class="line">        return a + b</div><div class="line"></div><div class="line">class ConcreteStrategySubtract implements Strategy is</div><div class="line">    method execute(a, b) is</div><div class="line">        return a - b</div><div class="line"></div><div class="line">class ConcreteStrategyMultiply implements Strategy is</div><div class="line">    method execute(a, b) is</div><div class="line">        return a * b</div><div class="line"></div><div class="line">// Context (as a client) always works with strategies</div><div class="line">// through a common interface. It does not know or care</div><div class="line">// which strategy is currently active.</div><div class="line">class Context is</div><div class="line">    private strategy: Strategy</div><div class="line"></div><div class="line">    method setStrategy(Strategy strategy) is</div><div class="line">        this.strategy = strategy</div><div class="line"></div><div class="line">    method executeStrategy(int a, int b) is</div><div class="line">        return strategy.execute(a, b)</div><div class="line"></div><div class="line"></div><div class="line">// The concrete strategy is picked on a higher level (for</div><div class="line">// example, by application config) and passed to the client</div><div class="line">// object. At any time, the strategy object can be replaced</div><div class="line">// by a different strategy.</div><div class="line">class ExampleApplication is</div><div class="line">    method main() is</div><div class="line">        Create context object.</div><div class="line"></div><div class="line">        Read first number.</div><div class="line">        Read last number.</div><div class="line">        Read the desired action from user input.</div><div class="line"></div><div class="line">        if (action == addition) then</div><div class="line">            context.setStrategy(new ConcreteStrategyAdd())</div><div class="line"></div><div class="line">        if (action == subtraction) then</div><div class="line">            context.setStrategy(new ConcreteStrategySubtract())</div><div class="line"></div><div class="line">        if (action == multiplication) then</div><div class="line">            context.setStrategy(new ConcreteStrategyMultiply())</div><div class="line"></div><div class="line">        result = context.executeStrategy(First number, Second number)</div><div class="line"></div><div class="line">        Print result.</div></pre></td></tr></table></figure>
+<h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
+<li><p>当你有一个对象需要以许多不同的方式来做相同的任务时。</p>
+<p>  策略模式允许你在运行时通过提供不同的子对象（实际处理工作的对象）来修改对象的行为。</p>
+</li>
+<li><p>当你有许多相似的类，它们以不同的方式执行一些行为。</p>
+<p>  策略模式允许你将所有这些类的行为抽取到单独的类层次结构中，从而使原始类的行为可以自定义。</p>
+</li>
+<li><p>当你不想把算法实现的细节暴露给其他类时。</p>
+<p>  策略模式通过把代码，内部数据和算法的依赖关系提取到自己的类中来隔离其他对象。</p>
+</li>
+<li><p>一个算法通过大量条件操作被选择执行。背个条件分支代表不同的算法。</p>
+<p>  策略允许你通过抽离每个算法到自己的类中来分解条件，这些类都遵循一个相同的接口。上下文把工作委托给这些对象，而不是自己实现这些行为。</p>
+</li>
+</ul>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
+<li><p>确定客户希望通过“flex ponit”访问的算法。</p>
+</li>
+<li><p>为这个算法所有的实现声明通用的接口。</p>
+</li>
+<li><p>挨个把这些算法抽离到它们自己的类中。它们都应当遵循通用的<em>Strategy</em>接口。</p>
+</li>
+<li><p>给<em>Context</em>类增加一个字段来关联当前使用的策略，并提供一个setter方法用来改变策略。上下文应当只通过<em>Strategy</em>接口和策略协作。</p>
+</li>
+<li><p>当客户端需要上下文来以某种方式工作的时候，必须提供一个合适策略对象。</p>
+</li>
+</ol>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>允许在运行时热替换算法。</p>
+</li>
+<li><p>对其他类隔离代码和算法数据。</p>
+</li>
+<li><p>用委托替代继承。</p>
+</li>
+<li><p>符合开闭原则。</p>
+</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li><p>通过创建多个额外类增加代码复杂度。</p>
+</li>
+<li><p>客户端必须关心策略间的差异以便选择正确的策略。</p>
+</li>
+</ul>
+<h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
+<li><p>State，Strategy，Bridge（和某种程度上的Adapter）都有相似的解决结构。它们都是共享“handle/body”句柄。它们的意图不一样，所以他们用来解决不同的问题。</p>
+</li>
+<li><p>Command和Strategy很相似，因为他们都是把一些行为参数化到上下文。Command可以用爱把任何操作转换到一个对象中。可选的参数变成了那个对象的字段。这个转换允许延迟或者远程执行，存储命令历史等。</p>
+<p>  另一方面，Strategy模式通常用来描述处理相同事情的不同方式。它可以帮助我们让这些算法在一个单独的上下文类中是可替换的。</p>
+</li>
+<li><p>Decorator可以让你改变一个对象的皮肤（外部表象）。Strategy让你改变胆子（内部实现）。</p>
+</li>
+<li><p>Template Method使用继承来改变算法（子类扩展父类的某些方法）。Strategy通过把工作委托给可替换的策略对象来改变对象的行为。模版方法模式工作在类这一层面。策略模式允许你改变个性化对象的行为。</p>
+</li>
+<li><p>State可以看作是Strategy模式的一种扩展。这两种模式都采用组合的方式来改变主对象的行为，主对象委托工作给这些帮助对象。Strategy模式让这些对象完全独立。State模式允许状态对象改变上下文对象的当前状态，他们之间是相互依存的。</p>
+</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>策略模式是行为模式的一种，他把一系列行为分解到不同的对象中，使得他们在源上下文对象中可以互换。</p>
+<p>源对象被叫做上下文，他会持有一个策略对象的引用，并把任务委托给策略执行。为了改变上下文处理工作的方式，其他对象可以修改当前上下文中的策略对象。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/strategy" target="_blank" rel="external">https://refactoring.guru/design-patterns/strategy</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+            <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
+          
+            <a href="/tags/Strategy/" rel="tag"># Strategy</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/16/设计模式-结构模式之State/" rel="next" title="译-设计模式-结构模式之State">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之State
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/A/A/A/1_myjcxd.jpg"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运输"><span class="nav-number">4.1.</span> <span class="nav-text">运输</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">6.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">7.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">8.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">9.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">10.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">11.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">12.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
