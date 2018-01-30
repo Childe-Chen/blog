@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Factory Method," />
+  <meta name="keywords" content="JAVA,设计模式,Design Patterns,Template Method," />
 
 
 
@@ -87,29 +87,27 @@
 
 
 
-<meta name="description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
-问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
-不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
+<meta name="description" content="意图Template Method 时行为模式的一种，让你定义一个算法的骨架，允许子类重新定义在不改变结构的情况下重新定义算法的某些步骤。
+问题假设你正在写一个挖掘办公文档数据的应用程序。用户想要输入各种格式的文件（PDF，DOC，CSV），程序输出给他们有用的格式化数据。
+第一个版本你仅支持DOC文件。下一个版本支持CSV格式文件。一个月后，你又增加了从PDF中分析数据的功能。
+这时候，你注意到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-创建模式之Factory Method">
-<meta property="og:url" content="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/index.html">
+<meta property="og:title" content="译-设计模式-行为模式之Template-Method">
+<meta property="og:url" content="http://yoursite.com/2018/01/26/设计模式-行为模式之Template-Method/index.html">
 <meta property="og:site_name" content="凡隐的博客">
-<meta property="og:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
-问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
-不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-15T11:55:59.132Z">
+<meta property="og:description" content="意图Template Method 时行为模式的一种，让你定义一个算法的骨架，允许子类重新定义在不改变结构的情况下重新定义算法的某些步骤。
+问题假设你正在写一个挖掘办公文档数据的应用程序。用户想要输入各种格式的文件（PDF，DOC，CSV），程序输出给他们有用的格式化数据。
+第一个版本你仅支持DOC文件。下一个版本支持CSV格式文件。一个月后，你又增加了从PDF中分析数据的功能。
+这时候，你注意到">
+<meta property="og:image" content="http://img.blog.csdn.net/20180130204704125?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-01-30T12:47:28.925Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-创建模式之Factory Method">
-<meta name="twitter:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
-问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
-不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="译-设计模式-行为模式之Template-Method">
+<meta name="twitter:description" content="意图Template Method 时行为模式的一种，让你定义一个算法的骨架，允许子类重新定义在不改变结构的情况下重新定义算法的某些步骤。
+问题假设你正在写一个挖掘办公文档数据的应用程序。用户想要输入各种格式的文件（PDF，DOC，CSV），程序输出给他们有用的格式化数据。
+第一个版本你仅支持DOC文件。下一个版本支持CSV格式文件。一个月后，你又增加了从PDF中分析数据的功能。
+这时候，你注意到">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180130204704125?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
@@ -137,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/26/设计模式-行为模式之Template-Method/"/>
 
 
 
 
 
-  <title> 译-设计模式-创建模式之Factory Method | 凡隐的博客 </title>
+  <title> 译-设计模式-行为模式之Template-Method | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -306,7 +304,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/13/设计模式-创建模式之FactoryMethod/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/设计模式-行为模式之Template-Method/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="childe.chen">
@@ -327,7 +325,7 @@
             
             
               
-                译-设计模式-创建模式之Factory Method
+                译-设计模式-行为模式之Template-Method
               
             
           </h2>
@@ -342,8 +340,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-13T17:39:28+08:00">
-                2017-11-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-26T17:29:16+08:00">
+                2018-01-26
               </time>
             
 
@@ -383,8 +381,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/13/设计模式-创建模式之FactoryMethod/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/11/13/设计模式-创建模式之FactoryMethod/" itemprop="commentCount"></span>
+                <a href="/2018/01/26/设计模式-行为模式之Template-Method/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/26/设计模式-行为模式之Template-Method/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -392,7 +390,7 @@
 
           
           
-             <span id="/2017/11/13/设计模式-创建模式之FactoryMethod/" class="leancloud_visitors" data-flag-title="译-设计模式-创建模式之Factory Method">
+             <span id="/2018/01/26/设计模式-行为模式之Template-Method/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Template-Method">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -421,124 +419,74 @@
       
 
       
-        <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。</p>
-<p>不久，你的应用很受欢迎，你收到了许多需求，包括水运。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="problem.png"></p>
-<p>好消息，不是吗？但是你的代码怎么样呢？看起来，你的代码有许多地方要和Truck类耦合。添加Ship类需要改变整个代码库。此外，如果你决定添加另外一个类型的配送方式，你可能需要再次修改整个代码库。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Factory Method模式建议通过调用一个特别的“工厂”方法来代替直接创建对象（使用new操作）。构造方法应该移到那个方法中调用。工厂方法返回的对象被称为“产品”。</p>
-<p>乍一看，这么做似乎没有意义。但是，现在你可以在字类中重写工厂方法，并且改变要创建对象的类。我们来看它是怎么工作的：</p>
-<p><img src="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution.png"></p>
-<p>当然，这种方式有个限制：所有的产品必须遵循一个通用接口（Transport）。基类中的工厂方法需要返回这个通用接口。</p>
-<p><img src="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution1.png"></p>
-<p>字类返回不同的具体产品，它们都有一样的基类或者接口（比如：Truck和Ship都实现了Transport接口）。</p>
-<p><img src="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution3.png"></p>
-<p>工厂方法的客户端不需要关心它得到产品的类型。它们通过产品接口和所有产品协作。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure.png"></p>
+        <h3 id="意图"><a href="#意图" class="headerlink" title="意图"></a>意图</h3><p>Template Method 时行为模式的一种，让你定义一个算法的骨架，允许子类重新定义在不改变结构的情况下重新定义算法的某些步骤。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你正在写一个挖掘办公文档数据的应用程序。用户想要输入各种格式的文件（PDF，DOC，CSV），程序输出给他们有用的格式化数据。</p>
+<p>第一个版本你仅支持DOC文件。下一个版本支持CSV格式文件。一个月后，你又增加了从PDF中分析数据的功能。</p>
+<p>这时候，你注意到这三种转换算法有很多相似之处。他们除了处理不同的文件格式外，对数据的萃取和分析都是一致的。这点对减少重复代码和算法独立很有帮助。</p>
+<p>客户端代码使用这些算法还有另一个问题。选择合适的行为的许多条件都需要依赖选择的算法。如果这三个转换类都遵循一个通用接口或者一个基类，这些条件就可以用多态消灭掉。<br><a id="more"></a></p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Template Method模式建议把一个算法分成几个步骤，把步骤封装到方法中并在一个“template”方法中挨个调用。</p>
+<p>子类可以复写特定的步骤，但是无法修改模板方法，保持算法的结构不变。</p>
+<p>在我们的应用中，我们为所有的转换算法创建一个通用的基类。模版方法的关键步骤看起来像这样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function">method <span class="title">templateMethod</span><span class="params">()</span> is</span></div><div class="line">    <span class="title">openDocument</span><span class="params">()</span>;</div><div class="line">    extractRawData();</div><div class="line">    parseRawData();</div><div class="line">    analyzeData();</div><div class="line">    closeDocument();</div></pre></td></tr></table></figure>
+<p>首先，你要把模版方法声明为<code>abstract</code>的，让所有的步骤都需要子类实现。然后，在子类的所有方法都实现后，再把子类共有的部分放到基类中，并使这些步骤（方法）成为可选的复写方法。</p>
+<p>在我们的例子中，打开和关闭文档的操作对三种文件方式都不同，所以这点不需要默认实现。但是其他的步骤，比如，转换和分析，可以放到基类中，使得子类间共享这些代码。</p>
+<p>还有另外一种步骤，叫做钩子。钩子时可选的步骤，他默认是空的。因此，即使一个模板没有腹泻够爱方法，它依然可以工作。通常，钩子被用来再算法开始之前或者结束之后给子类提供机会来做一些事情。</p>
+<h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="大众住房建设"><a href="#大众住房建设" class="headerlink" title="大众住房建设"></a>大众住房建设</h4><p>建筑商使用模板方法来进行大规模住房建设。有一个标准的建筑模板来描述施工步骤：打地基，筑桩，垒墙，走水电等。</p>
+<p>但是，尽管标准化，建筑商可以稍微改变每一步，使一个房子有点不同（即添加更多的窗口，用不同的颜色涂墙…）</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180130204704125?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
 <ol>
-<li><p>Product为creator和他的字类能够生产的对象定义接口。</p>
+<li><p><strong>Abstract class</strong>声明了算法的每个步骤，以及用来统筹调用每个步骤的模版方法。这些步骤可以被声明为<code>abstract</code>或者有默认的实现。</p>
 </li>
-<li><p>Concrete Product是Product的不同实现。Concrete Creator将会创建并返回这饿类的实例。</p>
-</li>
-<li><p>Creator声明了一个返回Product类型的工厂方法。在第一个例子中，所有的Concrete Creator必须实现它们的工厂方法。</p>
-<p> 尽管这个名字在现实世界中，生产产品并不是Concrete Creator的主要责任。通常，他有一些处理产品的核心逻辑。</p>
-<p> 打个比方：大的软件开发公司有对开发者进行培训的部门。但是公司的主要功能还是写代码。</p>
-</li>
-<li><p>Concrete Creator实现或者重写基本的工厂方法，创建并返回一个Concrete Product。</p>
-<p> 注意：工厂方法并不总是创建一个新实例。它也可以从缓存中返回一个已经存在的对象。</p>
+<li><p><strong>Concrete class</strong>实现模版方法中定义的每个抽象步骤，但是它也可以复写抽象类中的默认实现。具体的实现类不能自己复写模板方法。</p>
 </li>
 </ol>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子用来展示工厂方法可以被用来创建跨平台的UI元素。工厂放被声明在对话框UI的基类中。它返回抽象的按钮。对话框的积累重写工厂方法并返回特定的按钮。</p>
-<p><img src="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode.png"></p>
-<p>结果是使用基本对话框的代码组合了一个UI窗口。对话框通过通用接口和那妞协作。所以，不管工厂方法返回什么类型的按钮，对话框保留基本的功能。</p>
-<p>因此，Factory Method使得类的主要代码独立于所使用的具体产品类。Factory Method让字类担负起选择生产产品所需要的具体类的责任。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">// The Factory Method pattern is applicable only when there is a</div><div class="line">// products hierarchy.</div><div class="line">interface Button is</div><div class="line">    method render()</div><div class="line">    method onClick(f)</div><div class="line"></div><div class="line">class WindowsButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Create and render a Windows looking button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a native OS click event.</div><div class="line"></div><div class="line">class HTMLButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Return an HTML representation of a button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a web browser click event.</div><div class="line"></div><div class="line">// Base factory class. Note that the "factory" is merely a role for the class.</div><div class="line">// It should have some core business logic which needs different products to</div><div class="line">// be created.</div><div class="line">class Dialog is</div><div class="line">    method renderWindow() is</div><div class="line">        Render other window controls.</div><div class="line"></div><div class="line">        Button okButton = createButton();</div><div class="line">        okButton.onClick(closeDialog);</div><div class="line">        okButton.render();</div><div class="line"></div><div class="line">    // Therefore we extract all product creation code to a special</div><div class="line">    // factory method.</div><div class="line">    abstract method createButton()</div><div class="line"></div><div class="line">// Concrete factories extend that method to produce different kinds of products.</div><div class="line">class WindowsDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new WindowsButton()</div><div class="line"></div><div class="line">class WebDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new HTMLButton()</div><div class="line"></div><div class="line">class ClientApplication is</div><div class="line">    field dialog: Dialog</div><div class="line"></div><div class="line">    // Application picks a factory type depending on configuration</div><div class="line">    // or environment.</div><div class="line">    method configure() is</div><div class="line">        if (we are in windows environment) then</div><div class="line">            dialog = new WindowsDialog()</div><div class="line"></div><div class="line">        if (we are in web environment) then</div><div class="line">            dialog = new WebDialog()</div><div class="line"></div><div class="line">    // The client code should work with factories and products through their</div><div class="line">    // abstract interfaces. This way it will remain functional even if you add</div><div class="line">    // new product types to the program.</div><div class="line">    method main() is</div><div class="line">        dialog.initialize()</div><div class="line">        dialog.render()</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
-<li><p>当你的代码需要和不知道具体类型及一来对象协作时。</p>
-<p>  比如，从多数据源读写数据：文件系统，数据库或者网络。这些资源有着不同的类型，依赖和初始化代码。</p>
-<p>  工厂方法对其他代码隐藏了产品的实现细节。支持一个新的产品类型，你只需要创建一个新的字类并且重写工厂方法。</p>
+<li><p>当子类能够扩展基本算法而不能修改他的结构时。</p>
+<p>  模版方法模式把算法分割成几个定义在基类中的个性化的步骤，可以被子类轻松扩展，并保持算法的结构。</p>
 </li>
-<li><p>当你想要让用户扩展你的类库或者框架的内部组件时。</p>
-<p>  用户可以轻松的创建特定组件的字类。但是如何让框架识别这个字类并且替换标准的组件？用户必须重写每一个创建标准组件的方法，把它们改成创建自定义子类的对象。这样相当尴尬，不是吗？</p>
-<p>  最好的方法不仅仅是给用户提供扩展某个类，而是将生成组件的代码减少到单个创建方法中。换句话说，提供出一个工厂方法。</p>
-<p>  让我们看看它如何工作。假设你在用一个开源的UI框架写app，你的app必须使用圆边按钮，但是框架只提供了一个方形的。</p>
-<p>  你做的第一件事就是实现一个RoundButton类。但是现在你需要告诉UIFramework类用一个新的按钮类代替默认的那个。</p>
-<p>  为了实现这个，你创建了基础框架的一个子类UIWithRoundButtons，并且重写了createButton方法。这个方法会返回一个Button对象，除了你创建的新子类RoundButton对象。现在，在你的app中，你必须使用UIWithRoundButtons类替代UIFramework来初始化框架。</p>
-</li>
-<li><p>当你想要保存系统资源并且重用存在的对象，而不是重新建立一个时。</p>
-<p>  比如，当你需要处理像数据库连接这类大的或者资源紧张对象。</p>
-<p>  想象下要重用存在的对象需要做什么：</p>
-<ol>
-<li><p>首先，你需要创建一个池子来保存存在的对象。</p>
-</li>
-<li><p>当有人请求一个对象时，你需要在池子中找到一个闲置的对象。</p>
-</li>
-<li><p>然后把它返回给客户端代码。</p>
-</li>
-<li><p>仅仅在池子中没有闲置对象时，你才需要创建一个新的（并且把它放到池子中）。</p>
-<p>这些代码必须放在某个地方。最便利的地方是构造方法。这样子就可以在请求创建对象时去做那些检查。但是，从定义上讲构造方法必须返回新对象，所以它们不能返回存在的实例。</p>
-<p>另外，那些使用你对象的客户端代码也不能包含它。否则，客户端就知道太多你的类中的实现细节。因此，你需要一个独立的方法封装这个逻辑。那就是工厂方法。</p>
-</li>
-</ol>
+<li><p>当你需要几个类来做相似的事情但是又有一些不同时时。当你修改其中一个类时，你必须同时修改其他的类。</p>
+<p>  模版方法模式把相似的算法步骤抽取到基类中。代码的不同部分保留在各个子类中。</p>
 </li>
 </ul>
 <h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><ol>
-<li><p>为所有产品抽离出通用的接口。这个接口应该声明对每个产品都有意义的方法。</p>
+<li><p>分析算法，看他们是否可以被分解成几个步骤。这些步骤中那些事所有子类公用的，哪些事子类唯一的。</p>
 </li>
-<li><p>在创建类中添加一个空的工厂方法。他的签名应当返回产品的接口类型。</p>
+<li><p>创建抽象基类，并且声明模版方法。列出这些算法的结构，把他们声明为<code>abstract</code>。考虑哪些方法应当被声明为<code>final</code>来阻止子类的重写。</p>
 </li>
-<li><p>查看创建者的代码并且找到所有用到产品构造方法的引用。将它们逐一替换为对工厂方法的调用，并将产品创建代码提取到工厂方法。<br> 你可能需要为工厂方法添加临时变量来控制要创建的产品。此时，工厂方法的代码看起来很挫。<br> 它有一个巨大的switch操作来获取要实例化产品的类。不过不用担心，我们马上修复他。</p>
+<li><p>如果所有的步骤都是抽象的那就好了。然而，一些步骤适合有默认实现。子类必须实现哪些抽象的方法。</p>
 </li>
-<li><p>现在，在子类中重写工厂方法，并且把父类中对应的case语句挪到子类中。</p>
+<li><p>考虑在合适的步骤之间增加钩子，以及在模板方法的开始和结束之间添加钩子。</p>
 </li>
-<li><p>基础创建类中的控制参数也可以用在子类中。</p>
-<p> 比如，你可能有一个Mail作为基类的层级结构，里面有Air和Ground，还有产品类：Plane，Truck和Train。Air正好和Plane匹配，但是Ground可以同时和Truck还有Train匹配。你可以创建一个新的子类来处理这两种情况，但是还有一种处理方式。客户端代码向Ground的工厂方法传递一个参数来控制它想要的产品。</p>
-</li>
-<li><p>如果基本工厂方法在移动后变成空的了，你可以把它标志成抽象方法。</p>
+<li><p>算法的每个变种都从抽象类继承。变种必须实现所有必要的步骤，但是可以选择性重写可选步骤。</p>
 </li>
 </ol>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li><p>遵循开闭原则。</p>
-</li>
-<li><p>避免产品和使用它们代码的耦合。</p>
-</li>
-<li><p>把创建代码都移动到一个地方，简化了代码。</p>
-</li>
-<li><p>简化添加新产品的编程。</p>
-</li>
+<li>帮助消除重复代码。</li>
 </ul>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>需要额外的子类。</li>
+<li><p>你将受限于现有算法的架构。</p>
+</li>
+<li><p>如果通过子类复写默认的步骤实现就违背了里氏替换原则。</p>
+</li>
+<li><p>模板方法往往难以保持更多的步骤。</p>
+</li>
 </ul>
 <h3 id="和其他模式的关系"><a href="#和其他模式的关系" class="headerlink" title="和其他模式的关系"></a>和其他模式的关系</h3><ul>
-<li><p>通常，设计从使用Factory Method开始（比较简单，并且可以通过子类实现定制），逐渐演变到Abstract Factory，Prototype，或者Builder（更加复杂，但更灵活），因为设计者发现它们需要更灵活的程序。</p>
+<li><p><em>Factory Method</em>是专业化的<em>Template Method</em>。另一方面，<em>Factory Method</em>通常作为大型<em>Template Method</em>的一个步骤。</p>
 </li>
-<li><p>Abstract Factory类通常使用工厂方法实现，但也可以使用Prototype实现。</p>
-</li>
-<li><p>Factory Method可以和Iterator单独使用，让集合子类返回正确的迭代器。</p>
-</li>
-<li><p>Prototype不需要子类，但是需要一个“初始”操作。Factory Method需要子类，但是不需要初始化这个步骤。</p>
-</li>
-<li><p>Factory Method是一个专业化的Template Method。另一方面，Factory Method常常作为一个大Template Method的一个步骤。</p>
+<li><p><em>Template Method</em>采用继承方式来扩展不同的类取修改算法。<em>Strategy</em>采用修改委托对象行为的方式来改变对象的行为。<em>Template Method</em>工作在类级别。<em>Strategy</em>允许你更改单个对象的行为。</p>
 </li>
 </ul>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>工厂方法是一个用来解决创建产品对象时没有指定具体类的问题的设计模式。</p>
-<p>工厂方法定义了一个方法，用来替代直接调用构造方法（new操作）。子类可以重写这个方法来改变要创建对象的类。</p>
-<p>If you can’t figure out the difference between Factories, Factory Method &amp; Abstract Factory patterns, then read our Factory Comparison guide.<br>如果你分不清楚Factories，Factory Method和Abstract Factory，可以阅读<a href="https://refactoring.guru/design-patterns/factory-comparison" target="_blank" rel="external">工厂比较指南（待译）</a>。</p>
-<h3 id="在Java中的使用"><a href="#在Java中的使用" class="headerlink" title="在Java中的使用"></a>在Java中的使用</h3><ul>
-<li><p>用例</p>
-<p>  java.util.Calendar#getInstance()</p>
-<p>  java.util.ResourceBundle#getBundle()</p>
-<p>  java.text.NumberFormat#getInstance()</p>
-<p>  java.nio.charset.Charset#forName()</p>
-<p>  java.net.URLStreamHandlerFactory#createURLStreamHandler(String) (Returns different singleton objects, depending on a protocol)</p>
-<p>  java.util.EnumSet#of()</p>
-<p>  javax.xml.bind.JAXBContext#createMarshaller() and other similar methods.</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>Java核心库中有些例子：</p>
+<ul>
+<li><p>java.io.InputStream，java.io.OutputStream，java.io.Reader和java.io.Writer中所有非抽象的方法。</p>
 </li>
-<li><p>鉴定</p>
-<p>  工厂方法可以通过创建方法来识别，这些方法从具体类创建对象，但将它们作为抽象类型或接口的对象返回。</p>
+<li><p>java.util.AbstractList，java.util.AbstractSet和java.util.AbstractMap中所有非抽象的方法。</p>
+</li>
+<li><p>javax.servlet.http.HttpServlet中所有的doXXX()方法都默认响应一个HTTP 405 “Method Not Allowed”错误。你可以自由复写他们。</p>
 </li>
 </ul>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自： <a href="https://refactoring.guru/design-patterns/factory-method" target="_blank" rel="external">https://refactoring.guru/design-patterns/factory-method</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>翻译整理自：<a href="https://refactoring.guru/design-patterns/template-method" target="_blank" rel="external">https://refactoring.guru/design-patterns/template-method</a></p>
 
       
     </div>
@@ -568,7 +516,7 @@
           
             <a href="/tags/Design-Patterns/" rel="tag"># Design Patterns</a>
           
-            <a href="/tags/Factory-Method/" rel="tag"># Factory Method</a>
+            <a href="/tags/Template-Method/" rel="tag"># Template Method</a>
           
         </div>
       
@@ -581,8 +529,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/02/设计模式-结构模式之小结/" rel="next" title="设计模式-结构模式之小结">
-                <i class="fa fa-chevron-left"></i> 设计模式-结构模式之小结
+              <a href="/2018/01/22/设计模式-结构模式之Strategy/" rel="next" title="译-设计模式-结构模式之Strategy">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之Strategy
               </a>
             
           </div>
@@ -590,10 +538,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/14/设计模式-创建模式之AbstractFactory/" rel="prev" title="译-设计模式-创建模式之Abstract Factory">
-                译-设计模式-创建模式之Abstract Factory <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -740,7 +684,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">4.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪代码"><span class="nav-number">5.</span> <span class="nav-text">伪代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Java中的使用"><span class="nav-number">12.</span> <span class="nav-text">在Java中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">13.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#意图"><span class="nav-number">1.</span> <span class="nav-text">意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实世界的类比"><span class="nav-number">4.</span> <span class="nav-text">真实世界的类比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#大众住房建设"><span class="nav-number">4.1.</span> <span class="nav-text">大众住房建设</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构"><span class="nav-number">5.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用性"><span class="nav-number">6.</span> <span class="nav-text">适用性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">7.</span> <span class="nav-text">如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">8.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">9.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和其他模式的关系"><span class="nav-number">10.</span> <span class="nav-text">和其他模式的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
@@ -872,9 +816,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'childe';
-      var disqus_identifier = '2017/11/13/设计模式-创建模式之FactoryMethod/';
+      var disqus_identifier = '2018/01/26/设计模式-行为模式之Template-Method/';
 
-      var disqus_title = "译-设计模式-创建模式之Factory Method";
+      var disqus_title = "译-设计模式-行为模式之Template-Method";
 
 
       function run_disqus_script(disqus_script) {
