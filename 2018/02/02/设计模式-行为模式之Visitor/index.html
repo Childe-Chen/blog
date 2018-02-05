@@ -98,7 +98,7 @@
 问题你的团队正在开发一款地理信息结构地图的app。图的节点不仅表示城镇也有其他诸如景点，行业等信息。节点间通过道路关联。在引擎中，每个节点都是一个对象，他们的类型由他们自己的类来表示。
 你接到一个任务，要把地图导出为XML。乍看之下很容易实现。你需要为每个类型的节点添加一个导出方法，然后遍历地图并为每个节点执行">
 <meta property="og:image" content="http://img.blog.csdn.net/20180205203917475?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-02-05T12:39:26.768Z">
+<meta property="og:updated_time" content="2018-02-05T12:48:51.704Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-行为模式之Visitor">
 <meta name="twitter:description" content="意图Visitor是行为模式的一种，允许你在不改变要操作对象类的情况下定义一个新操作。
@@ -421,7 +421,7 @@
 <p>你接到一个任务，要把地图导出为XML。乍看之下很容易实现。你需要为每个类型的节点添加一个导出方法，然后遍历地图并为每个节点执行导出方法。这个方法不仅简单而且优雅，因为你可以使用多态来避免和具体的节点类耦合。</p>
 <p>但不幸的是，系统架构师不允许修改已存在的node类。这些代码已经在生产环境，没有人希望冒着风险修改他。</p>
 <p>另外，他质疑节点类中的XML导出是否有意义。这些类的主要工作是和地理数据协作。导出行为放在这里看起来很不合适。</p>
-<p>还有另一个拒绝的原因。在此之后，市场部门的人可能会要求你导出其他格式或添加其他一些奇怪的功能。这会迫使你再次修改那些珍贵的代码。</p>
+<p>还有另一个拒绝的原因。在此之后，市场部门的人可能会要求你导出其他格式或添加其他一些奇怪的功能。这会迫使你再次修改那些珍贵的代码。<br><a id="more"></a></p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Visitor模式建议你把新的行为放在一个单独的类中，而不是把它继承在已存在的类中。关联到对象的行为，不会被对象本身调用。对象被作为visitor对象的方法参数传递。</p>
 <p>对于不同类型的对象，行为的代码可能有点不同。因此，visitor类必须为不同类型的参数提供不同的行为方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExportVisitor</span> <span class="keyword">implements</span> <span class="title">Visitor</span> <span class="title">is</span></span></div><div class="line">    <span class="title">method</span> <span class="title">doForCity</span>(<span class="title">City</span> <span class="title">c</span>) &#123; ... &#125;</div><div class="line">    <span class="function">method <span class="title">doForIndustry</span><span class="params">(Industry f)</span> </span>&#123; ... &#125;</div><div class="line">    <span class="function">method <span class="title">doForSightSeeing</span><span class="params">(SightSeeing ss)</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// ...</span></div></pre></td></tr></table></figure>
