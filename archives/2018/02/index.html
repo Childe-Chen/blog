@@ -90,7 +90,7 @@
 <meta name="description" content="少爷凡隐">
 <meta property="og:type" content="website">
 <meta property="og:title" content="凡隐的博客">
-<meta property="og:url" content="http://yoursite.com/tags/spring/index.html">
+<meta property="og:url" content="http://yoursite.com/archives/2018/02/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="少爷凡隐">
 <meta name="twitter:card" content="summary">
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/spring/"/>
+  <link rel="canonical" href="http://yoursite.com/archives/2018/02/"/>
 
 
 
 
 
-  <title> 标签: spring | 凡隐的博客 </title>
+  <title> 归档 | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +154,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left  page-archive  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -282,15 +282,31 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        spring
-        <small>标签</small>
-      </h2>
-    </div>
+  <section id="posts" class="posts-collapse">
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+       
+      
+      OK! 目前共计 39 篇日志。 继续努力。
+    </span>
 
     
+
+      
+      
+      
+
+      
+        
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2018">2018</h2>
+        </div>
+      
+      
+
       
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -298,9 +314,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2017/06/13/转-Servlet3-异步请求/" itemprop="url">
+            <a class="post-title-link" href="/2018/02/02/设计模式-行为模式之Visitor/" itemprop="url">
               
-                <span itemprop="name">转-Servlet3-异步请求</span>
+                <span itemprop="name">译-设计模式-行为模式之Visitor</span>
               
             </a>
         
@@ -308,9 +324,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-13T15:48:51+08:00"
-              content="2017-06-13" >
-          06-13
+              datetime="2018-02-02T14:58:03+08:00"
+              content="2018-02-02" >
+          02-02
         </time>
       </div>
 
@@ -318,10 +334,13 @@
   </article>
 
 
+
     
-  </div>
+
+  </section>
 
   
+
 
           
           </div>
@@ -528,6 +547,12 @@
   
 
   
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
+
 
   
 
@@ -544,7 +569,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'childe';
-      var disqus_identifier = 'tags/spring/index.html';
+      var disqus_identifier = 'archives/2018/02/index.html';
 
       var disqus_title = "";
 
@@ -782,62 +807,6 @@
             newcounter.setACL(acl);
             /* End Set ACL */
             newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-  
-
-
-  
-
-</body>
-</html>
-.set("title", title);
             newcounter.set("url", url);
             newcounter.set("time", 1);
             newcounter.save(null, {
