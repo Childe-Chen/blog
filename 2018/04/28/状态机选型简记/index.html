@@ -96,7 +96,7 @@
 <meta property="og:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
 痛点业务发展的比较快，某些单据状态不停的增加，每一次增加都需要改动业务中使用到状态的相关代码，更糟的的是这些代码可能遍布于多个类的多个方法中（散弹枪一样），不仅增加发布的风险也同时增加了测试的回归任务">
 <meta property="og:image" content="https://img-blog.csdn.net/2018050317335793?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2018-05-04T07:15:48.366Z">
+<meta property="og:updated_time" content="2018-05-04T07:27:19.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="状态机选型简记">
 <meta name="twitter:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
@@ -542,6 +542,8 @@
 <li><p>是否有公司在使用</p>
 </li>
 <li><p>使用状态机到那种地步：仅做状态判断？状态机是否和业务关联？持久化？</p>
+</li>
+<li><p>是否引用其他开源项目？被引用的项目是否稳定？是否使用其中明确被告知不稳定的方法或者类？</p>
 </li>
 </ul>
 <p>至此，我需要再次回顾我最初的诉求：管理状态的转换，避免散弹式的效果。结合考量点，其实sateless4j和squirrel都满足我现在的要求，但我只是想方便管理单据状态的转换，并不想基于这些状态的特性更多的改动工程中的代码，所以决定使用sateless4j。PS：一般PS都是重点啦。朋友的项目中已经在使用sateless4j。</p>
