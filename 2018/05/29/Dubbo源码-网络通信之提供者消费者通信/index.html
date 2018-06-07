@@ -98,7 +98,7 @@
 <meta property="og:image" content="https://img-blog.csdn.net/20180607180333171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-export.jpg">
 <meta property="og:image" content="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-refer.jpg">
-<meta property="og:updated_time" content="2018-06-07T10:14:00.248Z">
+<meta property="og:updated_time" content="2018-06-07T10:16:37.144Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo源码-网络通信之提供者消费者通信">
 <meta name="twitter:description" content="引入之前简单看过Dubbo基于SPI的“微核+插件”形式的架构模式，Dubbo因为这种架构模式使得扩展十分简单，另外Dubbo的框架分层十分清晰，看起源码来相对轻松不少。
@@ -416,7 +416,7 @@
 
       
         <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>之前简单看过<a href="http://childe.net.cn/2017/03/07/Dubbo%E6%BA%90%E7%A0%81-SPI%E5%AE%9E%E7%8E%B0%E4%B9%8BExtensionLoader/" target="_blank" rel="external">Dubbo基于SPI的“微核+插件”形式的架构模式</a>，Dubbo因为这种架构模式使得扩展十分简单，另外Dubbo的<a href="http://dubbo.apache.org/books/dubbo-dev-book/design.html" target="_blank" rel="external">框架分层</a>十分清晰，看起源码来相对轻松不少。</p>
-<p>在使用Dubbo时突然想到几个问题，Dubbo默认使用tcp长链接，消费者们可能同时发起调用，提供者是怎样处理这些请求的？消费者和生产者之间链接如何复用？消费者和提供者之间几个长链接？要搞清楚这几个问题要从Dubbo的exchange和transport层来找答案。</p>
+<p>在使用Dubbo时突然想到几个问题，Dubbo默认使用tcp长链接，消费者们可能同时发起调用，提供者是怎样处理这些请求的？消费者和生产者之间链接如何复用？消费者和提供者之间几个长链接？要搞清楚这几个问题要从Dubbo的exchange和transport层来找答案。<br><a id="more"></a></p>
 <ul>
 <li>exchange 信息交换层：封装请求响应模式，同步转异步，以 Request, Response 为中心，扩展接口为 Exchanger, ExchangeChannel, ExchangeClient, ExchangeServer</li>
 <li>transport 网络传输层：抽象 mina 和 netty 为统一接口，以 Message 为中心，扩展接口为 Channel, Transporter, Client, Server, Codec</li>
