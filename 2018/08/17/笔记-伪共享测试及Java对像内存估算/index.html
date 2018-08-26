@@ -88,24 +88,21 @@
 
 
 <meta name="description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
-前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
-Java对象内存估算要想先搞清楚">
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内存伪共享测试及Java对像内存估算">
 <meta property="og:url" content="http://yoursite.com/2018/08/17/笔记-伪共享测试及Java对像内存估算/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
-前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
-Java对象内存估算要想先搞清楚">
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。">
 <meta property="og:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg">
-<meta property="og:updated_time" content="2018-08-26T13:35:09.855Z">
+<meta property="og:updated_time" content="2018-08-26T13:38:01.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存伪共享测试及Java对像内存估算">
 <meta name="twitter:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
-前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
-Java对象内存估算要想先搞清楚">
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。">
 <meta name="twitter:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
 
 
@@ -419,7 +416,7 @@ Java对象内存估算要想先搞清楚">
 
       
         <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。</p>
-<p>前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。</p>
+<p>前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。<br><a id="more"></a></p>
 <h3 id="Java对象内存估算"><a href="#Java对象内存估算" class="headerlink" title="Java对象内存估算"></a>Java对象内存估算</h3><p>要想先搞清楚伪共享问题，就先需要搞清楚使用的语言（Java）对实例对象的内存布局以及如何来检测估算实例的内存占用。</p>
 <h4 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h4><p>Instrumentation是Java SE5开始引入的，我们可以通过它来检测Java对象的大小，当然这只是Instrumentation强大功能之一，还可以通过Instrumentation增加自定义类转换器，对Class进行增强或者替换，只是我们在这里并不关心。</p>
 <p>找到了检测工具后怎么去使用呢？</p>
