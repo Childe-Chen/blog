@@ -95,13 +95,13 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
 痛点业务发展的比较快，某些单据状态不停的增加，每一次增加都需要改动业务中使用到状态的相关代码，更糟的的是这些代码可能遍布于多个类的多个方法中（散弹枪一样），不仅增加发布的风险也同时增加了测试的回归任务">
-<meta property="og:image" content="https://img-blog.csdn.net/2018050317335793?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2018-05-04T07:27:19.652Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535285056/blog/statemachine/fsm.png">
+<meta property="og:updated_time" content="2018-08-26T12:09:27.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="状态机选型简记">
 <meta name="twitter:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
 痛点业务发展的比较快，某些单据状态不停的增加，每一次增加都需要改动业务中使用到状态的相关代码，更糟的的是这些代码可能遍布于多个类的多个方法中（散弹枪一样），不仅增加发布的风险也同时增加了测试的回归任务">
-<meta name="twitter:image" content="https://img-blog.csdn.net/2018050317335793?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535285056/blog/statemachine/fsm.png">
 
 
 
@@ -419,7 +419,7 @@
 <h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>单据的状态及状态转换与业务解耦，避免散弹一样的效果。</p>
 <h2 id="涉及到的知识点"><a href="#涉及到的知识点" class="headerlink" title="涉及到的知识点"></a>涉及到的知识点</h2><p>了解以下几个知识点有助于我们更好的理解状态机，也相当于是调研状态机是否满足我们最核心的需求。</p>
 <h3 id="FSM1"><a href="#FSM1" class="headerlink" title="FSM1"></a>FSM<sup>1</sup></h3><p>有限状态机（英语：finite-state machine，缩写：FSM）又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。</p>
-<p><img src="https://img-blog.csdn.net/2018050317335793?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="30%" height="30%" alter="FSM图解"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535285056/blog/statemachine/fsm.png" width="30%" height="30%" alter="FSM图解"></p>
 <p>状态存储关于过去的信息，就是说：它反映从系统开始到现在时刻的输入变化。转移指示状态变更，并且用必须满足确使转移发生的条件来描述它。动作是在给定时刻要进行的活动的描述。有多种类型的动作：</p>
 <ul>
 <li>进入动作（entry action）：在进入状态时进行</li>
@@ -688,7 +688,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -699,7 +699,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -710,7 +710,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

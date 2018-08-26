@@ -99,15 +99,15 @@
 问题假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。
 客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。
 另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的">
-<meta property="og:image" content="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-15T12:45:49.782Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286289/blog/pattern/behavior/observer/structure.png">
+<meta property="og:updated_time" content="2018-08-26T12:25:39.684Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-行为模式之Observer">
 <meta name="twitter:description" content="意图Observer是行为模式的一种，允许你定义对象间一对多的关系，以便一个对象状态改变后，它的依赖者可以被通知并可以自动更新。
 问题假设你有两个对象，Customer和Store。商店采购了一批新产品，一些客户对这些产品很感兴趣。
 客户可能每天都来商店看下是否有感兴趣的产品售卖，但大多情况下的是无意义的，因为产品还在路上。
 另一方面，商店可以给所有的客户发送上新的邮件。但是对那些不关心这类产品的">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535286289/blog/pattern/behavior/observer/structure.png">
 
 
 
@@ -431,7 +431,7 @@
 <p>如果应用有几个发布者类型，通用的发布者接口也需要提取出来。它由几个订阅方法组成。这个接口允许订阅者观察发布者的状态却不必和某个具体的实现类耦合。</p>
 <h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><h4 id="杂志订阅"><a href="#杂志订阅" class="headerlink" title="杂志订阅"></a>杂志订阅</h4><p>一旦你订阅了杂志或者报纸，你不在需要去商店检查是否有新的杂志或者报纸发布。相反，发布者将会在期刊发布后直接发送到你的邮箱。</p>
 <p>发布者维护了订阅者的信息，并且知道他们感兴趣的杂志。如果订阅者不想发布者再发送新的杂志给他们，他们可以随时取消对杂志的订阅。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180115204326665?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535286289/blog/pattern/behavior/observer/structure.png" alt="structure"></p>
 <ol>
 <li><p>Publisher（发布者）发布其他对象感兴趣的事件。这些事件发生在发布者改变了他的状态或者它执行力一些行为时。发布者包含订阅的基本设施，允许新订阅者的加入和老订阅者的退出。</p>
 <p> 当一个新事件发生，发布者遍历订阅者列表并调用他们的通知方法，这些方法声明在Subscriber（订阅者）接口中。</p>
@@ -554,8 +554,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/16/设计模式-结构模式之State/" rel="prev" title="译-设计模式-结构模式之State">
-                译-设计模式-结构模式之State <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/16/设计模式-结构模式之State/" rel="prev" title="译-设计模式-行为模式之State">
+                译-设计模式-行为模式之State <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -635,7 +635,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -646,7 +646,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -657,7 +657,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

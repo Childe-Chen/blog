@@ -97,19 +97,19 @@
 <meta property="og:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
 问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
 不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-15T11:55:59.132Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287368/blog/pattern/creational/Factory-Method/problem.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/solution.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287370/blog/pattern/creational/Factory-Method/solution1.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/solution3.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287371/blog/pattern/creational/Factory-Method/structure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/pseudocode.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:45:24.382Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-创建模式之Factory Method">
 <meta name="twitter:description" content="目的Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。
 问题假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。
 不久，你的应用很受欢迎，你收到了许多需求，包括水运。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535287368/blog/pattern/creational/Factory-Method/problem.jpg">
 
 
 
@@ -423,17 +423,17 @@
       
         <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Factory Method是创建模式的一种，他在父类中提供一个用来创建对象的接口，但是允许子类修改创建对象的类型。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>假设你有一个后勤管理应用。应用的第一个版本只需要处理卡车这种运输方式，所以，你有一个Truck类。</p>
-<p>不久，你的应用很受欢迎，你收到了许多需求，包括水运。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171114154738412?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="problem.png"></p>
+<p>不久，你的应用很受欢迎，你收到了许多需求，包括水运。<br><a id="more"></a><br><img src="https://res.cloudinary.com/childe/image/upload/v1535287368/blog/pattern/creational/Factory-Method/problem.jpg" alt="problem.png"></p>
 <p>好消息，不是吗？但是你的代码怎么样呢？看起来，你的代码有许多地方要和Truck类耦合。添加Ship类需要改变整个代码库。此外，如果你决定添加另外一个类型的配送方式，你可能需要再次修改整个代码库。</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>Factory Method模式建议通过调用一个特别的“工厂”方法来代替直接创建对象（使用new操作）。构造方法应该移到那个方法中调用。工厂方法返回的对象被称为“产品”。</p>
 <p>乍一看，这么做似乎没有意义。但是，现在你可以在字类中重写工厂方法，并且改变要创建对象的类。我们来看它是怎么工作的：</p>
-<p><img src="http://img.blog.csdn.net/20171114154754654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution.png"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/solution.jpg" alt="solution.png"></p>
 <p>当然，这种方式有个限制：所有的产品必须遵循一个通用接口（Transport）。基类中的工厂方法需要返回这个通用接口。</p>
-<p><img src="http://img.blog.csdn.net/20171114154810596?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution1.png"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287370/blog/pattern/creational/Factory-Method/solution1.jpg" alt="solution1.png"></p>
 <p>字类返回不同的具体产品，它们都有一样的基类或者接口（比如：Truck和Ship都实现了Transport接口）。</p>
-<p><img src="http://img.blog.csdn.net/20171114154825014?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution3.png"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/solution3.jpg" alt="solution3.png"></p>
 <p>工厂方法的客户端不需要关心它得到产品的类型。它们通过产品接口和所有产品协作。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171114154842422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure.png"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535287371/blog/pattern/creational/Factory-Method/structure.jpg" alt="structure.png"></p>
 <ol>
 <li><p>Product为creator和他的字类能够生产的对象定义接口。</p>
 </li>
@@ -448,7 +448,7 @@
 </li>
 </ol>
 <h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>这个例子用来展示工厂方法可以被用来创建跨平台的UI元素。工厂放被声明在对话框UI的基类中。它返回抽象的按钮。对话框的积累重写工厂方法并返回特定的按钮。</p>
-<p><img src="http://img.blog.csdn.net/20171114154903771?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode.png"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287369/blog/pattern/creational/Factory-Method/pseudocode.jpg" alt="pseudocode.png"></p>
 <p>结果是使用基本对话框的代码组合了一个UI窗口。对话框通过通用接口和那妞协作。所以，不管工厂方法返回什么类型的按钮，对话框保留基本的功能。</p>
 <p>因此，Factory Method使得类的主要代码独立于所使用的具体产品类。Factory Method让字类担负起选择生产产品所需要的具体类的责任。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">// The Factory Method pattern is applicable only when there is a</div><div class="line">// products hierarchy.</div><div class="line">interface Button is</div><div class="line">    method render()</div><div class="line">    method onClick(f)</div><div class="line"></div><div class="line">class WindowsButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Create and render a Windows looking button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a native OS click event.</div><div class="line"></div><div class="line">class HTMLButton implements Button is</div><div class="line">    method render(a, b) is</div><div class="line">        Return an HTML representation of a button.</div><div class="line">    method onClick(f) is</div><div class="line">        Bind a web browser click event.</div><div class="line"></div><div class="line">// Base factory class. Note that the "factory" is merely a role for the class.</div><div class="line">// It should have some core business logic which needs different products to</div><div class="line">// be created.</div><div class="line">class Dialog is</div><div class="line">    method renderWindow() is</div><div class="line">        Render other window controls.</div><div class="line"></div><div class="line">        Button okButton = createButton();</div><div class="line">        okButton.onClick(closeDialog);</div><div class="line">        okButton.render();</div><div class="line"></div><div class="line">    // Therefore we extract all product creation code to a special</div><div class="line">    // factory method.</div><div class="line">    abstract method createButton()</div><div class="line"></div><div class="line">// Concrete factories extend that method to produce different kinds of products.</div><div class="line">class WindowsDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new WindowsButton()</div><div class="line"></div><div class="line">class WebDialog extends Dialog is</div><div class="line">    method createButton() is</div><div class="line">        return new HTMLButton()</div><div class="line"></div><div class="line">class ClientApplication is</div><div class="line">    field dialog: Dialog</div><div class="line"></div><div class="line">    // Application picks a factory type depending on configuration</div><div class="line">    // or environment.</div><div class="line">    method configure() is</div><div class="line">        if (we are in windows environment) then</div><div class="line">            dialog = new WindowsDialog()</div><div class="line"></div><div class="line">        if (we are in web environment) then</div><div class="line">            dialog = new WebDialog()</div><div class="line"></div><div class="line">    // The client code should work with factories and products through their</div><div class="line">    // abstract interfaces. This way it will remain functional even if you add</div><div class="line">    // new product types to the program.</div><div class="line">    method main() is</div><div class="line">        dialog.initialize()</div><div class="line">        dialog.render()</div></pre></td></tr></table></figure>
@@ -672,7 +672,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -683,7 +683,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -694,7 +694,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

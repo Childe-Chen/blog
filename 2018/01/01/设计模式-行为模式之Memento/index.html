@@ -97,16 +97,16 @@
 <meta property="og:description" content="意图Memento是行为模式的一种，他允许你在不暴露对象内部结构的情况下捕获其内部状态，以便稍后对象可以返回到这个状态。
 问题假设你在写一个文本编辑器。核心逻辑放在Editor主类中。另外一些特性，像文本格式化，内联图像等，放在不同的命令类中。
 你决定让用户的操作变得可逆。换句话讲，要增加“撤销”功能。为了实现它，你需要在执行任何操作前保存Editor的状态。之后，如果用户决定还原他的一些操作，程">
-<meta property="og:image" content="http://img.blog.csdn.net/20180105183229063?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20180105183306333?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20180105183336838?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-05T10:34:48.835Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286653/blog/pattern/behavior/memento/nestedClassStructure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286652/blog/pattern/behavior/memento/indermediateInterfaceStructure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286653/blog/pattern/behavior/memento/stricterEncapsulationStructure.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:32:56.928Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-行为模式之Memento">
 <meta name="twitter:description" content="意图Memento是行为模式的一种，他允许你在不暴露对象内部结构的情况下捕获其内部状态，以便稍后对象可以返回到这个状态。
 问题假设你在写一个文本编辑器。核心逻辑放在Editor主类中。另外一些特性，像文本格式化，内联图像等，放在不同的命令类中。
 你决定让用户的操作变得可逆。换句话讲，要增加“撤销”功能。为了实现它，你需要在执行任何操作前保存Editor的状态。之后，如果用户决定还原他的一些操作，程">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20180105183229063?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535286653/blog/pattern/behavior/memento/nestedClassStructure.jpg">
 
 
 
@@ -431,7 +431,7 @@
 <p>这些数据保护允许把memento存储在叫做Caretakers的对象中。因为他们只能通过限制性接口访问menento，caretakers无法修改存储在里面的状态。</p>
 <p>在编辑器例子中，我们创建一个单独的History类来扮演caretakers。它把memento组织成一个栈，每个操作被执行前它会被压入新的memento。当用户触发撤销操作，History弹出栈顶memento并把它传给Editor，请求回滚。因为Editor可以完全访问memento，它将用memento的状态值覆盖当前变量值。</p>
 <h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="嵌套类实现"><a href="#嵌套类实现" class="headerlink" title="嵌套类实现"></a>嵌套类实现</h4><p>经典的实现方式依赖编程对嵌套类的支持，许多流行的编程语言（C++，C#和Java）都支持该方式。</p>
-<p><img src="http://img.blog.csdn.net/20180105183229063?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="nestedClassStructure"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535286653/blog/pattern/behavior/memento/nestedClassStructure.jpg" alt="nestedClassStructure"></p>
 <ol>
 <li><p>Originator包含复杂的状态并且你不想把它们暴露出去。它能够自己创建快照，也能够在需要的时候从快照恢复。</p>
 </li>
@@ -444,7 +444,7 @@
 </li>
 </ol>
 <h4 id="中间接口实现"><a href="#中间接口实现" class="headerlink" title="中间接口实现"></a>中间接口实现</h4><p>不支持嵌套类语言（PHP）的替代方式。</p>
-<p><img src="http://img.blog.csdn.net/20180105183306333?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="indermediateInterfaceStructure"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535286652/blog/pattern/behavior/memento/indermediateInterfaceStructure.jpg" alt="indermediateInterfaceStructure"></p>
 <ol>
 <li><p>在没有嵌套类的情况下，通过让caretaker使用有限接口和memento协作来限制其对memento的访问。</p>
 </li>
@@ -452,7 +452,7 @@
 </li>
 </ol>
 <h4 id="更严格的封装实现"><a href="#更严格的封装实现" class="headerlink" title="更严格的封装实现"></a>更严格的封装实现</h4><p>当你不想给远程的其他类通过Memento来访问Originator状态时，这种方式很有用。</p>
-<p><img src="http://img.blog.csdn.net/20180105183336838?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="stricterEncapsulationStructure"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535286653/blog/pattern/behavior/memento/stricterEncapsulationStructure.jpg" alt="stricterEncapsulationStructure"></p>
 <ol>
 <li><p>这种实现允许有多个类型的originator和memento。每个originator和其对应的memento协作。originator和memento不把他们的状态暴露给任何人。</p>
 </li>
@@ -649,7 +649,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -660,7 +660,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -671,7 +671,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

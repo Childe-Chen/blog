@@ -97,14 +97,14 @@
 <meta property="og:description" content="意图Command（命令）是一种行为模式，让你可以把请求转换到单独的对象，可以用来把不同的请求参数化，排队或者记录请求，并且支持撤销操作。
 问题假设你在做一个新的文本编辑器。你创建了一个Button类，可以被用做工具栏的按钮，也可以用作对话框的通用按钮。
 这些按钮看起来很像，但是它们做不同的事情。此时我们要把针对不同按钮点击的处理代码放在哪里呢？简单的解决方法是为每个按钮创建一个Button的子类">
-<meta property="og:image" content="http://img.blog.csdn.net/20171226224044490?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-12-26T14:45:15.383Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286850/blog/pattern/behavior/command/structure.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:34:28.984Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式-行为模式之Command">
 <meta name="twitter:description" content="意图Command（命令）是一种行为模式，让你可以把请求转换到单独的对象，可以用来把不同的请求参数化，排队或者记录请求，并且支持撤销操作。
 问题假设你在做一个新的文本编辑器。你创建了一个Button类，可以被用做工具栏的按钮，也可以用作对话框的通用按钮。
 这些按钮看起来很像，但是它们做不同的事情。此时我们要把针对不同按钮点击的处理代码放在哪里呢？简单的解决方法是为每个按钮创建一个Button的子类">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171226224044490?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535286850/blog/pattern/behavior/command/structure.jpg">
 
 
 
@@ -428,7 +428,7 @@
 <p>因此，command类将使得GUI和业务逻辑类的衔接变得很方便。这只是Command众多优点中的一部分。</p>
 <h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="在餐厅下单"><a href="#在餐厅下单" class="headerlink" title="在餐厅下单"></a>在餐厅下单</h4><p>你到一个餐厅中并找了个靠窗的位置坐下。服务员拿走了你写在纸上的订单，把它贴在厨房的墙上，它之前还有其他订单。</p>
 <p>正如你猜的那样，这个纸条就是一个command。它排在队列中知道一个厨师准备去做。这个订单包含了做这道菜的所有信息。他允许厨师立马开始做菜而不是跑来跑去来搞清楚订单的细节。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171226224044490?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure.png"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535286850/blog/pattern/behavior/command/structure.jpg" alt="structure.png"></p>
 <ol>
 <li><p>Invoker保存Command对象的引用，并且当一个操作需要被执行的时候使用它。Invoker通过通用接口和command协作，这个接口通常只有一个execute()方法。Invoker不负责创建command对象。他们通常通过构造函数从客户端获取预创建的command。</p>
 </li>
@@ -655,7 +655,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -666,7 +666,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -677,7 +677,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -95,15 +95,15 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="引入之前简单看过Dubbo基于SPI的“微核+插件”形式的架构模式，Dubbo因为这种架构模式使得扩展十分简单，另外Dubbo的框架分层十分清晰，看起源码来相对轻松不少。
 在使用Dubbo时突然想到几个问题，Dubbo默认使用tcp长链接，消费者们可能同时发起调用，提供者是怎样处理这些请求的？消费者和生产者之间链接如何复用？消费者和提供者之间几个长链接？要搞清楚这几个问题要从Dubbo的excha">
-<meta property="og:image" content="https://img-blog.csdn.net/20180607180333171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-export.jpg">
-<meta property="og:image" content="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-refer.jpg">
-<meta property="og:updated_time" content="2018-06-07T10:20:41.589Z">
+<meta property="og:image" content="http://res.cloudinary.com/childe/image/upload/v1535284309/blog/dubbo/dubbo%E9%80%9A%E4%BF%A1%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="https://dubbo.gitbooks.io/dubbo-dev-book/sources/images/dubbo-export.jpg">
+<meta property="og:image" content="https://dubbo.gitbooks.io/dubbo-dev-book/sources/images/dubbo-refer.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:02:18.314Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo源码-网络通信之提供者消费者通信">
 <meta name="twitter:description" content="引入之前简单看过Dubbo基于SPI的“微核+插件”形式的架构模式，Dubbo因为这种架构模式使得扩展十分简单，另外Dubbo的框架分层十分清晰，看起源码来相对轻松不少。
 在使用Dubbo时突然想到几个问题，Dubbo默认使用tcp长链接，消费者们可能同时发起调用，提供者是怎样处理这些请求的？消费者和生产者之间链接如何复用？消费者和提供者之间几个长链接？要搞清楚这几个问题要从Dubbo的excha">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180607180333171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:image" content="http://res.cloudinary.com/childe/image/upload/v1535284309/blog/dubbo/dubbo%E9%80%9A%E4%BF%A1%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.png">
 
 
 
@@ -422,7 +422,7 @@
 <li>transport 网络传输层：抽象 mina 和 netty 为统一接口，以 Message 为中心，扩展接口为 Channel, Transporter, Client, Server, Codec</li>
 </ul>
 <p>Dubbo在这两层提供了不同的实现，信息交换层默认的是自定义协议dubbo，传输层默认使用Netty。下面的一些探讨以Dubbo的默认配置为基础进行，可能因为Dubbo版本不同其中一些类名或者方法名称不一致，但不影响对其本身的理解。可借由具体实现更好的理解Dubbo的抽象分层。</p>
-<h3 id="网络通信模型"><a href="#网络通信模型" class="headerlink" title="网络通信模型"></a>网络通信模型</h3><p><img src="https://img-blog.csdn.net/20180607180333171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L215amN4ZA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="dubbo交互通讯"></p>
+<h3 id="网络通信模型"><a href="#网络通信模型" class="headerlink" title="网络通信模型"></a>网络通信模型</h3><p><img src="http://res.cloudinary.com/childe/image/upload/v1535284309/blog/dubbo/dubbo%E9%80%9A%E4%BF%A1%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B.png" alt="dubbo交互通讯"></p>
 <ul>
 <li><p>Client表示应用具体的某个服务引用，每个服务的引用可根据提供者的配置（connections）建立多个链接。<br>  Dubbo协议缺省每服务每提供者每消费者使用单一长连接。</p>
 </li>
@@ -441,7 +441,7 @@
 </li>
 </ul>
 <h3 id="服务启动"><a href="#服务启动" class="headerlink" title="服务启动"></a>服务启动</h3><p>Dubbo在解析service标签时会向外暴露服务，同时会检查打开网络服务。下图是dubbo服务暴露的时序图（摘自dubbo官网）。</p>
-<p><img src="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-export.jpg" alt="dubbo-export"></p>
+<p><img src="https://dubbo.gitbooks.io/dubbo-dev-book/sources/images/dubbo-export.jpg" alt="dubbo-export"></p>
 <p>在export阶段，会调用相应协议的export方法去完成invoker到exporter转化同时根据url（如下）中的address打开本地网络通信服务，默认启动netty服务。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">URL内容</div><div class="line"></div><div class="line">dubbo://10.1.87.93:20880/com.xx.IAdminUserLoginService?accesslog=/Users/childe/logs/access.log&amp;anyhost=true&amp;application=dmall-provider&amp;connections=4&amp;default.delay=-1&amp;default.retries=0&amp;default.service.filter=-monitor,-exception&amp;default.timeout=10000&amp;delay=-1&amp;dubbo=2.5.9&amp;generic=false&amp;interface=com.xx.IAdminUserLoginService&amp;loadbalance=roundrobin&amp;logger=slf4j&amp;methods=checkUser,getUserById,getUserByAccount&amp;monitor=dubbo%3A%2F%2Fzk1.daily.com%3A2181%2Fcom.alibaba.dubbo.registry.RegistryService%3Fapplication%3Ddmall-provider%26backup%3Dzk2.daily.com%3A2181%2Czk3.daily.com%3A2181%26dubbo%3D2.5.9%26file%3D%2FUsers%2Fchilde%2F.dubbo%2FDDD-soa.cache%26logger%3Dslf4j%26owner%3Dmazha%26pid%3D21874%26protocol%3Dregistry%26refer%3Ddubbo%253D2.5.9%2526interface%253Dcom.alibaba.dubbo.monitor.MonitorService%2526pid%253D21874%2526timestamp%253D1528104644722%26registry%3Dzookeeper%26timestamp%3D1528104644709&amp;owner=childe&amp;pid=21874&amp;revision=1.0.28&amp;side=provider&amp;timestamp=1528104644712&amp;uptime=1528104644716&amp;version=1.0.0.fsm.chen</div></pre></td></tr></table></figure>
 <p>启动netty服务的代码如下，分别有boss和worker线程池供netty来完成新链接的建立及网络IO。在创建NioServerSocketChannelFactory时我们可以通过Dubbo的配置（dubbo:protocol 中iothreads）来指定IO的线程数量。默认数量为CPU可用核数加1，但不能超过32个。</p>
@@ -451,7 +451,7 @@
 <p>下面这段代码起的便是承上启下的作用，在这个步骤中，根据Request的信息构造出Response，并调用具体协议的reply实现获取业务相应数据。</p>
 <p>在构造Response时回写入了Request的ID和Version。这是channel复用的关键。每个channel的Request都有一个唯一的ID，类型为long。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//HeaderExchangeHandler</span></div><div class="line"><span class="function">Response <span class="title">handleRequest</span><span class="params">(ExchangeChannel channel, Request req)</span> <span class="keyword">throws</span> RemotingException </span>&#123;</div><div class="line">    Response res = <span class="keyword">new</span> Response(req.getId(), req.getVersion());</div><div class="line">    <span class="keyword">if</span> (req.isBroken()) &#123;</div><div class="line">        Object data = req.getData();</div><div class="line"></div><div class="line">        String msg;</div><div class="line">        <span class="keyword">if</span> (data == <span class="keyword">null</span>) msg = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (data <span class="keyword">instanceof</span> Throwable) msg = StringUtils.toString((Throwable) data);</div><div class="line">        <span class="keyword">else</span> msg = data.toString();</div><div class="line">        res.setErrorMessage(<span class="string">"Fail to decode request due to: "</span> + msg);</div><div class="line">        res.setStatus(Response.BAD_REQUEST);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// find handler by message class.</span></div><div class="line">    Object msg = req.getData();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// handle data.</span></div><div class="line">        Object result = handler.reply(channel, msg);</div><div class="line">        res.setStatus(Response.OK);</div><div class="line">        res.setResult(result);</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">        res.setStatus(Response.SERVICE_ERROR);</div><div class="line">        res.setErrorMessage(StringUtils.toString(e));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> res;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="服务引用"><a href="#服务引用" class="headerlink" title="服务引用"></a>服务引用</h3><p>Consumer启动时会从注册中心拉取订阅的Provider信息，并建立和Provider的链接，时序图如下（摘自dubbo官网）：<br><img src="http://dubbo.apache.org/books/dubbo-dev-book/sources/images/dubbo-refer.jpg" alt="dubbo-refer"></p>
+<h3 id="服务引用"><a href="#服务引用" class="headerlink" title="服务引用"></a>服务引用</h3><p>Consumer启动时会从注册中心拉取订阅的Provider信息，并建立和Provider的链接，时序图如下（摘自dubbo官网）：<br><img src="https://dubbo.gitbooks.io/dubbo-dev-book/sources/images/dubbo-refer.jpg" alt="dubbo-refer"></p>
 <p>Consumer的一次调用时序: DubboInvoker::doInvoke-&gt;NettyClient-&gt;AbstractClient::send-&gt;AbstractPeer-&gt;HeaderExchangeChannel::send-&gt;DefaultFuture::send-&gt;NettyChannel::send-&gt;DefaultFuture::received</p>
 <p>Consumer每发起一次调用时会构建出本次调用的Request，每个Request有唯一的ID。Dubbo中用AtomicLong实现ID，短时间内不会重复，所以可作为唯一标识。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//HeaderExchangeChannel</span></div><div class="line"><span class="function"><span class="keyword">public</span> ResponseFuture <span class="title">request</span><span class="params">(Object request, <span class="keyword">int</span> timeout)</span> <span class="keyword">throws</span> RemotingException </span>&#123;</div><div class="line">    <span class="keyword">if</span> (closed) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RemotingException(<span class="keyword">this</span>.getLocalAddress(), <span class="keyword">null</span>, <span class="string">"Failed to send request "</span> + request + <span class="string">", cause: The channel "</span> + <span class="keyword">this</span> + <span class="string">" is closed!"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// create request.</span></div><div class="line">    <span class="comment">// 无参构造方法中生成一个ID</span></div><div class="line">    Request req = <span class="keyword">new</span> Request();</div><div class="line">    req.setVersion(<span class="string">"2.0.0"</span>);</div><div class="line">    req.setTwoWay(<span class="keyword">true</span>);</div><div class="line">    req.setData(request);</div><div class="line">    DefaultFuture future = <span class="keyword">new</span> DefaultFuture(channel, req, timeout);</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        channel.send(req);</div><div class="line">    &#125; <span class="keyword">catch</span> (RemotingException e) &#123;</div><div class="line">        future.cancel();</div><div class="line">        <span class="keyword">throw</span> e;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> future;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -526,6 +526,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/17/笔记-伪共享测试及Java对像内存估算/" rel="prev" title="内存伪共享测试及Java对像内存估算">
+                内存伪共享测试及Java对像内存估算 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -604,7 +608,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -615,7 +619,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -626,7 +630,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

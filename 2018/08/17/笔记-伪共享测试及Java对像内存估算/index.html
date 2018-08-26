@@ -1,0 +1,1165 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM,JAVA,伪共享,JML,False Sharing," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
+Java对象内存估算要想先搞清楚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存伪共享测试及Java对像内存估算">
+<meta property="og:url" content="http://yoursite.com/2018/08/17/笔记-伪共享测试及Java对像内存估算/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
+Java对象内存估算要想先搞清楚">
+<meta property="og:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg">
+<meta property="og:updated_time" content="2018-08-26T13:35:09.855Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内存伪共享测试及Java对像内存估算">
+<meta name="twitter:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
+前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。
+Java对象内存估算要想先搞清楚">
+<meta name="twitter:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/17/笔记-伪共享测试及Java对像内存估算/"/>
+
+
+
+
+
+  <title> 内存伪共享测试及Java对像内存估算 | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/17/笔记-伪共享测试及Java对像内存估算/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatar.csdn.net/A/A/A/1_myjcxd.jpg?1525340789">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                内存伪共享测试及Java对像内存估算
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-17T16:45:25+08:00">
+                2018-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/17/笔记-伪共享测试及Java对像内存估算/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/08/17/笔记-伪共享测试及Java对像内存估算/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/08/17/笔记-伪共享测试及Java对像内存估算/" class="leancloud_visitors" data-flag-title="内存伪共享测试及Java对像内存估算">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h3><p>之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。</p>
+<p>前车之鉴，后事之师。这次花了一些时间先去了解下久闻其名的伪共享。</p>
+<h3 id="Java对象内存估算"><a href="#Java对象内存估算" class="headerlink" title="Java对象内存估算"></a>Java对象内存估算</h3><p>要想先搞清楚伪共享问题，就先需要搞清楚使用的语言（Java）对实例对象的内存布局以及如何来检测估算实例的内存占用。</p>
+<h4 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h4><p>Instrumentation是Java SE5开始引入的，我们可以通过它来检测Java对象的大小，当然这只是Instrumentation强大功能之一，还可以通过Instrumentation增加自定义类转换器，对Class进行增强或者替换，只是我们在这里并不关心。</p>
+<p>找到了检测工具后怎么去使用呢？</p>
+<p>首先，要获取Instrumentation实例。Instrumentation由虚拟机来实例化和维护的，可以通过两种方式来获取：</p>
+<ol>
+<li><p>当JVM以指示一个代理类的方式启动时，将传递给代理类的premain方法一个Instrumentation实例。</p>
+</li>
+<li><p>当JVM提供某种机制在JVM启动之后某一时刻启动代理时，将传递给代理代码的agentmain方法一个Instrumentation实例。</p>
+</li>
+</ol>
+<p>这里通过方法一来做。</p>
+<p>步骤1. 创建一个用来检测对象大小的工具类，并在该类中声明实现premain方法；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectSizeUtil</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Instrumentation inst;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation instP)</span> </span>&#123;</div><div class="line">        inst = instP;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">shallowSizeOf</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span>(inst == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Can not access instrumentation environment.\n"</span> +</div><div class="line">                    <span class="string">"Please check if jar file containing SizeOfAgent class is \n"</span> +</div><div class="line">                    <span class="string">"specified in the java's \"-javaagent\" command line argument."</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> inst.getObjectSize(o);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>步骤2. 利用javaagent方式启动来获取Instrumentation实例。这里以IDEA为例使用maven插件的方式来配置javaagent。</p>
+<table>
+<thead>
+<tr>
+<th>插件名</th>
+<th>功能简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maven-jar-plugin</td>
+<td>maven 默认打包插件，用来创建 project jar，可参考下一些开源软件项目对该插件的使用，比如：dubbo</td>
+</tr>
+<tr>
+<td>maven-shade-plugin</td>
+<td>用来打可执行包，包含依赖，以及对依赖进行取舍过滤，可参考下一些开源软件项目对该插件的使用，比如：dubbo</td>
+</tr>
+<tr>
+<td>maven-assembly-plugin</td>
+<td>支持定制化打包方式，更多是对项目目录的重新组装，可参考下一些开源软件项目对该插件的使用，比如：dubbo</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> &lt;plugin&gt;</div><div class="line">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;3.0.0&lt;/version&gt;</div><div class="line">    &lt;executions&gt;</div><div class="line">        &lt;execution&gt;</div><div class="line">            &lt;phase&gt;package&lt;/phase&gt;</div><div class="line">            &lt;goals&gt;</div><div class="line">                &lt;goal&gt;shade&lt;/goal&gt;</div><div class="line">            &lt;/goals&gt;</div><div class="line">            &lt;configuration&gt;</div><div class="line">                &lt;transformers&gt;</div><div class="line">                    &lt;transformer</div><div class="line">                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"&gt;</div><div class="line">                        &lt;manifestEntries&gt;</div><div class="line">                            &lt;Premain-Class&gt;com.cxd.jvm.jml.ObjectSizeUtil&lt;/Premain-Class&gt;</div><div class="line">                        &lt;/manifestEntries&gt;</div><div class="line">                    &lt;/transformer&gt;</div><div class="line">                &lt;/transformers&gt;</div><div class="line">            &lt;/configuration&gt;</div><div class="line">        &lt;/execution&gt;</div><div class="line">    &lt;/executions&gt;</div><div class="line">&lt;/plugin&gt;</div></pre></td></tr></table></figure>
+<p>配置完成后使用maven进行打包。</p>
+<p>步骤3. 在启动脚本中增加代理类路径，我的是<br><code>-javaagent:/Users/childe/Documents/workspace/goodGoodStudy/target/childe-1.0-SNAPSHOT.jar</code></p>
+<p><img src="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png" alt="idea-vm-options"></p>
+<p>完成上面的操作后，<a href="https://github.com/Childe-Chen/goodGoodStudy/tree/master/src/main/java/com/cxd/jvm/jml" target="_blank" rel="external">基本工具就完成了</a>，接下来就使用Instrumentation来帮助我们获取对象内存大小。</p>
+<h4 id="对象大小检测"><a href="#对象大小检测" class="headerlink" title="对象大小检测"></a>对象大小检测</h4><p>在估算内存大小时，会遇到类似Retained heap和Shallow heap两个概念，Shallow heap表示一个实例自身占用堆空间的大小，而Retained Heap不仅包含自身占用堆空间还包括自身引用其他对象的Shallow heap。在MAT中Retained Heap是一个对象被GC回收时，能够释放其所有引用的Shallow Heap的总和。</p>
+<p>在开始检测前，先回顾下Java中元类型的大小。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小（字节byte）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>byte</td>
+<td>1</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+</tr>
+<tr>
+<td>char</td>
+<td>2</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>大小没有明确指定，和虚拟机具体实现有关</td>
+</tr>
+</tbody>
+</table>
+<p>一个类的实例对象在内存中这么分布：对象头 + 实例数据 + 填充。对象头里面保存了对象相关的诸如GC标记、锁标记等一些必要信息，实例数据就是对象的各个属性，填充是为了让对象的大小为8的倍数。</p>
+<p>在开启指针压缩（-XX:+UseCompressedOops）的情况下，测试了一些元类型的大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 64位机器上reference类型占用8个字节，开启指针压缩后占用4个字节</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">primitiveTest</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> integer = <span class="number">90</span>;</div><div class="line">    <span class="comment">// int 自身4byte</span></div><div class="line">    <span class="comment">// +UseCompressedOops Integer shallowSizeOf : 16 = 12(head) + 4(instance data) retainedSizeOf : 16</span></div><div class="line">    System.out.println(<span class="string">"Integer shallowSizeOf : "</span> + ObjectSizeUtil.shallowSizeOf(integer) + <span class="string">" retainedSizeOf : "</span> + ObjectSizeUtil.retainedSizeOf(integer)+ <span class="string">"\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">long</span> a = <span class="number">100L</span>;</div><div class="line">    <span class="comment">// long 自身8byte</span></div><div class="line">    <span class="comment">// +UseCompressedOops Long shallowSizeOf : 24 = 12(head) + 8(instance data) + 4(padding) retainedSizeOf : 24</span></div><div class="line">    System.out.println(<span class="string">"Long shallowSizeOf : "</span> + ObjectSizeUtil.shallowSizeOf(a) + <span class="string">" retainedSizeOf : "</span> + ObjectSizeUtil.retainedSizeOf(a)+ <span class="string">"\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">byte</span> b = <span class="number">1</span>;</div><div class="line">    <span class="comment">// byte 自身1byte</span></div><div class="line">    <span class="comment">// +UseCompressedOops byte shallowSizeOf : 16 = 12(head) + 1(instance data) + 3(padding) retainedSizeOf : 16</span></div><div class="line">    System.out.println(<span class="string">"byte shallowSizeOf : "</span> + ObjectSizeUtil.shallowSizeOf(b) + <span class="string">" retainedSizeOf : "</span> + ObjectSizeUtil.retainedSizeOf(b)+ <span class="string">"\n"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">char</span> c = <span class="string">'2'</span>;</div><div class="line">    <span class="comment">// char 自身2byte</span></div><div class="line">    <span class="comment">// +UseCompressedOops char shallowSizeOf : 16 = 12(head) + 2(instance data) + 2(padding) retainedSizeOf : 16</span></div><div class="line">    System.out.println(<span class="string">"char shallowSizeOf : "</span> + ObjectSizeUtil.shallowSizeOf(c) + <span class="string">" retainedSizeOf : "</span> + ObjectSizeUtil.retainedSizeOf(c)+ <span class="string">"\n"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然，还有array、reference、String（特别的）类型内存大小的测试，这里不一一列出，全部代码<a href="https://github.com/Childe-Chen/goodGoodStudy/tree/master/src/main/java/com/cxd/jvm/jml" target="_blank" rel="external">-&gt;请戳这里-&lt;</a>。</p>
+<h3 id="伪共享"><a href="#伪共享" class="headerlink" title="伪共享"></a>伪共享</h3><h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><p>说到伪共享就不得不提一下CPU和高速缓存。我们知道，CPU的计算速度时远远大于磁盘的读写速度的，为了缓解两者之间的速度差，就有了内存，CPU计算时需要的数据先放到内存中，CPU直接操作内存的数据而不是操作磁盘，内存又分成几部分：一级缓存（L1）、二次缓存（L2）、三级缓存（L3）、主存（Main Memory）。</p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg" alt="cpu-cache"></p>
+<p>如图所示，越靠近CPU的缓存速度越快，容量就越小。当CPU执行运算的时候，它先去L1查找所需的数据，再去L2，然后是L3（被单个插槽上的所有CPU核共享），最后如果这些缓存中都没有，所需的数据就要去主内存拿。走得越远，运算耗费的时间就越长。所以如果在做一些很频繁的事，就要确保数据在L1缓存中。</p>
+<h4 id="缓存行"><a href="#缓存行" class="headerlink" title="缓存行"></a>缓存行</h4><p>数据在缓存系统中是以缓存行（cache line）为单位存储的。缓存行是2的整数幂个连续字节，一般为32-256个字节。最常见的缓存行大小是64个字节。-当多线程修改互相独立的变量时，如果这些变量共享同一个缓存行，就会无意中影响彼此的性能，这就是伪共享。-</p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg" alt="cache-false"></p>
+<p>如上图，为了简化问题，把缓存表示成了一块。线程0和线程1会用到不同变量，它们在内存中彼此相邻，并驻留在同一高速缓存行。高速缓存行被加载到CPU0和CPU1的高速缓存中（灰色箭头）。尽管这些线程修改的是不同变量（红色和蓝色箭头），高速缓存行仍会无效(MSEI协议)，并强制内存更新以维持高速缓存的一致性。</p>
+<p>那么，伪共享的存在到底对我们的程序有多大影响呢？我们做个<a href="https://github.com/Childe-Chen/goodGoodStudy/blob/master/src/main/java/com/cxd/disruptor/FalseSharing.java" target="_blank" rel="external">-&gt;测试（戳我看源码）&lt;-</a>看下。</p>
+<p>以下测试数据环境：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">CPU 2.7 GHz Intel Core i5</div><div class="line">内存 8 GB 1867 MHz DDR3</div><div class="line"></div><div class="line">java version &quot;1.8.0_74&quot;</div><div class="line">Java(TM) SE Runtime Environment (build 1.8.0_74-b02)</div><div class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.74-b02, mixed mode)</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FalseSharing</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 每改变一次，要重新编译一次，不然跑出的时间差别不准确</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> NUM_THREADS = <span class="number">1</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">long</span> ITERATIONS = <span class="number">500L</span> * <span class="number">1000L</span> * <span class="number">1000L</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> arrayIndex;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> VolatileLong[] longs = <span class="keyword">new</span> VolatileLong[NUM_THREADS];</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; longs.length; i++) &#123;</div><div class="line">            longs[i] = <span class="keyword">new</span> VolatileLong();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FalseSharing</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> arrayIndex)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.arrayIndex = arrayIndex;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> start = System.nanoTime();</div><div class="line">        runTest();</div><div class="line">        System.out.println(<span class="string">"duration = "</span> + (System.nanoTime() - start));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runTest</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread[] threads = <span class="keyword">new</span> Thread[NUM_THREADS];</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threads.length; i++) &#123;</div><div class="line">            threads[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> FalseSharing(i));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (Thread t : threads) &#123;</div><div class="line">            t.start();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (Thread t : threads) &#123;</div><div class="line">            t.join();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> i = ITERATIONS + <span class="number">1</span>;</div><div class="line">        <span class="keyword">while</span> (<span class="number">0</span> != --i) &#123;</div><div class="line">            longs[arrayIndex].value = i;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 从不断上升的测试所需时间中能够明显看出伪共享的影响。没有缓存行竞争时，我们几近达到了随着线程数的线性扩展。</div><div class="line">     * 这并不是个完美的测试，因为我们不能确定这些VolatileLong会布局在内存的什么位置。它们是独立的对象。</div><div class="line">     * 但是经验告诉我们同一时间分配的对象趋向集中于一块。</div><div class="line">     * 所以你也看到了，伪共享可能是无声的性能杀手。</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileLong</span> </span>&#123;</div><div class="line">        <span class="comment">// 8byte</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">long</span> value = <span class="number">0L</span>;</div><div class="line">        <span class="comment">// 40byte comment out</span></div><div class="line">        <span class="comment">// 0. NUM_THREADS = 1 duration = 4587.402.329</span></div><div class="line">        <span class="comment">// 1. NUM_THREADS = 2 duration = 5249.820.613</span></div><div class="line">        <span class="comment">// 2. NUM_THREADS = 3 duration = 6329.667.147</span></div><div class="line">        <span class="comment">// 3. NUM_THREADS = 4 duration = 7743.024.530</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">long</span> p1, p2, p3, p4, p5;</div><div class="line"></div><div class="line">        <span class="comment">// 无填充时</span></div><div class="line">        <span class="comment">// 0. NUM_THREADS = 1 duration =  8213.558.562</span></div><div class="line">        <span class="comment">// 0. NUM_THREADS = 2 duration = 15874.759.369</span></div><div class="line">        <span class="comment">// 0. NUM_THREADS = 3 duration = 27350.752.730</span></div><div class="line">        <span class="comment">// 0. NUM_THREADS = 4 duration = 27435.461.116</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面代码在<a href="https://lixiangyun.gitbooks.io/disruptor/content/1.3.html" target="_blank" rel="external">disruptor用户手册中文翻译</a>中有所描述，查看了网络上的一些关于伪共享的文章，测试代码大同小异，但<code>VolatileLong</code>这个类中，网上大多写的是填充6个long类型的属性，但经过计算和测试，基于上述代码环境时填充5个才是合适的，大家在做实验的时候注意一下自己的环境问题，这也是为什么文章开头先介绍计算对象大小的原因。</p>
+<p>在<code>VolatileLong</code>类的注解中我贴出了自己跑的几组数据，得出的结论和我们的分析时一致的，伪共享随着竞争的加剧，表现的更加明显。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在Java8之后，新增了注解@sun.misc.Contended，来避免伪共享的问题，在JDK的源码中也可以搜寻到她的身影，像我们常用的Thread和ConcurrentHashMap中都有使用该注解。</p>
+<p>那么是不是我们编码时要特别关注伪共享这个问题呢？个人认为除非是真的是要追求卓越的性能表现，大可不必在普通的业务应用中过分考虑该问题。首先，这个问题很隐蔽，难以从系统层面上通过工具来探测伪共享事件；其次，做测试之前我也强调了自己的测试环境，这个问题实际上和环境也有一定的关系；另外，缓存资源是很珍贵的，这些事情我们毕竟不专业，如果滥用就造成了浪费；最后，像Intel这类的厂商在做设计时必然会对此类问题做优化。所以呢，我们只要在真正需要时去考虑这些问题就行了。</p>
+<p>终于把Disruptor一大优势-避免伪共享的基础了解完了，可以继续了解它在RingBuffer中精巧的无锁设计了！</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://lixiangyun.gitbooks.io/disruptor/content/1.3.html" target="_blank" rel="external">disruptor用户手册中文翻译</a></p>
+<p><a href="http://tool.oschina.net/apidocs/apidoc?api=jdk-zh" target="_blank" rel="external">软件包 java.lang.instrument 的描述</a></p>
+<p><a href="http://www.infoq.com/cn/articles/javaagent-illustrated" target="_blank" rel="external">JVM源码分析之javaagent原理完全解读</a></p>
+<p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-jse61/index.html" target="_blank" rel="external">Instrumentation新功能</a></p>
+<p><a href="http://www.importnew.com/19429.html" target="_blank" rel="external">java对象内存分布（Java Memory Layout）</a></p>
+<p><a href="https://my.oschina.net/xianggao/blog/361584" target="_blank" rel="external">怎样精确计算一个对象的内存大小</a></p>
+<p><a href="https://software.intel.com/zh-cn/articles/avoiding-and-identifying-false-sharing-among-threads" target="_blank" rel="external">避免并发线程之间的假共享</a></p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p><a href="http://www.infoq.com/cn/search.action?queryString=Maven%E5%AE%9E%E6%88%98&amp;page=1&amp;searchOrder=" target="_blank" rel="external">infoQ上《maven实战》作者关于Maven的介绍</a></p>
+<p><a href="http://www.infoq.com/cn/news/2011/04/xxb-maven-7-plugin" target="_blank" rel="external">Maven实战（七）——常用Maven插件介绍（上）</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/伪共享/" rel="tag"># 伪共享</a>
+          
+            <a href="/tags/JML/" rel="tag"># JML</a>
+          
+            <a href="/tags/False-Sharing/" rel="tag"># False Sharing</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/29/Dubbo源码-网络通信之提供者消费者通信/" rel="next" title="Dubbo源码-网络通信之提供者消费者通信">
+                <i class="fa fa-chevron-left"></i> Dubbo源码-网络通信之提供者消费者通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatar.csdn.net/A/A/A/1_myjcxd.jpg?1525340789"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引入"><span class="nav-number">1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java对象内存估算"><span class="nav-number">2.</span> <span class="nav-text">Java对象内存估算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Instrumentation"><span class="nav-number">2.1.</span> <span class="nav-text">Instrumentation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象大小检测"><span class="nav-number">2.2.</span> <span class="nav-text">对象大小检测</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#伪共享"><span class="nav-number">3.</span> <span class="nav-text">伪共享</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存"><span class="nav-number">3.1.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存行"><span class="nav-number">3.2.</span> <span class="nav-text">缓存行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展"><span class="nav-number">6.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'childe';
+      var disqus_identifier = '2018/08/17/笔记-伪共享测试及Java对像内存估算/';
+
+      var disqus_title = "内存伪共享测试及Java对像内存估算";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

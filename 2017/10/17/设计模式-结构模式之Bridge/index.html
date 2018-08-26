@@ -97,19 +97,19 @@
 <meta property="og:description" content="目的Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。
 问题抽象？实现？听起来害怕？我们首先来看个简单的例子。
 你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和R">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194817750?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194846982?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194902726?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194918958?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171018194937180?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-18T11:56:26.000Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288248/blog/pattern/structural/bridge/shapeCombination.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288249/blog/pattern/structural/bridge/shapeSolution.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288247/blog/pattern/structural/bridge/compare.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288248/blog/pattern/structural/bridge/exampleApp.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288250/blog/pattern/structural/bridge/structure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288249/blog/pattern/structural/bridge/umlExample.jpg">
+<meta property="og:updated_time" content="2018-08-26T13:00:32.642Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Bridge">
 <meta name="twitter:description" content="目的Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。
 问题抽象？实现？听起来害怕？我们首先来看个简单的例子。
 你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和R">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535288248/blog/pattern/structural/bridge/shapeCombination.jpg">
 
 
 
@@ -423,11 +423,11 @@
       
         <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>Bridge是结构模式的一种，它可以帮你分离一个巨大的类或者将一组关系相近的类分离成为两个独立的层次结构，抽象和实现，可以各自独立开发。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>抽象？实现？听起来害怕？我们首先来看个简单的例子。</p>
-<p>你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和RedTriangle。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171018194750108?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="shapeCombination"></p>
+<p>你有一个几何Shap类，他有一对子类：Square和Triangle。你希望扩展这个层次结构来融入颜色以便创建红色和蓝色的形状。但是因为你已经有子类，你需要创建4个类来组合，比如BlueSquare和RedTriangle。<br><a id="more"></a><br><img src="https://res.cloudinary.com/childe/image/upload/v1535288248/blog/pattern/structural/bridge/shapeCombination.jpg" alt="shapeCombination"></p>
 <p>添加更多的形状类型和颜色将会导致层级结构变的更大。比如，添加一个Circles，你必须创建两个子类，每个对应一种颜色。之后，再添加新的颜色就需要为每个形状添加一个子类。再往后发展，将会变的更糟。</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>我们每次在扩展类层次到几个独立纬度时都会碰到这个问题。</p>
 <p>Bridge模式尝试通过用委托替换继承来解决这个问题。你必须将其中一个维度抽离到不同的层次结构中。原类将通过持有新层次结构中的一个对象的引用的方式来替换在一个类中保留它所有的状态和行为的方式。</p>
-<p><img src="http://img.blog.csdn.net/20171018194817750?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="shapeSolution"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288249/blog/pattern/structural/bridge/shapeSolution.jpg" alt="shapeSolution"></p>
 <p>通过这种方式我们抽离出Color和它的两个子类，Red和Blue。Shape类将持有一个颜色类的引用域。当我们需要时通过这个引用把工作委托给color对象。这个引用在Shapps和Color之间像桥一样提供服务。从现在开始，添加color将不再需要改变shape类，反之亦然。</p>
 <h3 id="抽象（Abstraction）和实现（Implementation）"><a href="#抽象（Abstraction）和实现（Implementation）" class="headerlink" title="抽象（Abstraction）和实现（Implementation）"></a>抽象（Abstraction）和实现（Implementation）</h3><p>在GoF的书中把“抽象和实现”一词作为Bridge模式定义的一部分。在我看来，那样太过学术并且使得这个模式变的更加难以理解。通过上面那个简单的例子，让我们看下GoF的真正意思。</p>
 <p>抽象（Abstraction），也叫做接口（Interface），是一些实体的控制层。它们自己并不做任何真正事情，而是把大多工作委托给实现（Implementation）层，有时叫做平台（Platform）。不要把接口和抽象类和你的编程语言混淆，他们不是一回事。</p>
@@ -438,7 +438,7 @@
 <li>支持一些不同的API（可以工作在Windows，Linux和MacOS下）</li>
 </ul>
 <p>这个程序的代码看起来像<a href="http://wiki.mbalib.com/wiki/%E2%80%9C%E6%84%8F%E5%A4%A7%E5%88%A9%E9%9D%A2%E6%9D%A1%E7%A2%97%E2%80%9D%E7%8E%B0%E8%B1%A1" target="_blank" rel="external">“巨大的意大利面条碗”</a>，有着成吨的连接不同GUI和API行为的操作条件。</p>
-<p><img src="http://img.blog.csdn.net/20171018194846982?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="compare"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288247/blog/pattern/structural/bridge/compare.jpg" alt="compare"></p>
 <p>可以通过对所有接口-平台的变体进行子类化来改进代码。但实际上，这个将导致我们已经在形状例子中看到的同样的问题。类层次将爆发时增长，每个新GUI或者API类型将需要增加一些组合类。</p>
 <p>Bridge模式建议把这些类分成两个层次：</p>
 <ul>
@@ -446,9 +446,9 @@
 <li>实现层（Implementation）：操作系统API。</li>
 </ul>
 <p>抽象对象持有一个具体实现对象的引用。只要遵循通用的接口，使同一个GUI能够在Windows和Linux下工作，不同的实现将是可互换的。</p>
-<p><img src="http://img.blog.csdn.net/20171018194902726?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="exampleApp"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288248/blog/pattern/structural/bridge/exampleApp.jpg" alt="exampleApp"></p>
 <p>更重要的是，你可以在不触碰操作系统代码的情况下开始在GUI类中工作，反之亦然。比如，添加一个对新操作系统的支持，将仅需要在实现层中创建一个子类。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171018194918958?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535288250/blog/pattern/structural/bridge/structure.jpg" alt="structure"></p>
 <ol>
 <li><p>抽象（Abstraction）主要包含一个像用户接口一样的控制逻辑。抽象代码依赖具体实现对象来完成任务。</p>
 </li>
@@ -466,7 +466,7 @@
 <li>设备（看作实现）</li>
 <li>遥控器（看作抽象）</li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20171018194937180?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="umlExample"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288249/blog/pattern/structural/bridge/umlExample.jpg" alt="umlExample"></p>
 <p>遥控器的基类有一个域来持有一个要控制设备的对象引用。遥控器通过设备提供的通用接口工作。它允许一个遥控器可以和几个不同的设备协作（译者注：控制几个不同类型的设备）。</p>
 <p>你可以独立的改变控制类。例如，你可以创建一个仅有两个按钮的遥控器或者带有触摸屏的复杂遥控器。</p>
 <p>因此，Bridge模式允许你将一个实体分成几个不同的实体，它们可以独立发展。客户端代码总是保持简单。它只需要选择一个抽象并且配置给它一个具体实现。</p>
@@ -649,7 +649,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -660,7 +660,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -671,7 +671,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -99,15 +99,15 @@
 问题为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。
 因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。
 理想状态下，我们可以直接在对象类中加入代码">
-<meta property="og:image" content="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-27T09:50:27.000Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288039/blog/pattern/structural/proxy/structure.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:54:20.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Proxy">
 <meta name="twitter:description" content="意图Proxy是结构模式的一种，它能够让你为另外一个对象提供一个替身或者占位符来控制对它的访问。
 问题为什么要控制对对象的访问？比如：你有一个需要消耗大量系统资源的对象。你时不时会用到它，但不是一直使用。
 因此，这个对象不用再程序启动时创建，而是当真正需要它的时候再创建。每个用到这个对象的客户端可能都有一些延迟实例化代码。显而易见，它导致了大量重复代码。
 理想状态下，我们可以直接在对象类中加入代码">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535288039/blog/pattern/structural/proxy/structure.jpg">
 
 
 
@@ -427,7 +427,7 @@
 <p>但是有什么好处呢？你可以在调用真正服务对象方法之前（或之后）在代理类中加入一些代码。因为代理和服务对象遵循相同的接口，它可以传递服务对象可以接受的任何代码。</p>
 <h3 id="现实世界类比"><a href="#现实世界类比" class="headerlink" title="现实世界类比"></a>现实世界类比</h3><h4 id="支票"><a href="#支票" class="headerlink" title="支票"></a>支票</h4><p>支票是一种文件，可以命令银行从个人账户支付特定金额给持有支票的人。支票和现金都有一个通用的接口：可以用作付款。因此，支票是一大堆现金的代理。</p>
 <p>站在消费者角度看，支票很棒，因为没有必要携带大量的现金。对于店主来说，他们也很好，因为可以在最近的银行兑换现金。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171027174901099?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="strcutrue"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535288039/blog/pattern/structural/proxy/structure.jpg" alt="strcutrue"></p>
 <ol>
 <li><p>Service interface为Service和Proxy生命了通用接口。</p>
 </li>
@@ -640,7 +640,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -651,7 +651,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -662,7 +662,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

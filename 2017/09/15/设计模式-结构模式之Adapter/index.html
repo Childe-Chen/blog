@@ -101,12 +101,12 @@
 举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
 
 在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213027831?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213103878?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213135660?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20170918213211205?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-10-10T11:53:47.000Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/xmlcant2json.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/xml2json.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288572/blog/pattern/structural/adapter/objectAdapter.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/classAdapter.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535288572/blog/pattern/structural/adapter/pseudocode.jpg">
+<meta property="og:updated_time" content="2018-08-26T13:04:41.440Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Adapter">
 <meta name="twitter:description" content="目的适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。
@@ -114,7 +114,7 @@
 举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。
 
 在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/xmlcant2json.jpg">
 
 
 
@@ -429,19 +429,19 @@
         <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>适配器是一种结构设计模式，使得不兼容接口间的可正常进行协作。</p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>想象你有一个使用XML作为数据处理格式的APP，但你用到了一个仅支持JSON数据格式的类库。</p>
 <p>举个例子，你有一个做股票数据的APP。他从多个数据源获取XML来展示成图标。在一个新版本中，你决定使用一些三方的分析包。但是有一个问题：分析包仅支持JSON数据。</p>
-<p><img src="http://img.blog.csdn.net/20170918212900852?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="xmlcant2json.png"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/xmlcant2json.jpg" alt="xmlcant2json.png"></p>
 <p>在这种情况下，可以重写你自己的代码以便支持JSON或者改变依赖的库使其支持XML。第一种选择要破坏已有的代码，第二种选择看上去是不可能的，因为我们常常无法修改三方库。<br><a id="more"></a></p>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>你可以创建一个适配器。它可以将调用方发送的数据按照格式转换成三方库可以解析的类型。适配器封装了对一个对象复杂的转换过程。</p>
 <p>适配器可以不仅可以格式化数据，也可以适配接口。比如，适配器接收到一个对方法A的调用，他可以转交给被包装的方法B、C、D。</p>
 <p>有时甚至可以创建一个双向适配，这样就可以双向转换。</p>
-<p><img src="http://img.blog.csdn.net/20170918213027831?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="xml2json"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/xml2json.jpg" alt="xml2json"></p>
 <p>综上讨论，股票超市APP需要一个特别的<code>XML_To_JSON_Adapter</code>类。在调用分析类库之前，将xml转换为json。采用这种方式你将不需要改变任何已有的APP代码，也不需要改变分析库的代码。</p>
 <h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="不同国家的插头和插板"><a href="#不同国家的插头和插板" class="headerlink" title="不同国家的插头和插板"></a>不同国家的插头和插板</h4><p>当你第一次从美国到偶主，你会发现没办法给你的笔记本充电。两个国家插座和插头的标准根本不一样。这就是为什么美国的插头没办法适配德国的插座。</p>
 <p>这个问题可以通过使用具有美式插座和欧式插头的电源插头适配器来解决。</p>
 <h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="对象适配"><a href="#对象适配" class="headerlink" title="对象适配"></a>对象适配</h4><p>实现采用组合原则：适配器实现其中一对象的接口，并且封装另一个对象。他可以在所有新生代语言中实现。</p>
-<p><img src="http://img.blog.csdn.net/20170918213103878?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="objectAdapter"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288572/blog/pattern/structural/adapter/objectAdapter.jpg" alt="objectAdapter"></p>
 <h4 id="类适配"><a href="#类适配" class="headerlink" title="类适配"></a>类适配</h4><p>实现采用集成。适配器同是继承两个接口。该方式只有像C++这种支持多继承的语言可以实现。</p>
-<p><img src="http://img.blog.csdn.net/20170918213135660?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="classAdapter"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288571/blog/pattern/structural/adapter/classAdapter.jpg" alt="classAdapter"></p>
 <ol>
 <li><p><em>Existing interface</em> （存在的接口或者类）已经被你的其余代码支持</p>
 </li>
@@ -457,7 +457,7 @@
 </li>
 </ol>
 <h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>让我们看看Adapter如何从一个接口到另一个接口进行基本数据转换。这个例子给予圆孔和方形钉的冲突。圆孔可以和圆钉很好的工作；可以通过两者的半径来决定是否合适。但是方形钉不能测量半径。</p>
-<p><img src="http://img.blog.csdn.net/20170918213211205?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535288572/blog/pattern/structural/adapter/pseudocode.jpg" alt="pseudocode"></p>
 <p>这就是我们为什么需要创建一个Adapter类来封装方形钉对象并且伪装他有一个等于方形直径一半的半径。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Classes with compatible interfaces: RoundHole and RoundPeg.</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RoundHole</span> <span class="title">is</span></span></div><div class="line">    <span class="title">constructor</span> <span class="title">RoundHole</span>(<span class="title">radius</span>) &#123; ... &#125;</div><div class="line">    <span class="function">method getRadius</span></div><div class="line">    method <span class="title">fits</span><span class="params">(peg: RoundPeg)</span> is</div><div class="line">        return <span class="keyword">this</span>.<span class="title">getRadius</span><span class="params">()</span> &gt;= peg.radius()</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RoundPeg</span> <span class="title">is</span></span></div><div class="line">    <span class="title">constructor</span> <span class="title">RoundPeg</span>(<span class="title">radius</span>) &#123; ... &#125;</div><div class="line"></div><div class="line">    <span class="function">method <span class="title">getRadius</span><span class="params">()</span> is</span></div><div class="line">        Return the peg radius.</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Obsolete incompatible class: SquarePeg.</span></div><div class="line">class SquarePeg is</div><div class="line">    constructor <span class="title">SquarePeg</span><span class="params">(width)</span> &#123; ... &#125;</div><div class="line"></div><div class="line">    <span class="function">method <span class="title">getWidth</span><span class="params">()</span> is</span></div><div class="line">        Return the square peg width.</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Adapter allows fitting square pegs into round holes.</span></div><div class="line">class SquarePegAdapter extends RoundPeg is</div><div class="line">    <span class="keyword">private</span> field peg: SquarePeg</div><div class="line"></div><div class="line">    constructor <span class="title">SquarePegAdapter</span><span class="params">(peg: SquarePeg)</span> is</div><div class="line">        <span class="keyword">this</span>.peg = <span class="function">peg</span></div><div class="line"></div><div class="line">    method <span class="title">getRadius</span><span class="params">()</span> is</div><div class="line">        return Math.<span class="title">sqrt</span><span class="params">(Math.pow((peg.getWidth()</span>/2), 2) * 2);</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Somewhere in client code.</span></div><div class="line">hole = <span class="keyword">new</span> RoundHole(<span class="number">5</span>)</div><div class="line">rpeg = <span class="keyword">new</span> RoundPeg(<span class="number">5</span>)</div><div class="line">hole.fits(rpeg) <span class="comment">// true</span></div><div class="line"></div><div class="line">small_sqpeg = <span class="keyword">new</span> SquarePeg(<span class="number">2</span>)</div><div class="line">large_sqpeg = <span class="keyword">new</span> SquarePeg(<span class="number">5</span>)</div><div class="line">hole.fits(small_sqpeg) <span class="comment">// won't compile (incompatible types)</span></div><div class="line"></div><div class="line">small_sqpeg_adapter = <span class="keyword">new</span> SquarePegAdapter(small_sqpeg)</div><div class="line">large_sqpeg_adapter = <span class="keyword">new</span> SquarePegAdapter(large_sqpeg)</div><div class="line">hole.fits(small_sqpeg_adapter) <span class="comment">// true</span></div><div class="line">hole.fits(large_sqpeg_adapter) <span class="comment">// false</span></div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><p><em>当你想服用已经存在的类，但是接口和应用其他代码不兼容</em></p>
@@ -651,7 +651,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -662,7 +662,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -673,7 +673,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

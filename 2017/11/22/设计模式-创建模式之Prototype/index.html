@@ -99,16 +99,16 @@
 问题你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。
 但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。
 这么做还有另外的问题">
-<meta property="og:image" content="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171123101957076?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-23T02:21:08.348Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287123/blog/pattern/creational/prototype/basicStructure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287124/blog/pattern/creational/prototype/registryStructure.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:39:26.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-创建模式之Prototype(Clone)">
 <meta name="twitter:description" content="目的Prototype（也叫做Clone）是创建型模式的一种，允许你通过复制现有的对象来生成新的对象，而不会影响现有对象的内部。
 问题你有一个对象并且想要创建一个副本。你该怎么做？首先，你需要创建同样class的一个新对象。然后，你必须遍历源对象的所有字段并把值拷贝到新对象中。
 但是这么做有一个问题。不是所有对象都可以通过这种方式被拷贝。一些对象拥有无法从外部访问的私有字段。
 这么做还有另外的问题">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535287123/blog/pattern/creational/prototype/basicStructure.jpg">
 
 
 
@@ -430,8 +430,8 @@
 <p>可以被克隆的对象叫做prototype（原型）。有时，特别是当你的对象有很多字段并且一些字段可配置，原型可以作为子类的一种替代。在这种情况下，程序提前创建一些原型，然后克隆它们而不是从头开始重建对象。</p>
 <h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="工业和细胞分裂"><a href="#工业和细胞分裂" class="headerlink" title="工业和细胞分裂"></a>工业和细胞分裂</h4><p>在真实生活中，原型在产品量产之前用来做各种测试。然而，在这种情况下，原型并没有参与真正的生产，是一个被动的角色。</p>
 <p>因为工业原型自己不会拷贝，对这个模式更相近的类比是有丝细胞分裂（生物学，还记得吗？）。在这种分裂后，两个完全一样的细胞就形成了。源细胞就是原型，在创建拷贝中是一个主动的角色。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h4><p><img src="http://img.blog.csdn.net/20171123101942380?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="basicStructure"></p>
-<h4 id="原型注册实现"><a href="#原型注册实现" class="headerlink" title="原型注册实现"></a>原型注册实现</h4><p><img src="http://img.blog.csdn.net/20171123101957076?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="registryStructure"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="基本实现"><a href="#基本实现" class="headerlink" title="基本实现"></a>基本实现</h4><p><img src="https://res.cloudinary.com/childe/image/upload/v1535287123/blog/pattern/creational/prototype/basicStructure.jpg" alt="basicStructure"></p>
+<h4 id="原型注册实现"><a href="#原型注册实现" class="headerlink" title="原型注册实现"></a>原型注册实现</h4><p><img src="https://res.cloudinary.com/childe/image/upload/v1535287124/blog/pattern/creational/prototype/registryStructure.jpg" alt="registryStructure"></p>
 <ol>
 <li><p>Prototype声明克隆接口。大多情况下，只要一个clone方法就够了。</p>
 </li>
@@ -637,7 +637,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -648,7 +648,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -659,7 +659,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

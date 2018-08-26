@@ -91,20 +91,20 @@
 问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
 第一个版本的应用只能规划道路上的路线，适合汽车旅客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译-设计模式-结构模式之Strategy">
+<meta property="og:title" content="译-设计模式-行为模式之Strategy">
 <meta property="og:url" content="http://yoursite.com/2018/01/22/设计模式-结构模式之Strategy/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="意图Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。
 问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
 第一个版本的应用只能规划道路上的路线，适合汽车旅客">
-<meta property="og:image" content="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-01-26T09:24:35.239Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535286018/blog/pattern/behavior/strategy/structure.png">
+<meta property="og:updated_time" content="2018-08-26T12:20:51.921Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译-设计模式-结构模式之Strategy">
+<meta name="twitter:title" content="译-设计模式-行为模式之Strategy">
 <meta name="twitter:description" content="意图Strategy是行为模式的一种，让你定义一组算法，各自封装，并且他们可替换。Strategy让这些算法独立与使用他们的客户端。
 问题一天你决定写一个给驴友使用的导航应用。这个应用以漂亮的地图为中心，允许用户在任何城市快速的定位。应用最大的特点是能够自动规划路线，所以你决定特别关注这点。用户可以输入一个期望的目的地，能够快速在屏幕上画出路线。
 第一个版本的应用只能规划道路上的路线，适合汽车旅客">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535286018/blog/pattern/behavior/strategy/structure.png">
 
 
 
@@ -138,7 +138,7 @@
 
 
 
-  <title> 译-设计模式-结构模式之Strategy | 凡隐的博客 </title>
+  <title> 译-设计模式-行为模式之Strategy | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -322,7 +322,7 @@
             
             
               
-                译-设计模式-结构模式之Strategy
+                译-设计模式-行为模式之Strategy
               
             
           </h2>
@@ -387,7 +387,7 @@
 
           
           
-             <span id="/2018/01/22/设计模式-结构模式之Strategy/" class="leancloud_visitors" data-flag-title="译-设计模式-结构模式之Strategy">
+             <span id="/2018/01/22/设计模式-结构模式之Strategy/" class="leancloud_visitors" data-flag-title="译-设计模式-行为模式之Strategy">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -431,7 +431,7 @@
 <p>甚至每个路线类在相同的参数下会给出不同的路线。<code>Map</code>类不需要在关心那个策略被选中，因为它唯一的工作就是把检查点渲染到地图上。</p>
 <p>这个<code>Map</code>将会提供出一个方法来切换路线策略，这样客户端就可以提供出一个按钮给用户来修改当前规划路线的方式。</p>
 <h3 id="真实世界的类比"><a href="#真实世界的类比" class="headerlink" title="真实世界的类比"></a>真实世界的类比</h3><h4 id="运输"><a href="#运输" class="headerlink" title="运输"></a>运输</h4><p>你必须到机场去。你可以坐巴士，打的或者骑单车。出行方式就是策略。你根据上下文来选择一个策略，比如预算或者时间限制。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20180126172151337?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure"></p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535286018/blog/pattern/behavior/strategy/structure.png" alt="structure"></p>
 <ol>
 <li><p><strong>Context</strong>存储一个<em>Concrete Strategy</em>对象，但是只通过通用的<em>Strategy</em>接口和其协作。上下文应当报漏出一个setter方法让其他对象可以替换关联的策略对象。</p>
 </li>
@@ -546,8 +546,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/16/设计模式-结构模式之State/" rel="next" title="译-设计模式-结构模式之State">
-                <i class="fa fa-chevron-left"></i> 译-设计模式-结构模式之State
+              <a href="/2018/01/16/设计模式-结构模式之State/" rel="next" title="译-设计模式-行为模式之State">
+                <i class="fa fa-chevron-left"></i> 译-设计模式-行为模式之State
               </a>
             
           </div>
@@ -637,7 +637,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -648,7 +648,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -659,7 +659,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -839,7 +839,7 @@
       var disqus_shortname = 'childe';
       var disqus_identifier = '2018/01/22/设计模式-结构模式之Strategy/';
 
-      var disqus_title = "译-设计模式-结构模式之Strategy";
+      var disqus_title = "译-设计模式-行为模式之Strategy";
 
 
       function run_disqus_script(disqus_script) {

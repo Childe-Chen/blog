@@ -97,19 +97,19 @@
 <meta property="og:description" content="目的Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。
 问题在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。
 过了一会，你最后一次提交代码并且把游">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110552606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110636035?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110701654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110730283?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171102110759904?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-11-02T03:11:43.000Z">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/crash.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/solution.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/flyweight.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/extrinsic.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/structure.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/pseudocode.jpg">
+<meta property="og:updated_time" content="2018-08-26T12:51:41.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="译-设计模式-结构模式之Flyweight">
 <meta name="twitter:description" content="目的Flyweight是结构模式的一种，通过在多个对象见共享对象状态的通用部分而不是让各个对象独自持有的方式来让你在可用的RAM中装入更多的对象。
 问题在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。
 过了一会，你最后一次提交代码并且把游">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/crash.jpg">
 
 
 
@@ -425,22 +425,22 @@
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在长时间工作后想要找些乐趣，你决定写一个简单的视频游戏。玩家能够在地图上移动并且可以相互射击。你决定实现一个真实的粒子系统并让它称为这个游戏的特性。子弹，导弹和爆炸产生的碎片应该到处飞舞并且能够给玩家分配经验。</p>
 <p>过了一会，你最后一次提交代码并且把游戏发给了你的朋友，希望他能够立马玩起来。尽管游戏在你电脑上完美运行，但是你的朋友却不能玩起来。这个游戏总是在他的电脑上运行一会儿就崩溃。</p>
 <p>在你看了日之后，发现是因为RAM不足导致了游戏崩溃。这个看起来和你的粒子系统有关。</p>
-<p>每一个例子由一个包含和丰富数据的对象表示。在某一刻，当团战达到高潮，可用的RAM无法装入新创建的粒子，此时程序就崩溃了。<br><a id="more"></a><br><img src="http://img.blog.csdn.net/20171102110533715?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="crash"></p>
+<p>每一个例子由一个包含和丰富数据的对象表示。在某一刻，当团战达到高潮，可用的RAM无法装入新创建的粒子，此时程序就崩溃了。<br><a id="more"></a><br><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/crash.jpg" alt="crash"></p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>仔细检查Particle类，你会发现color和sprite数据是对象中最耗内存的字段。更糟糕的是，这些字段存储的是所有粒子都相同的数据。比如，所有的子弹都是相同的颜色和质地。</p>
-<p><img src="http://img.blog.csdn.net/20171102110552606?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="solution"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/solution.jpg" alt="solution"></p>
 <p>粒子的其他数据，像坐标，移动向量和速度是所有粒子唯一的。另外，这些字段的数据是实时变化的。对color和sprite这类保留常量而言，它们看起来就像粒子的可变上下文。</p>
 <p>这些context-specific对象的变量数据通常被叫做“外在状态”，因为他们早对象外部变化。对象余下的状态，就是这些不可变的数据，被叫做“内在状态”。</p>
 <p>Flyweight模式建议你不要再对象内部存储外部状态，而是通过调用方法时当作参数传递进来。通过这种方式你就可以把不可变状态留在对象内，这样你就可以在不同的上下文环境中重用它。更重要的，你将会需要很少这种对象，因为仅仅出现在固有状态不同时，而这种状态并不多。</p>
 <p>就我们的游戏而言，只需要三个粒子对象就能满足（子弹，导弹和碎片）。现在你应该猜到了，这种分离对象的方式就叫做“flyweight”（享元，这个术语来自拳击，表示选手小于111磅）。</p>
-<p><img src="http://img.blog.csdn.net/20171102110636035?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="flyweight"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/flyweight.jpg" alt="flyweight"></p>
 <h4 id="外部状态存储"><a href="#外部状态存储" class="headerlink" title="外部状态存储"></a>外部状态存储</h4><p>但是我们在那里做外部状态的移动？用一些类来持有他，对吗？大多情况下，把这些数据移动到容器中是很便利的，该容器用于在应用模式之前聚合对象。</p>
 <p>在我们的例子中，它是主要游戏对象。你可以创建额外的数组字段来存储坐标，向量和速度。另外，你也需要其他的数组来存储表示一个粒子的指定享元对象的引用。</p>
 <p>等一下！难道我们不需要在一开始就需要有相同数量的上下问对象？从技术上讲，需要。但事实是，这些对象要比之前小太多了。最耗内存的字段现在仅存活在几个享元对象中。上千个上下文对象可以连接并且重用单个享元对象，而不是复制状态到内部各自存储。</p>
-<p><img src="http://img.blog.csdn.net/20171102110701654?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="extrinsic"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/extrinsic.jpg" alt="extrinsic"></p>
 <h4 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h4><p>因为相同的享元对象可以被用在不同的上下文中，你必须确保它们的状态不能被改变。享元应该智能通过构造参数来接收内部状态。它们不应该暴露set方法或者称为公开字段。</p>
 <h4 id="享元工厂"><a href="#享元工厂" class="headerlink" title="享元工厂"></a>享元工厂</h4><p>你可以创建一个工厂方法来管理已经存在享元对象的池子。这个方法接收客户端期望的内部状态，并能够在已经存在的享元对象中匹配这个状态，如果找到就返回它。如果没有找到，它将创建一个新享元并且把它加入池子。</p>
 <p>有几个地方可以放置该方法。通常的做法是放在享元容器中。另外，一个新工厂类应该被创建。你甚至可以把工厂方法做成静态的，并将其放在主要的Flyweight类中。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="http://img.blog.csdn.net/20171102110730283?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="structure">【structure.png】</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/structure.jpg" alt="structure"></p>
 <ol>
 <li><p>不要忘记，Flyweight模式是一种优化，只有在使用大量相似对象的程序中才有意义。模式把对象的状态分成两个部分：享元和上下文。</p>
 </li>
@@ -456,7 +456,7 @@
 </li>
 </ol>
 <h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><p>在这个例子中，享元模式帮助在画布上渲染一百万棵树。模式从一个主Tree类中抽离出重复的内部状态并把它放到一个享元类TreeType中。</p>
-<p><img src="http://img.blog.csdn.net/20171102110759904?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="pseudocode"></p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1535287735/blog/pattern/structural/flyweight/pseudocode.jpg" alt="pseudocode"></p>
 <p>现在不是将相同数据存储在多个对象中，而是把它们保留在几个享元对象中并且被响应的Tree对象连接（译者注：引用）。客户端代码通过享元工厂和不同的书协作，这个工厂封装了在新树对象中重用现有树类型的逻辑。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">// The Flyweight class contains only a portion of state that describes a tree.</div><div class="line">// These field store values that hardly unique for each particular tree. You</div><div class="line">// won't find here tree coordinates, however textures and colors shared between</div><div class="line">// multiple are here. And since this data is usually BIG, you'd waste a lot of</div><div class="line">// memory by keeping it in each tree object. That's why we extract texture,</div><div class="line">// colors and other data to a separate flyweight class that can be referenced</div><div class="line">// from all those similar trees.</div><div class="line">class TreeType is</div><div class="line">    field name</div><div class="line">    field color</div><div class="line">    field texture</div><div class="line">    constructor Tree(name, color, texture) &#123; ... &#125;</div><div class="line">    method draw(canvas, x, y) is</div><div class="line">        Create a bitmap from type, color and texture.</div><div class="line">        Draw bitmap on canvas at X and Y.</div><div class="line"></div><div class="line">// Flyweight factory decides whether to re-use existing flyweight or create a</div><div class="line">// new object.</div><div class="line">class TreeFactory is</div><div class="line">    static field treeTypes: collection of tree types</div><div class="line">    static method getTreeType(name, color, texture) is</div><div class="line">        type = treeTypes.find(name, color, texture)</div><div class="line">        if (type == null)</div><div class="line">            type = new TreeType(name, color, texture)</div><div class="line">            treeTypes.add(type)</div><div class="line">        return type</div><div class="line"></div><div class="line">// Context object contains extrinsic part of tree state. Application can create</div><div class="line">// billions of these since they are pretty thin: just two integer coordinates</div><div class="line">// and one reference.</div><div class="line">class Tree is</div><div class="line">    field x,y</div><div class="line">    field type: TreeType</div><div class="line">    constructor Tree(x, y, type) &#123; ... &#125;</div><div class="line">    method draw(canvas) is</div><div class="line">        type.draw(canvas, this.x, this.y)</div><div class="line"></div><div class="line">// Tree and Forest classes are Flyweight's clients. You might merge them</div><div class="line">// together if you don't plan to develop a Tree class any further.</div><div class="line">class Forest is</div><div class="line">    field trees: collection of Trees</div><div class="line"></div><div class="line">    method plantTree(x, y, name, color, texture) is</div><div class="line">        type = TreeFactory.getTreeType(name, color, texture)</div><div class="line">        tree = new Tree(x, y, type);</div><div class="line">        trees.add(tree)</div><div class="line"></div><div class="line">    method draw(canvas) is</div><div class="line">        foreach tree in trees</div><div class="line">            tree.draw(canvas)</div></pre></td></tr></table></figure>
 <h3 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h3><ul>
@@ -646,7 +646,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -657,7 +657,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -668,7 +668,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
