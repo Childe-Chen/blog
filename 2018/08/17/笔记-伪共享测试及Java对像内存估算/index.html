@@ -98,7 +98,7 @@
 <meta property="og:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg">
-<meta property="og:updated_time" content="2018-08-26T13:41:11.050Z">
+<meta property="og:updated_time" content="2018-08-26T13:42:54.246Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存伪共享测试及Java对像内存估算">
 <meta name="twitter:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
@@ -509,7 +509,7 @@
 <h3 id="伪共享"><a href="#伪共享" class="headerlink" title="伪共享"></a>伪共享</h3><h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><p>说到伪共享就不得不提一下CPU和高速缓存。我们知道，CPU的计算速度时远远大于磁盘的读写速度的，为了缓解两者之间的速度差，就有了内存，CPU计算时需要的数据先放到内存中，CPU直接操作内存的数据而不是操作磁盘，内存又分成几部分：一级缓存（L1）、二次缓存（L2）、三级缓存（L3）、主存（Main Memory）。</p>
 <p><img src="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg" alt="cpu-cache"></p>
 <p>如图所示，越靠近CPU的缓存速度越快，容量就越小。当CPU执行运算的时候，它先去L1查找所需的数据，再去L2，然后是L3（被单个插槽上的所有CPU核共享），最后如果这些缓存中都没有，所需的数据就要去主内存拿。走得越远，运算耗费的时间就越长。所以如果在做一些很频繁的事，就要确保数据在L1缓存中。</p>
-<h4 id="缓存行"><a href="#缓存行" class="headerlink" title="缓存行"></a>缓存行</h4><p>数据在缓存系统中是以缓存行（cache line）为单位存储的。缓存行是2的整数幂个连续字节，一般为32-256个字节。最常见的缓存行大小是64个字节。-当多线程修改互相独立的变量时，如果这些变量共享同一个缓存行，就会无意中影响彼此的性能，这就是伪共享。-</p>
+<h4 id="缓存行"><a href="#缓存行" class="headerlink" title="缓存行"></a>缓存行</h4><p>数据在缓存系统中是以缓存行（cache line）为单位存储的。缓存行是2的整数幂个连续字节，一般为32-256个字节。最常见的缓存行大小是64个字节。当多线程修改互相独立的变量时，如果这些变量共享同一个缓存行，就会无意中影响彼此的性能，这就是伪共享。</p>
 <p><img src="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg" alt="cache-false"></p>
 <p>如上图，为了简化问题，把缓存表示成了一块。线程0和线程1会用到不同变量，它们在内存中彼此相邻，并驻留在同一高速缓存行。高速缓存行被加载到CPU0和CPU1的高速缓存中（灰色箭头）。尽管这些线程修改的是不同变量（红色和蓝色箭头），高速缓存行仍会无效(MSEI协议)，并强制内存更新以维持高速缓存的一致性。</p>
 <p>那么，伪共享的存在到底对我们的程序有多大影响呢？我们做个<a href="https://github.com/Childe-Chen/goodGoodStudy/blob/master/src/main/java/com/cxd/disruptor/FalseSharing.java" target="_blank" rel="external">-&gt;测试（戳我看源码）&lt;-</a>看下。</p>
