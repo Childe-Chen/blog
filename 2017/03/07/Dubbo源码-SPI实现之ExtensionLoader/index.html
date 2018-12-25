@@ -106,7 +106,7 @@ META-INF/services目录下建立以接口包全名命名的文件，文件中写
 META-INF/services目录下建立以接口包全名命名的文件，文件中写入实现类的包名+类名
 用Java提供的ServiceLo">
 <meta property="og:image" content="http://img.blog.csdn.net/20170307222925459?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-06-05T02:40:53.088Z">
+<meta property="og:updated_time" content="2018-12-24T09:22:41.572Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dubbo源码 SPI实现之ExtensionLoader">
 <meta name="twitter:description" content="Dubbo SPISPI 全称为 (Service Provider Interface) ，JDK也默认提供了SPI的一种实现，不过对比Dubbo的实现，JDK的实现就非常简单。
@@ -439,7 +439,7 @@ META-INF/services目录下建立以接口包全名命名的文件，文件中写
 </ol>
 <p>看下如何使用ServiceLoader进行加载</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">* com.cxd.spi.SayHello文件内容如下：</div><div class="line">* com.cxd.spi.impl.TomSayHello</div><div class="line">* com.cxd.spi.impl.JerrySayHello</div><div class="line">**/</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SPIMain</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ServiceLoader&lt;SayHello&gt; sayHellos = ServiceLoader.load(SayHello.class);</div><div class="line">        Iterator&lt;SayHello&gt; sayHelloIterator = sayHellos.iterator();</div><div class="line">        <span class="keyword">while</span> (sayHelloIterator.hasNext()) &#123;</div><div class="line">            SayHello sayHello = sayHelloIterator.next();</div><div class="line">            sayHello.say();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>ServiceLoader的实现也是比较简单，说下过程，不再列出源码。ServiceLoader根据传入的class去约定的目录下找到相应的文件逐行读取，然后用当前线程的ClassLoader加载文件中定义的实现类，通过class.newInstance()创建实例对象。ServiceLoader通过返回迭代器的方式让我们遍历所有的借口实现。</p>
+<p>ServiceLoader的实现也是比较简单，说下过程，不再列出源码。ServiceLoader根据传入的class去约定的目录下找到相应的文件逐行读取，然后用当前线程的ClassLoader加载文件中定义的实现类，通过class.newInstance()创建实例对象。ServiceLoader通过返回迭代器的方式让我们遍历所有的接口实现。</p>
 <p>Dubbo整体思路也是如此，但是Dubbo SPI实现的功能就比较强大了。<br>SPI通过定义文件实现，但是文件格式并没有局限，Dubbo中使用key=value的形式来进行定义，这也是dubbo能够灵活支持多种协议以及实现良好扩展性的关键所在。</p>
 <p>在Dubbo里面使用ExtensionLoader来加载扩展点（即：接口的具体实现），每类接口Dubbo都有默认的实现，当然我们也可以根据自己的业务需要来定义自己的扩展，而扩展的方式也非常简单，SPI的方式给Dubbo提供了框架极好的扩展性。</p>
 <p>下面我们主要来看ExtensionLoader，它是Dubbo对SPI实现的核心，也是Dubbo的核心。</p>
