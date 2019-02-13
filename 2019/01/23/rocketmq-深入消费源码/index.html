@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。
 消费方式宏观上看rmq自身是一个生产-消费模式，在他各个角色的具体实现中也不乏生产-消费模式的使用。DefaultMQPushConsumerIm">
-<meta property="og:updated_time" content="2019-02-13T08:13:06.666Z">
+<meta property="og:updated_time" content="2019-02-13T08:22:59.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rocketmq-深入消费源码">
 <meta name="twitter:description" content="对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。
@@ -438,7 +438,7 @@
 </ol>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p><code>ProcessQueue</code>中已offset为key做本地排序怎么能保证消息的顺序呢？很简单，因为broker是顺序写commitLog，所以后来消息的offset一定比先到的消息offset大。</p>
 <p>在<code>ProcessQueue</code>中为顺序消费保留了一个<code>consumingMsgOrderlyTreeMap</code>字段，该字段保存某次消费的消息，为什么需要做这个字段呢？猜测只是为了应对批量消费的，即ConsumeMessageBatchMaxSize大于1时。</p>
-<p>以上如有描述有误的地方还望各位多多指教 !^_^！</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 <p>贴出的源码均基于release-4.3.2，为了更好的表达描述的重点，贴出的源代码会有所删减。</p>
 
       
