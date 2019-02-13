@@ -1,0 +1,1080 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="架构,JAVA,MQ,rocketmq," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。
+消费方式宏观上看rmq自身是一个生产-消费模式，在他各个角色的具体实现中也不乏生产-消费模式的使用。DefaultMQPushConsumerIm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rocketmq-深入消费源码">
+<meta property="og:url" content="http://yoursite.com/2019/01/23/rocketmq-深入消费源码/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。
+消费方式宏观上看rmq自身是一个生产-消费模式，在他各个角色的具体实现中也不乏生产-消费模式的使用。DefaultMQPushConsumerIm">
+<meta property="og:updated_time" content="2019-02-13T08:13:06.666Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rocketmq-深入消费源码">
+<meta name="twitter:description" content="对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。
+消费方式宏观上看rmq自身是一个生产-消费模式，在他各个角色的具体实现中也不乏生产-消费模式的使用。DefaultMQPushConsumerIm">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/23/rocketmq-深入消费源码/"/>
+
+
+
+
+
+  <title> rocketmq-深入消费源码 | 凡隐的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/rocketmq-深入消费源码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                rocketmq-深入消费源码
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T22:10:44+08:00">
+                2019-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/23/rocketmq-深入消费源码/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/01/23/rocketmq-深入消费源码/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/01/23/rocketmq-深入消费源码/" class="leancloud_visitors" data-flag-title="rocketmq-深入消费源码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>对比看两种消费方式的实现：顺序消费与并发消费。这里对顺序消费只关注消费端，不关心producer与broker怎么处理顺序消息，假设架构及策略已保证消息的全局或者局部顺序性。通过构建假定前提，我们可以忽略本次讨论的非重点内容。以下仍以Push方式为例。</p>
+<h2 id="消费方式"><a href="#消费方式" class="headerlink" title="消费方式"></a>消费方式</h2><p>宏观上看rmq自身是一个生产-消费模式，在他各个角色的具体实现中也不乏生产-消费模式的使用。<code>DefaultMQPushConsumerImpl</code>中消息的拉取及拉取成功后的消费均采用生产-消费的方式进行组织（<code>PullRequest</code>、<code>ConsumeRequest</code>），消费的流程在之前<a href="http://childe.net.cn/2019/01/13/rocketmq-消息重复分析/" target="_blank" rel="external">rocketmq-消息重复分析</a>一文中记录的很清楚，不再展开。<br><a id="more"></a><br>不论是顺序还是并发消费，都使用<code>ProcessQueue</code>做为本地消息的存储介质，每个<code>MessageQueue</code>对应一个<code>ProcessQueue</code>，该关系保存在<code>RebalanceImpl</code>中，每次复杂均衡时可能发生改变。<code>ProcessQueue</code>内部用<code>TreeMap&lt;Long, MessageExt&gt;</code>来保存消息，key是消息的offset。<code>TreeMap</code>内部使用的红黑树，根据树的特性可知消息的本地存储是offset有序的，并发消费时<code>DefaultMQPushConsumerImpl</code>去拉取消息会根据offset(RebalanceImpl#getMaxSpan)的跨度判断是否限流。</p>
+<h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><p>关于并发消费的源码在<a href="http://childe.net.cn/2019/01/13/rocketmq-消息重复分析/" target="_blank" rel="external">rocketmq-消息重复分析</a>中已有分析。</p>
+<p>这里在强调下其ack机制的实现，ack是发送响应的过程，来确保消息的送达，在rmq实现中，为了确保消息“至少消费一次”语义，采用 offset + sendback 的方式来实现。</p>
+<p>在并发消费下，不论消费成功还是失败offset都会记录为本次消费的最大一个offset，对于消费失败的消息，rmq的consumer会再次发回broker，如果此步骤也失败，降级为本地延迟消费，然后重复消费步骤。</p>
+<h2 id="顺序"><a href="#顺序" class="headerlink" title="顺序"></a>顺序</h2><p>顺序分全局顺序和局部顺序。全局有序的话就一个队列一个消费者；局部有序情况下，按照某个业务为度将统一纬度的消息发送到指定队列（可以通过自定义发送策略实现），消费者顺序消费分配到的队列消息。PS：广播与集群略有差异，以下默认集群消费。</p>
+<p>在<a href="http://childe.net.cn/2019/01/13/rocketmq-消息重复分析/" target="_blank" rel="external">rocketmq-消息重复分析</a>中有谈到负载均衡的流程，在负载均衡完成的最后有这么一个操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// RebalanceImpl</span></div><div class="line"><span class="comment">// omit</span></div><div class="line"></div><div class="line"><span class="comment">// Rebalance后，更新本地的queue信息，消费者提交PullRequest，从新队列拉取消息</span></div><div class="line"><span class="keyword">this</span>.updateProcessQueueTableInRebalance(topic, allocateResultSet, isOrder);</div><div class="line"></div><div class="line"><span class="comment">//omit</span></div></pre></td></tr></table></figure>
+<p>这方法的三个参数意义是：当前消费者分配到<strong>哪个topic</strong>下的<strong>哪些队列</strong>，当前消费者的<strong>消费方式</strong>是否为顺序。</p>
+<p>下面的代码需要注意对<code>isOrder</code>的使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// RebalanceImpl</span></div><div class="line"></div><div class="line"><span class="comment">// 1. 删除已经不再订阅的messageQueue</span></div><div class="line"><span class="comment">// omit</span></div><div class="line"></div><div class="line"><span class="comment">// 2. 订阅新的messageQueue，并封装新的PullRequest</span></div><div class="line">List&lt;PullRequest&gt; pullRequestList = <span class="keyword">new</span> ArrayList&lt;PullRequest&gt;();</div><div class="line"><span class="keyword">for</span> (MessageQueue mq : mqSet) &#123;</div><div class="line">    <span class="comment">// 如果为新增messageQueue，需要添加到本地记录</span></div><div class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.processQueueTable.containsKey(mq)) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 如果为顺序消费，并且锁messageQueue失败，则忽略该messageQueue</span></div><div class="line">        <span class="keyword">if</span> (isOrder &amp;&amp; !<span class="keyword">this</span>.lock(mq)) &#123;</div><div class="line">            log.warn(<span class="string">"doRebalance, &#123;&#125;, add a new mq failed, &#123;&#125;, because lock failed"</span>, consumerGroup, mq);</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 删除之前的消费进度</span></div><div class="line">        <span class="keyword">this</span>.removeDirtyOffset(mq);</div><div class="line">        ProcessQueue pq = <span class="keyword">new</span> ProcessQueue();</div><div class="line"></div><div class="line">        <span class="comment">// 计算消费进度，参见 ConsumeFromWhere，该值在启动消费者时设置</span></div><div class="line">        <span class="keyword">long</span> nextOffset = <span class="keyword">this</span>.computePullFromWhere(mq);</div><div class="line"></div><div class="line">        <span class="comment">// 进行本地存根，若为新存根则发起PullRequest</span></div><div class="line">        <span class="keyword">if</span> (nextOffset &gt;= <span class="number">0</span>) &#123;</div><div class="line">            ProcessQueue pre = <span class="keyword">this</span>.processQueueTable.putIfAbsent(mq, pq);</div><div class="line">            <span class="keyword">if</span> (pre != <span class="keyword">null</span>) &#123;</div><div class="line">                log.info(<span class="string">"doRebalance, &#123;&#125;, mq already exists, &#123;&#125;"</span>, consumerGroup, mq);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                log.info(<span class="string">"doRebalance, &#123;&#125;, add a new mq, &#123;&#125;"</span>, consumerGroup, mq);</div><div class="line">                PullRequest pullRequest = <span class="keyword">new</span> PullRequest();</div><div class="line">                pullRequest.setConsumerGroup(consumerGroup);</div><div class="line">                pullRequest.setNextOffset(nextOffset);</div><div class="line">                pullRequest.setMessageQueue(mq);</div><div class="line">                pullRequest.setProcessQueue(pq);</div><div class="line">                pullRequestList.add(pullRequest);</div><div class="line">                changed = <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            log.warn(<span class="string">"doRebalance, &#123;&#125;, add new mq failed, &#123;&#125;"</span>, consumerGroup, mq);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 3. 提交PullRequest进行消息拉取</span></div><div class="line"><span class="comment">// omit</span></div></pre></td></tr></table></figure>
+<p>我们看到在为顺序消费时，多了一步对messageQueue的加锁操作，看他做了些什么事情。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// RebalanceImpl</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">lock</span><span class="params">(<span class="keyword">final</span> MessageQueue mq)</span> </span>&#123;</div><div class="line">    <span class="comment">// 找到该messageQueue所在的broker，该broker必须是master并且必须是该messageQueue所在的broker</span></div><div class="line">    FindBrokerResult findBrokerResult = <span class="keyword">this</span>.mQClientFactory.findBrokerAddressInSubscribe(mq.getBrokerName(), MixAll.MASTER_ID, <span class="keyword">true</span>);</div><div class="line">    <span class="keyword">if</span> (findBrokerResult != <span class="keyword">null</span>) &#123;</div><div class="line">        LockBatchRequestBody requestBody = <span class="keyword">new</span> LockBatchRequestBody();</div><div class="line">        requestBody.setConsumerGroup(<span class="keyword">this</span>.consumerGroup);</div><div class="line">        requestBody.setClientId(<span class="keyword">this</span>.mQClientFactory.getClientId());</div><div class="line">        requestBody.getMqSet().add(mq);</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">        	<span class="comment">// 请求broker锁定该messageQueue</span></div><div class="line">        	<span class="comment">// broker在RebalanceLockManager中尝试锁定messageQueue，若锁定成功则保存MessageQueue与clientId的映射关系</span></div><div class="line">        	<span class="comment">// 一个messageQueue只能被一个client锁定，来确保一个messageQueue在顺序情况下只能被一个消费者订阅，保证消费的顺序性</span></div><div class="line">            Set&lt;MessageQueue&gt; lockedMq =</div><div class="line">                <span class="keyword">this</span>.mQClientFactory.getMQClientAPIImpl().lockBatchMQ(findBrokerResult.getBrokerAddr(), requestBody, <span class="number">1000</span>);</div><div class="line">            <span class="keyword">for</span> (MessageQueue mmqq : lockedMq) &#123;</div><div class="line">            	<span class="comment">// 更新本地存根</span></div><div class="line">                ProcessQueue processQueue = <span class="keyword">this</span>.processQueueTable.get(mmqq);</div><div class="line">                <span class="keyword">if</span> (processQueue != <span class="keyword">null</span>) &#123;</div><div class="line">                    processQueue.setLocked(<span class="keyword">true</span>);</div><div class="line">                    <span class="comment">// 记录锁定时间</span></div><div class="line">                    processQueue.setLastLockTimestamp(System.currentTimeMillis());</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            <span class="comment">// 返回锁定结果</span></div><div class="line">            <span class="keyword">return</span> lockedMq.contains(mq);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            log.error(<span class="string">"lockBatchMQ exception, "</span> + mq, e);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在顺序消费的模式下，负载均衡时需要锁定队列来避免多个消费者同时订阅一个messageQueue的情况，并发消费模式不需要考虑这些问题。在消息的拉取时，顺序消费也略有不同。我们以Push方式为例来看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// DefaultMQPushConsumerImpl</span></div><div class="line"></div><div class="line"><span class="comment">// 检查messageQueue是否被锁定</span></div><div class="line"><span class="keyword">if</span> (processQueue.isLocked()) &#123;</div><div class="line">    <span class="comment">// 如果是第一次拉取该messageQueue</span></div><div class="line">    <span class="keyword">if</span> (!pullRequest.isLockedFirst()) &#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> offset = <span class="keyword">this</span>.rebalanceImpl.computePullFromWhere(pullRequest.getMessageQueue());</div><div class="line">        <span class="keyword">boolean</span> brokerBusy = offset &lt; pullRequest.getNextOffset();</div><div class="line">        log.info(<span class="string">"the first time to pull message, so fix offset from broker. pullRequest: &#123;&#125; NewOffset: &#123;&#125; brokerBusy: &#123;&#125;"</span>,</div><div class="line">            pullRequest, offset, brokerBusy);</div><div class="line">        <span class="keyword">if</span> (brokerBusy) &#123;</div><div class="line">            log.info(<span class="string">"[NOTIFYME]the first time to pull message, but pull request offset larger than broker consume offset. pullRequest: &#123;&#125; NewOffset: &#123;&#125;"</span>,</div><div class="line">                pullRequest, offset);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        pullRequest.setLockedFirst(<span class="keyword">true</span>);</div><div class="line">        pullRequest.setNextOffset(offset);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// 如果messageQueue未被锁定，等待一段时间再次尝试拉取，ConsumeMessageOrderlyService启动时会启动任务定时去锁定所有消费的messageQueue</span></div><div class="line">    <span class="keyword">this</span>.executePullRequestLater(pullRequest, PULL_TIME_DELAY_MILLS_WHEN_EXCEPTION);</div><div class="line">    log.info(<span class="string">"pull message later because not locked in broker, &#123;&#125;"</span>, pullRequest);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在<code>MessageListenerOrderly</code>接口中有这么一段注释<code>A MessageListenerOrderly object is used to receive asynchronously delivered messages orderly. one queue,one thread</code>。意思是顺序消费一个queue对应一个消费线程。因为要顺序消费，必然要保证前一个消费后才能消费后面一个，所以多线程在此处没有存在的必要性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ConsumeMessageOrderlyService</span></div><div class="line"></div><div class="line"><span class="comment">// 如果发生负载均衡当前消费者不再处理该messageQueue时，processQueue会被标记为删除</span></div><div class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.processQueue.isDropped()) &#123;</div><div class="line">    log.warn(<span class="string">"run, the message queue not be able to consume, because it's dropped. &#123;&#125;"</span>, <span class="keyword">this</span>.messageQueue);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 每个messageQueue对应一把锁，同一时刻只能有一个线程在消费一个messageQueue</span></div><div class="line"><span class="keyword">final</span> Object objLock = messageQueueLock.fetchLockObject(<span class="keyword">this</span>.messageQueue);</div><div class="line"><span class="keyword">synchronized</span> (objLock) &#123;</div><div class="line">    <span class="comment">// 检查消费模式及锁的有效性</span></div><div class="line">    <span class="keyword">if</span> (MessageModel.BROADCASTING.equals(ConsumeMessageOrderlyService.<span class="keyword">this</span>.defaultMQPushConsumerImpl.messageModel())</div><div class="line">        || (<span class="keyword">this</span>.processQueue.isLocked() &amp;&amp; !<span class="keyword">this</span>.processQueue.isLockExpired())) &#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> beginTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">boolean</span> continueConsume = <span class="keyword">true</span>; continueConsume; ) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.processQueue.isDropped()) &#123;</div><div class="line">                log.warn(<span class="string">"the message queue not be able to consume, because it's dropped. &#123;&#125;"</span>, <span class="keyword">this</span>.messageQueue);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 集群模式下检查是否上锁</span></div><div class="line">            <span class="keyword">if</span> (MessageModel.CLUSTERING.equals(ConsumeMessageOrderlyService.<span class="keyword">this</span>.defaultMQPushConsumerImpl.messageModel())</div><div class="line">                &amp;&amp; !<span class="keyword">this</span>.processQueue.isLocked()) &#123;</div><div class="line">                log.warn(<span class="string">"the message queue not locked, so consume later, &#123;&#125;"</span>, <span class="keyword">this</span>.messageQueue);</div><div class="line">                ConsumeMessageOrderlyService.<span class="keyword">this</span>.tryLockLaterAndReconsume(<span class="keyword">this</span>.messageQueue, <span class="keyword">this</span>.processQueue, <span class="number">10</span>);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 集群模式下检查锁是否过期</span></div><div class="line">            <span class="keyword">if</span> (MessageModel.CLUSTERING.equals(ConsumeMessageOrderlyService.<span class="keyword">this</span>.defaultMQPushConsumerImpl.messageModel())</div><div class="line">                &amp;&amp; <span class="keyword">this</span>.processQueue.isLockExpired()) &#123;</div><div class="line">                log.warn(<span class="string">"the message queue lock expired, so consume later, &#123;&#125;"</span>, <span class="keyword">this</span>.messageQueue);</div><div class="line">                ConsumeMessageOrderlyService.<span class="keyword">this</span>.tryLockLaterAndReconsume(<span class="keyword">this</span>.messageQueue, <span class="keyword">this</span>.processQueue, <span class="number">10</span>);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 消费循环时长不能超过MAX_TIME_CONSUME_CONTINUOUSLY</span></div><div class="line">            <span class="keyword">long</span> interval = System.currentTimeMillis() - beginTime;</div><div class="line">            <span class="keyword">if</span> (interval &gt; MAX_TIME_CONSUME_CONTINUOUSLY) &#123;</div><div class="line">                ConsumeMessageOrderlyService.<span class="keyword">this</span>.submitConsumeRequestLater(processQueue, messageQueue, <span class="number">10</span>);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 一次消费的消息数量，默认为1</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> consumeBatchSize =</div><div class="line">                ConsumeMessageOrderlyService.<span class="keyword">this</span>.defaultMQPushConsumer.getConsumeMessageBatchMaxSize();</div><div class="line"></div><div class="line">            <span class="comment">// 从本地缓存获取消息</span></div><div class="line">            List&lt;MessageExt&gt; msgs = <span class="keyword">this</span>.processQueue.takeMessags(consumeBatchSize);</div><div class="line">            <span class="keyword">if</span> (msgs.isEmpty()) &#123;</div><div class="line">            	<span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">final</span> ConsumeOrderlyContext context = <span class="keyword">new</span> ConsumeOrderlyContext(<span class="keyword">this</span>.messageQueue);</div><div class="line"></div><div class="line">            ConsumeOrderlyStatus status = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">            ConsumeMessageContext consumeMessageContext = <span class="keyword">null</span>;</div><div class="line">            <span class="comment">// omit hook</span></div><div class="line"></div><div class="line">            <span class="keyword">long</span> beginTimestamp = System.currentTimeMillis();</div><div class="line">            ConsumeReturnType returnType = ConsumeReturnType.SUCCESS;</div><div class="line">            <span class="keyword">boolean</span> hasException = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">            	<span class="comment">// 对processQueue加上消费锁，防止负载均衡时可能会发生争抢</span></div><div class="line">                <span class="keyword">this</span>.processQueue.getLockConsume().lock();</div><div class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.processQueue.isDropped()) &#123;</div><div class="line">                    log.warn(<span class="string">"consumeMessage, the message queue not be able to consume, because it's dropped. &#123;&#125;"</span>,</div><div class="line">                        <span class="keyword">this</span>.messageQueue);</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">                <span class="comment">// 参考 ConsumeOrderlyStatus</span></div><div class="line">                status = messageListener.consumeMessage(Collections.unmodifiableList(msgs), context);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">                hasException = <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                <span class="keyword">this</span>.processQueue.getLockConsume().unlock();</div><div class="line">            &#125;</div><div class="line">          </div><div class="line">            <span class="comment">// omit hook and stats preprocess</span></div><div class="line">            </div><div class="line">            <span class="comment">// 抛出异常时</span></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == status) &#123;</div><div class="line">                status = ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// omit hook and stats</span></div><div class="line">            <span class="comment">// 处理消费结果</span></div><div class="line">            continueConsume = ConsumeMessageOrderlyService.<span class="keyword">this</span>.processConsumeResult(msgs, status, context, <span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.processQueue.isDropped()) &#123;</div><div class="line">            log.warn(<span class="string">"the message queue not be able to consume, because it's dropped. &#123;&#125;"</span>, <span class="keyword">this</span>.messageQueue);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">// 挂起片刻再次尝试消费</span></div><div class="line">        ConsumeMessageOrderlyService.<span class="keyword">this</span>.tryLockLaterAndReconsume(<span class="keyword">this</span>.messageQueue, <span class="keyword">this</span>.processQueue, <span class="number">100</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再来看下怎么处理消费结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ConsumeMessageOrderlyService</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">processConsumeResult</span><span class="params">(</span></span></div><div class="line">        <span class="keyword">final</span> List&lt;MessageExt&gt; msgs,</div><div class="line">        <span class="keyword">final</span> ConsumeOrderlyStatus status,</div><div class="line">        <span class="keyword">final</span> ConsumeOrderlyContext context,</div><div class="line">        <span class="keyword">final</span> ConsumeRequest consumeRequest</div><div class="line">    ) &#123;</div><div class="line">    <span class="keyword">boolean</span> continueConsume = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">long</span> commitOffset = -<span class="number">1L</span>;</div><div class="line">    <span class="keyword">if</span> (context.isAutoCommit()) &#123;</div><div class="line">        <span class="keyword">switch</span> (status) &#123;</div><div class="line">            <span class="keyword">case</span> COMMIT:</div><div class="line">            <span class="keyword">case</span> ROLLBACK:</div><div class="line">                log.warn(<span class="string">"the message queue consume result is illegal, we think you want to ack these message &#123;&#125;"</span>,</div><div class="line">                    consumeRequest.getMessageQueue());</div><div class="line">            <span class="keyword">case</span> SUCCESS:</div><div class="line">                <span class="comment">// 清空consumingMsgOrderlyTreeMap，并更新一些统计信息，返回下一个offset的起始</span></div><div class="line">                commitOffset = consumeRequest.getProcessQueue().commit();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> SUSPEND_CURRENT_QUEUE_A_MOMENT:</div><div class="line">                <span class="comment">// 检查消息是否已经超过最大消费次数</span></div><div class="line">                <span class="comment">// 如果没有超过，本地继续尝试消费</span></div><div class="line">                <span class="comment">// 如果超过，将消息发送到死信队列，不在处理</span></div><div class="line">                <span class="comment">// 如果发送到死信队列失败，本地继续尝试消费</span></div><div class="line">                <span class="keyword">if</span> (checkReconsumeTimes(msgs)) &#123;</div><div class="line">                    consumeRequest.getProcessQueue().makeMessageToCosumeAgain(msgs);</div><div class="line">                    <span class="keyword">this</span>.submitConsumeRequestLater(</div><div class="line">                        consumeRequest.getProcessQueue(),</div><div class="line">                        consumeRequest.getMessageQueue(),</div><div class="line">                        context.getSuspendCurrentQueueTimeMillis());</div><div class="line">                    continueConsume = <span class="keyword">false</span>;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    commitOffset = consumeRequest.getProcessQueue().commit();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">default</span>:</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">       <span class="comment">// omit</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 更新消费偏移</span></div><div class="line">    <span class="keyword">if</span> (commitOffset &gt;= <span class="number">0</span> &amp;&amp; !consumeRequest.getProcessQueue().isDropped()) &#123;</div><div class="line">        <span class="keyword">this</span>.defaultMQPushConsumerImpl.getOffsetStore().updateOffset(consumeRequest.getMessageQueue(), commitOffset, <span class="keyword">false</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> continueConsume;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="offset保存"><a href="#offset保存" class="headerlink" title="offset保存"></a>offset保存</h2><p>offset的持久化可以在本地也可以在远程（broker上，默认<code>RemoteBrokerOffsetStore</code>），offset并不是每次消费完成都会向broker发起持久化请求，有这么几个持久化入口：</p>
+<ol>
+<li>定时任务，默认5S一次</li>
+<li>每次去broker拉取消息时</li>
+<li>消费者shutdown时</li>
+</ol>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p><code>ProcessQueue</code>中已offset为key做本地排序怎么能保证消息的顺序呢？很简单，因为broker是顺序写commitLog，所以后来消息的offset一定比先到的消息offset大。</p>
+<p>在<code>ProcessQueue</code>中为顺序消费保留了一个<code>consumingMsgOrderlyTreeMap</code>字段，该字段保存某次消费的消息，为什么需要做这个字段呢？猜测只是为了应对批量消费的，即ConsumeMessageBatchMaxSize大于1时。</p>
+<p>以上如有描述有误的地方还望各位多多指教 !^_^！</p>
+<p>贴出的源码均基于release-4.3.2，为了更好的表达描述的重点，贴出的源代码会有所删减。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/架构/" rel="tag"># 架构</a>
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/MQ/" rel="tag"># MQ</a>
+          
+            <a href="/tags/rocketmq/" rel="tag"># rocketmq</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/13/rocketmq-消息重复分析/" rel="next" title="rocketmq-消息重复分析">
+                <i class="fa fa-chevron-left"></i> rocketmq-消息重复分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Childe-Chen" target="_blank" title="github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#消费方式"><span class="nav-number">1.</span> <span class="nav-text">消费方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-number">2.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#顺序"><span class="nav-number">3.</span> <span class="nav-text">顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#offset保存"><span class="nav-number">4.</span> <span class="nav-text">offset保存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'childe';
+      var disqus_identifier = '2019/01/23/rocketmq-深入消费源码/';
+
+      var disqus_title = "rocketmq-深入消费源码";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>

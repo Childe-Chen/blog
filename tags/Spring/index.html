@@ -90,7 +90,7 @@
 <meta name="description" content="少爷凡隐">
 <meta property="og:type" content="website">
 <meta property="og:title" content="凡隐的博客">
-<meta property="og:url" content="http://yoursite.com/tags/spring/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/Spring/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="少爷凡隐">
 <meta name="twitter:card" content="summary">
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/spring/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/Spring/"/>
 
 
 
 
 
-  <title> 标签: spring | 凡隐的博客 </title>
+  <title> 标签: Spring | 凡隐的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +285,7 @@
   <div id="posts" class="posts-collapse">
     <div class="collection-title">
       <h2 >
-        spring
+        Spring
         <small>标签</small>
       </h2>
     </div>
@@ -298,9 +298,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2017/06/13/转-Servlet3-异步请求/" itemprop="url">
+            <a class="post-title-link" href="/2017/06/29/译-spring-理解AOP代理/" itemprop="url">
               
-                <span itemprop="name">转-Servlet3-异步请求</span>
+                <span itemprop="name">译-Spring-理解AOP代理</span>
               
             </a>
         
@@ -308,9 +308,65 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-13T15:48:51+08:00"
-              content="2017-06-13" >
-          06-13
+              datetime="2017-06-29T13:45:19+08:00"
+              content="2017-06-29" >
+          06-29
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2016/10/29/Spring源码-AOP代理流程/" itemprop="url">
+              
+                <span itemprop="name">Spring源码 AOP代理流程</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-10-29T20:18:17+08:00"
+              content="2016-10-29" >
+          10-29
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2016/10/19/Spring源码-Autowired与Resource/" itemprop="url">
+              
+                <span itemprop="name">Spring源码 Autowired与Resource</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-10-19T20:16:22+08:00"
+              content="2016-10-19" >
+          10-19
         </time>
       </div>
 
@@ -364,7 +420,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -553,7 +609,7 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'childe';
-      var disqus_identifier = 'tags/spring/index.html';
+      var disqus_identifier = 'tags/Spring/index.html';
 
       var disqus_title = "";
 
@@ -791,62 +847,6 @@
             newcounter.setACL(acl);
             /* End Set ACL */
             newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-  
-
-
-  
-
-</body>
-</html>
-.set("title", title);
             newcounter.set("url", url);
             newcounter.set("time", 1);
             newcounter.save(null, {
