@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/18/test4j导致Load飙高排查/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="记一次test4j导致CPU飙高的事故在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。于是，我就开始查找原因的漫漫长征路。">
-<meta property="og:updated_time" content="2017-03-10T03:12:10.000Z">
+<meta property="og:updated_time" content="2019-02-13T08:31:14.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="test4j导致Load飙高排查">
 <meta name="twitter:description" content="记一次test4j导致CPU飙高的事故在使用Jenkins构建工程时出现服务器Load不断飙升的现象，导致构建无法正常进行，查看构建日之后发现一些应用处出现OOM的状况。于是，我就开始查找原因的漫漫长征路。">
@@ -427,6 +427,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test4JSpringContext</span> <span class="keyword">extends</span> <span class="title">ClassPathXmlApplicationContext</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> shared;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 设置是否共享spring</div><div class="line">	 * </div><div class="line">	 * <span class="doctag">@param</span> share</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setShared</span><span class="params">(<span class="keyword">boolean</span> share)</span> </span>&#123;</div><div class="line">		<span class="comment">//哈哈哈，作者写了一个低级BUG出来，当你没使用共享方式的时候，恭喜你，你惨了！继续看代码！</span></div><div class="line">	    <span class="keyword">this</span>.shared = <span class="keyword">true</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>此时BUG的全貌出现了，大家仔细看，test4j中默认的shared为false，也就是默认不共享，但是在为Test4JSpringContext设置shared时却写死为true了。我们还记得test4j的每个Module都有一个内部监听类来处理关心的测试中的各个生命周期，在每个测试类开始前（beforeClass），SpringModule负责spring容器的创建（如果需要），在测试结束后（afterClass），负责容器的销毁（如果需要）。</p>
 <p>那么问题就在这里，当我们使用默认的shared时，每个测试开始都会创建一个spring容器，这是正常的，因为我们并没有共享spring容器，但是，当测试结束时，本应该根据shared值销毁spring容器，却因为BUG，从Test4JSpringContext中取出的值为true，作孽啊，test4j认为我们是共享的，便保留了当前的spring容器，于是乎，就出现了车祸现场！</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 
       
     </div>

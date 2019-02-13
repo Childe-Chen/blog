@@ -96,7 +96,7 @@
 <meta property="og:description" content="最早了解Hash的用法，是一次分表的经历，公司用户表数据有几千万，查询的效率已经比较低了，需要做拆分处理，之前系统中已经有分表的数据，处理方式比较简单，没有使用中间件，按照商家的ID（32位字符串）做Hash然后取模，算出其落在表的编号，然后加上前缀得到最终表名。
 最近在了解zk分布式锁时，为了避免一种实现方式的羊群效应，其改进思路类似一致性哈希算法。于是，便看了下Hash相关的知识，并用Java">
 <meta property="og:image" content="http://img.blog.csdn.net/20170514182427988?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbXlqY3hk/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-05-14T11:06:10.000Z">
+<meta property="og:updated_time" content="2019-02-13T08:29:10.360Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码 Hash杂记">
 <meta name="twitter:description" content="最早了解Hash的用法，是一次分表的经历，公司用户表数据有几千万，查询的效率已经比较低了，需要做拆分处理，之前系统中已经有分表的数据，处理方式比较简单，没有使用中间件，按照商家的ID（32位字符串）做Hash然后取模，算出其落在表的编号，然后加上前缀得到最终表名。
@@ -436,6 +436,7 @@
 <h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>JDK中我们常用的HashMap也是基于哈希实现，JDK1.8以前采用数组和链表来组织数据，1.8中引入了红黑树对链表部分进行了优化。为什么HashMap要采用链表和红黑树呢？因为我们得到某个key的HashCode需要落到具体的桶中，而桶的数量是有限并且固定的，所以难免遇到不同的key却落到相同的桶中，于是就需要链表将这些数据链接起来，这也就是为什么当碰撞比较严重时，HashMap查询变慢的原因，在JDK1.8在处理冲突时采用链表加红黑树，当链表长度大于8时，就将链表转换为红黑树，从而达到加速查找的目的。</p>
 <p>JDK1.8中还对HashMap的扩容做了优化，在1.8以前扩容时，需要重新计算每个key的HashCode然后入桶，所以扩容是一个耗时的操作，在1.8中避免了重新计算Hash，加快了扩容操作。</p>
 <p>不管是JDK1.7还是1.8我们使用HashMap时最好对需要的容量进行评估，尽量避免扩容操作。JDK1.8对HashMap的优化，想深入了解的可参考美团点评团队的<a href="http://tech.meituan.com/java-hashmap.html" target="_blank" rel="external">这篇博客</a></p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 <p>参考：<br><a href="http://wiki.mbalib.com/wiki/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95" target="_blank" rel="external">http://wiki.mbalib.com/wiki/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95</a><br><a href="http://www.berlinix.com/" target="_blank" rel="external">http://www.berlinix.com/</a></p>
 
       

@@ -96,7 +96,7 @@
 <meta property="og:description" content="场景描述有两个namesrv（namesrv1与namesrv2），某个topic分别在两个master上均分队列1，2，3。
 当broker-ba的主从与namesrv1网络出现问题，namesrv2正常，此时namesrv出现不一致，当两个从属相同consumerGroup的消费者分别从两个namesrv获取broker信息时，按照均分的策略就会出现c1订阅队列1和2，c2订阅队列2。此时，消">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1547996935/blog/mq/broker-2m-2s-async.png">
-<meta property="og:updated_time" content="2019-02-13T03:08:25.446Z">
+<meta property="og:updated_time" content="2019-02-13T08:30:01.123Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rocketmq-消息重复分析">
 <meta name="twitter:description" content="场景描述有两个namesrv（namesrv1与namesrv2），某个topic分别在两个master上均分队列1，2，3。
@@ -457,6 +457,7 @@
 <p>我们以“又比如”描述的为基础来回顾下“至少消费一次”语义，在本地重新消费上次失败的消息时再次失败，并且此时jvm crash或者restart，那么这批消费失败的消息就不会再被消费，从这里也可以看出，rcoketmq不保证消息一定被正常消费，只保证“至少消费一次”。</p>
 <p>书上得来终觉浅，绝知此事要躬行。</p>
 <p>贴出的源码均基于release-4.3.2，为了更好的表达描述的重点，贴出的源代码会有所删减。</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://segmentfault.com/a/1190000014918849" target="_blank" rel="external">ZooKeeper和CAP理论及一致性原则</a></p>
 <p><a href="http://www.ruanyifeng.com/blog/2018/07/cap.html" target="_blank" rel="external">CAP 定理的含义</a></p>
 

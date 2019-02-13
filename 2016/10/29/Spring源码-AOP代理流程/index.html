@@ -105,7 +105,7 @@ spring在完成对bean的装配后，在暴露到工厂前，会对进行实例�
 <meta property="og:image" content="http://img.blog.csdn.net/20161028175755328">
 <meta property="og:image" content="http://img.blog.csdn.net/20161028175947777">
 <meta property="og:image" content="http://img.blog.csdn.net/20161028180050512">
-<meta property="og:updated_time" content="2018-01-16T11:01:36.050Z">
+<meta property="og:updated_time" content="2019-02-13T08:30:14.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring源码 AOP代理流程">
 <meta name="twitter:description" content="AOP是spring中重要的一个组件，今天看了下AOP代理生成的过程，做了简单的记录，留作日后查看。
@@ -443,6 +443,7 @@ spring在完成对bean的装配后，在暴露到工厂前，会对进行实例�
 <p>真正的决策者出现了，看看spring到底是怎么来断定该Advice是否符合当前的bean。<br>可以看到，spring为了判断该bean是否能够应用该advice，查了当前bean实现的所有接口，但最终判断还是根据当前实例的某个实现方法是否满足匹配规则（比如：实例的某个复写方法上加上了自定义Aspect注解），如果满足，就认为该bean需要加入该advice。即：该类需要做代理类进行封装。</p>
 <p><img src="http://img.blog.csdn.net/20161028180050512" alt="匹配切入点"></p>
 <p>进一步理解AOP，请戳我 <a href="http://childe.net.cn/2017/06/29/%E8%AF%91-spring-%E7%90%86%E8%A7%A3AOP%E4%BB%A3%E7%90%86/" target="_blank" rel="external"><strong>译-Spring-理解AOP代理</strong></a>。</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 
       
     </div>

@@ -96,7 +96,7 @@
 <meta property="og:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
 痛点业务发展的比较快，某些单据状态不停的增加，每一次增加都需要改动业务中使用到状态的相关代码，更糟的的是这些代码可能遍布于多个类的多个方法中（散弹枪一样），不仅增加发布的风险也同时增加了测试的回归任务">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535285056/blog/statemachine/fsm.png">
-<meta property="og:updated_time" content="2018-08-26T12:09:27.803Z">
+<meta property="og:updated_time" content="2019-02-13T08:27:32.811Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="状态机选型简记">
 <meta name="twitter:description" content="背景业务中涉及到一些关于单据的操作，每种单据单据都会有自己的状态，单据的一些行为受限于当前订单的状态，单据的状态直接用常量表示，业务进行前的检查部分通过if判断来检测当前单据是否可以流转到目标状态。
@@ -547,7 +547,7 @@
 </li>
 </ul>
 <p>至此，我需要再次回顾我最初的诉求：管理状态的转换，避免散弹式的效果。结合考量点，其实sateless4j和squirrel都满足我现在的要求，但我只是想方便管理单据状态的转换，并不想基于这些状态的特性更多的改动工程中的代码，所以决定使用sateless4j。PS：一般PS都是重点啦。朋友的项目中已经在使用sateless4j。</p>
-<p>最后，迎留言指正讨论^_^。</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 <h2 id="参考及引用"><a href="#参考及引用" class="headerlink" title="参考及引用"></a>参考及引用</h2><ol>
 <li><a href="https://zh.wikipedia.org/wiki/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA" target="_blank" rel="external">有限状态机FSM</a></li>
 <li><a href="http://www.cnblogs.com/ywqu/archive/2009/12/17/1626043.html" target="_blank" rel="external">UML建模之状态图</a></li>

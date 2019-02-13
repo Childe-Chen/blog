@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/02/14/JDK源码-AQS/index.html">
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="AbstractQueueSynchronizer笔记在开始介绍之前我先来简单理解一下为什么会产生AQS。在我们应用内不可避免的会发生对一些资源的抢占，那么如何处理线程之间对资源的争夺呢？在Java SE 5 之前JDK可以使用synchronized来串行化对资源的操作，synchronized可以隐式的获取和释放锁，但是带来的不便就是不够灵活，可扩展性没有显式获取和释放锁的自主控制性强，另外s">
-<meta property="og:updated_time" content="2018-12-25T08:11:30.571Z">
+<meta property="og:updated_time" content="2019-02-13T08:28:48.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码 AQS">
 <meta name="twitter:description" content="AbstractQueueSynchronizer笔记在开始介绍之前我先来简单理解一下为什么会产生AQS。在我们应用内不可避免的会发生对一些资源的抢占，那么如何处理线程之间对资源的争夺呢？在Java SE 5 之前JDK可以使用synchronized来串行化对资源的操作，synchronized可以隐式的获取和释放锁，但是带来的不便就是不够灵活，可扩展性没有显式获取和释放锁的自主控制性强，另外s">
@@ -527,6 +527,7 @@
 <p>从网上摘抄过来一段对AQS的总结作为结束。</p>
 <p>首先，AQS并不关心“是什么锁”，对于AQS来说它只是实现了一系列的用于判断“资源”是否可以访问的API,并且封装了在“访问资源”受限时将请求访问的线程的加入队列、挂起、唤醒等操作， AQS只关心“资源不可以访问时，怎么处理？”、“资源是可以被同时访问，还是在同一时间只能被一个线程访问？”、“如果有线程等不及资源了，怎么从AQS的队列中退出？”等一系列围绕资源访问的问题，而至于“资源是否可以被访问？”这个问题则交给AQS的子类去实现。</p>
 <p>这是典型的将规则和操作分开的设计思路：规则子类定义，操作逻辑因为具有公用性，放在父类中去封装。</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 
       
     </div>

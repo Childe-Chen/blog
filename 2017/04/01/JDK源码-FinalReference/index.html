@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="凡隐的博客">
 <meta property="og:description" content="JAVA FinalReference引入使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？1234final class Finalizer extends FinalReference &amp;#123;	private static ReferenceQue">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1535289900/blog/jdk/fianlizerPkg.png">
-<meta property="og:updated_time" content="2018-08-26T13:25:15.868Z">
+<meta property="og:updated_time" content="2019-02-13T08:29:01.331Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码 FinalReference">
 <meta name="twitter:description" content="JAVA FinalReference引入使用MAT分析dump出的内存时，常会看到java.lang.ref.Finalizer占用内存也不小，比较纳闷我们在编程中并没有用到这个东西，为什么他会出现并且占用分量不算小的一部分内存呢？1234final class Finalizer extends FinalReference &amp;#123;	private static ReferenceQue">
@@ -455,6 +455,7 @@
 <li>Finalizer类有一个专门的线程负责从queue中取对象，并且执行finalizer引用的对象的finalize函数。</li>
 </ol>
 <p><strong>Java引用类型可参见</strong><br><a href="http://benjaminwhx.com/2016/09/10/%E8%AF%A6%E8%A7%A3java-lang-ref%E5%8C%85%E4%B8%AD%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8/" target="_blank" rel="external">http://benjaminwhx.com/2016/09/10/%E8%AF%A6%E8%A7%A3java-lang-ref%E5%8C%85%E4%B8%AD%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8/</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-langref/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/j-lo-langref/</a><br><a href="http://www.importnew.com/20468.html" target="_blank" rel="external">http://www.importnew.com/20468.html</a><br><a href="http://www.infoq.com/cn/articles/cf-java-garbage-references" target="_blank" rel="external">http://www.infoq.com/cn/articles/cf-java-garbage-references</a></p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 
       
     </div>

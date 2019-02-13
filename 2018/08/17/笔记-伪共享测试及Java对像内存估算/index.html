@@ -98,7 +98,7 @@
 <meta property="og:image" content="http://res.cloudinary.com/childe/image/upload/c_scale,w_1135/v1535290135/blog/jvm/false-sharing/idea-vm-options.png">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_287/v1535290131/blog/jvm/false-sharing/cpu-cache.jpg">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/c_scale,w_441/v1535290130/blog/jvm/false-sharing/cache-false.jpg">
-<meta property="og:updated_time" content="2018-08-26T13:42:54.246Z">
+<meta property="og:updated_time" content="2019-02-13T08:27:41.164Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存伪共享测试及Java对像内存估算">
 <meta name="twitter:description" content="引入之前每次入门Disruptor对此部分总是泛泛看过，主要关注点在如何应用上，急于按照文档完成第一个Demo，怠慢了其实现的核心思想及其要解决的主要问题，导致虽然入门过几次Disruptor，仍对其认识十分浅薄。最近有空再次入门Disruptor时，不出意外的又遇到了难以规避的问题–内存的伪共享。
@@ -520,6 +520,7 @@
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在Java8之后，新增了注解@sun.misc.Contended，来避免伪共享的问题，在JDK的源码中也可以搜寻到她的身影，像我们常用的Thread和ConcurrentHashMap中都有使用该注解。</p>
 <p>那么是不是我们编码时要特别关注伪共享这个问题呢？个人认为除非是真的是要追求卓越的性能表现，大可不必在普通的业务应用中过分考虑该问题。首先，这个问题很隐蔽，难以从系统层面上通过工具来探测伪共享事件；其次，做测试之前我也强调了自己的测试环境，这个问题实际上和环境也有一定的关系；另外，缓存资源是很珍贵的，这些事情我们毕竟不专业，如果滥用就造成了浪费；最后，像Intel这类的厂商在做设计时必然会对此类问题做优化。所以呢，我们只要在真正需要时去考虑这些问题就行了。</p>
 <p>终于把Disruptor一大优势-避免伪共享的基础了解完了，可以继续了解它在RingBuffer中精巧的无锁设计了！</p>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://lixiangyun.gitbooks.io/disruptor/content/1.3.html" target="_blank" rel="external">disruptor用户手册中文翻译</a></p>
 <p><a href="http://tool.oschina.net/apidocs/apidoc?api=jdk-zh" target="_blank" rel="external">软件包 java.lang.instrument 的描述</a></p>
 <p><a href="http://www.infoq.com/cn/articles/javaagent-illustrated" target="_blank" rel="external">JVM源码分析之javaagent原理完全解读</a></p>
