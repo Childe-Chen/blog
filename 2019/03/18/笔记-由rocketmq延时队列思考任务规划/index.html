@@ -1,0 +1,1219 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="架构,JAVA,延迟队列,Rocketmq,TimeWheel,DelayQueue," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="背景项目中存在以下场景需要延迟触发一些事件：
+
+订单在未支付状态下30分钟后自动关闭；
+订单超过15天未主动确认收货需要自动确认收货；
+商品价格需要在不同的时间段生效不同的价格方案等。
+
+以上场景下需要有一个相对平台化的服务来满足，而不必每个项目自己做定时任务去进行轮询。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="思考延时队列">
+<meta property="og:url" content="http://yoursite.com/2019/03/18/笔记-由rocketmq延时队列思考任务规划/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="背景项目中存在以下场景需要延迟触发一些事件：
+
+订单在未支付状态下30分钟后自动关闭；
+订单超过15天未主动确认收货需要自动确认收货；
+商品价格需要在不同的时间段生效不同的价格方案等。
+
+以上场景下需要有一个相对平台化的服务来满足，而不必每个项目自己做定时任务去进行轮询。">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/rmqDelayQueue.png">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/timeWheel.png">
+<meta property="og:updated_time" content="2019-04-18T11:41:35.413Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="思考延时队列">
+<meta name="twitter:description" content="背景项目中存在以下场景需要延迟触发一些事件：
+
+订单在未支付状态下30分钟后自动关闭；
+订单超过15天未主动确认收货需要自动确认收货；
+商品价格需要在不同的时间段生效不同的价格方案等。
+
+以上场景下需要有一个相对平台化的服务来满足，而不必每个项目自己做定时任务去进行轮询。">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/rmqDelayQueue.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/18/笔记-由rocketmq延时队列思考任务规划/"/>
+
+
+
+
+
+  <title> 思考延时队列 | 凡隐的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/18/笔记-由rocketmq延时队列思考任务规划/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                思考延时队列
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-18T20:07:11+08:00">
+                2019-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/18/笔记-由rocketmq延时队列思考任务规划/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/18/笔记-由rocketmq延时队列思考任务规划/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/03/18/笔记-由rocketmq延时队列思考任务规划/" class="leancloud_visitors" data-flag-title="思考延时队列">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>项目中存在以下场景需要延迟触发一些事件：</p>
+<ol>
+<li>订单在未支付状态下30分钟后自动关闭；</li>
+<li>订单超过15天未主动确认收货需要自动确认收货；</li>
+<li>商品价格需要在不同的时间段生效不同的价格方案等。</li>
+</ol>
+<p>以上场景下需要有一个相对平台化的服务来满足，而不必每个项目自己做定时任务去进行轮询。<br><a id="more"></a></p>
+<h4 id="解刨延迟-定时任务"><a href="#解刨延迟-定时任务" class="headerlink" title="解刨延迟/定时任务"></a>解刨延迟/定时任务</h4><p>构成一个任务有两个要素：执行时间；执行逻辑。对任务规划者而言，并不关心任务执行逻辑，规划者只要在既定的时间触发该任务，但既然作为一个规划者，就必须具备任务的基本维护能力：新增，删除/取消，到期，查找。</p>
+<p>那么一个想要实现规划者就必须考虑两件事：1.怎样即时发现时间到期；2.怎样提高任务的维护效率，即怎么存储任务来保证对任务的高效操作。</p>
+<p>本文只关注延时队列中对任务的基本规划能力的实现方式，不涉及延时系统的设计讨论，系统层面的话题太大了。</p>
+<h3 id="Rocketmq延迟队列实现"><a href="#Rocketmq延迟队列实现" class="headerlink" title="Rocketmq延迟队列实现"></a>Rocketmq延迟队列实现</h3><p>Rocketmq的定时队列通过一个叫做“SCHEDULE_TOPIC_XXXX”的Topic来实现，这个Topic用来处理需要被延迟发送的消息。在Rocketmq中延迟消息被分为几个延迟级别，每个延迟级别分别对应“SCHEDULE_TOPIC_XXXX”Topic下一个延迟队列，默认延迟级别为：”1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h”。在Broker启动时，会启动相对应队列的线程来处理各个延迟队列的延迟消息。</p>
+<p>盗用<code>艾瑞克</code>一次分享中的图来直观感受下延迟队列的实现。<br><img src="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/rmqDelayQueue.png" alt="rmqDelayQueue.png" width="500"></p>
+<p>Rocketmq处理通过消息体的扩展字段<code>DELAY</code>来区分Producer是否投递的是延迟消息，如果<code>DELAY</code>大于0，即确定是延迟消息，Broker会备份源消息的topic和queueId，并将其替换为对应延迟队列的信息，然后将修改后的消息落盘到commitLog，<code>DefaultMessageStore#ReputMessageService</code>Reput线程将消息分发至对应Topic的消息队列（messageQueue），延迟队列被<code>ScheduleMessageService</code>消费，延迟消息到期后会被封装为一个新消息（恢复其源Topic及queueId等信息）再次走消息的投递流程到commitLog，然后被Reput到最初要投递的队列，在整个过程中<code>ScheduleMessageService</code>同时扮演了Consumer和Producer的角色，区分好这两种角色后再来看<code>ScheduleMessageService</code>这段代码会清楚不少。下面列出的代码有所删减改，目的是为了表达核心逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ScheduleMessageService</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (started.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</div><div class="line">        <span class="keyword">this</span>.timer = <span class="keyword">new</span> Timer(<span class="string">"ScheduleMessageTimerThread"</span>, <span class="keyword">true</span>);</div><div class="line">        <span class="comment">// 给不同级别的队列启动对应的任务线程</span></div><div class="line">        <span class="keyword">for</span> (Map.Entry&lt;Integer, Long&gt; entry : <span class="keyword">this</span>.delayLevelTable.entrySet()) &#123;</div><div class="line">            Integer level = entry.getKey();</div><div class="line">            Long timeDelay = entry.getValue();</div><div class="line">            Long offset = <span class="keyword">this</span>.offsetTable.get(level);</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == offset) &#123;</div><div class="line">                offset = <span class="number">0L</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (timeDelay != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">this</span>.timer.schedule(<span class="keyword">new</span> DeliverDelayedMessageTimerTask(level, offset), FIRST_DELAY_TIME);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.timer.scheduleAtFixedRate(<span class="keyword">new</span> TimerTask() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                	<span class="comment">// 定时持久化消费进度</span></div><div class="line">                    <span class="keyword">if</span> (started.get()) ScheduleMessageService.<span class="keyword">this</span>.persist();</div><div class="line">                &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">                    log.error(<span class="string">"scheduleAtFixedRate flush exception"</span>, e);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="number">10000</span>, <span class="keyword">this</span>.defaultMessageStore.getMessageStoreConfig().getFlushDelayOffsetInterval());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">* ScheduleMessageService的内部类</div><div class="line">*/</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DeliverDelayedMessageTimerTask</span> <span class="keyword">extends</span> <span class="title">TimerTask</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">executeOnTimeup</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="comment">// 找到对应的队列</span></div><div class="line">        ConsumeQueue cq =</div><div class="line">            ScheduleMessageService.<span class="keyword">this</span>.defaultMessageStore.findConsumeQueue(SCHEDULE_TOPIC,</div><div class="line">                delayLevel2QueueId(delayLevel));</div><div class="line"></div><div class="line">        <span class="keyword">long</span> failScheduleOffset = offset;</div><div class="line">		<span class="comment">// 如果队列不存在，DELAY_FOR_A_WHILE后重新尝试。todo: 什么情况下会出现队列为null呢？？？</span></div><div class="line">        <span class="keyword">if</span> (cq == <span class="keyword">null</span>) &#123;</div><div class="line">			ScheduleMessageService.<span class="keyword">this</span>.timer.schedule(<span class="keyword">new</span> DeliverDelayedMessageTimerTask(<span class="keyword">this</span>.delayLevel,</div><div class="line">            	failScheduleOffset), DELAY_FOR_A_WHILE);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 从指定位置拉取队列中的可用消息</span></div><div class="line">        SelectMappedBufferResult bufferCQ = cq.getIndexBuffer(<span class="keyword">this</span>.offset);</div><div class="line">        <span class="keyword">if</span> (bufferCQ != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">long</span> nextOffset = offset;</div><div class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">                ConsumeQueueExt.CqExtUnit cqExtUnit = <span class="keyword">new</span> ConsumeQueueExt.CqExtUnit();</div><div class="line">                <span class="comment">// 队列中的消息体大小均为CQ_STORE_UNIT_SIZE，依次进行遍历</span></div><div class="line">                <span class="keyword">for</span> (; i &lt; bufferCQ.getSize(); i += ConsumeQueue.CQ_STORE_UNIT_SIZE) &#123;</div><div class="line">                    <span class="keyword">long</span> offsetPy = bufferCQ.getByteBuffer().getLong();</div><div class="line">                    <span class="keyword">int</span> sizePy = bufferCQ.getByteBuffer().getInt();</div><div class="line">                    <span class="comment">// 延迟消息的tagCode保存的是延时时间</span></div><div class="line">                    <span class="keyword">long</span> tagsCode = bufferCQ.getByteBuffer().getLong();</div><div class="line"></div><div class="line">                    <span class="comment">// omit tagsCode 校正</span></div><div class="line"></div><div class="line">                    <span class="keyword">long</span> now = System.currentTimeMillis();</div><div class="line">                    <span class="comment">// 交付时间计算</span></div><div class="line">                    <span class="keyword">long</span> deliverTimestamp = <span class="keyword">this</span>.correctDeliverTimestamp(now, tagsCode);</div><div class="line">                    <span class="comment">// 下次开始拉取消息的位置</span></div><div class="line">                    nextOffset = offset + (i / ConsumeQueue.CQ_STORE_UNIT_SIZE);</div><div class="line"></div><div class="line">                    <span class="keyword">long</span> countdown = deliverTimestamp - now;</div><div class="line"></div><div class="line">                    <span class="keyword">if</span> (countdown &lt;= <span class="number">0</span>) &#123;</div><div class="line">                    	<span class="comment">// 如果到了交付时间，则从commitLog中拉取出消息</span></div><div class="line">                        MessageExt msgExt =</div><div class="line">                            ScheduleMessageService.<span class="keyword">this</span>.defaultMessageStore.lookMessageByOffset(</div><div class="line">                                offsetPy, sizePy);</div><div class="line"></div><div class="line">                        <span class="keyword">if</span> (msgExt != <span class="keyword">null</span>) &#123;</div><div class="line">                            <span class="keyword">try</span> &#123;</div><div class="line">                            	<span class="comment">// 封装称为一条新的消息，主要是将在topic、queueId、tagCode等替换为源消息的值</span></div><div class="line">                                MessageExtBrokerInner msgInner = <span class="keyword">this</span>.messageTimeup(msgExt);</div><div class="line">                                PutMessageResult putMessageResult =</div><div class="line">                                    ScheduleMessageService.<span class="keyword">this</span>.writeMessageStore</div><div class="line">                                        .putMessage(msgInner);</div><div class="line"></div><div class="line">                                <span class="keyword">if</span> (putMessageResult != <span class="keyword">null</span></div><div class="line">                                    &amp;&amp; putMessageResult.getPutMessageStatus() == PutMessageStatus.PUT_OK) &#123;</div><div class="line">                                    <span class="keyword">continue</span>;</div><div class="line">                                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                                    <span class="comment">// reput失败的处理，主要是重设定时任务及持久化消费进度</span></div><div class="line">                                    <span class="keyword">return</span>;</div><div class="line">                                &#125;</div><div class="line">                            &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                                <span class="comment">//omit</span></div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="comment">// 重设定时任务及持久化消费进度</span></div><div class="line">                        <span class="keyword">return</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="comment">// end of for</span></div><div class="line"></div><div class="line">                nextOffset = offset + (i / ConsumeQueue.CQ_STORE_UNIT_SIZE);</div><div class="line">                <span class="comment">// 重设定时任务及持久化消费进度</span></div><div class="line">                ScheduleMessageService.<span class="keyword">this</span>.timer.schedule(<span class="keyword">new</span> DeliverDelayedMessageTimerTask(</div><div class="line">                    <span class="keyword">this</span>.delayLevel, nextOffset), DELAY_FOR_A_WHILE);</div><div class="line">                ScheduleMessageService.<span class="keyword">this</span>.updateOffset(<span class="keyword">this</span>.delayLevel, nextOffset);</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                bufferCQ.release();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="comment">// end of if (bufferCQ != null)</span></div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 校正消费偏移量</span></div><div class="line">            <span class="keyword">long</span> cqMinOffset = cq.getMinOffsetInQueue();</div><div class="line">            <span class="keyword">if</span> (offset &lt; cqMinOffset) &#123;</div><div class="line">                failScheduleOffset = cqMinOffset;</div><div class="line">                <span class="comment">// omit error log</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此种方式数据结构类似链表，但链表中的数据天然有序，为什么呢？因为消息的延迟时间是Broker落盘时间加上延迟级别对应的时间，落盘后的消息才会被<code>ReputMessageService</code>Reput线程进行分发到指定的<code>MessageQueue</code>，而Reput线程是个单线程，整个过程FIFO，所以延迟队列天然有序。</p>
+<p>我们再从任务的行为：新增，删除/取消，到期，查找，来看下Rocketmq延迟队列作为任务的优缺点。</p>
+<ul>
+<li>因为Rocketmq的设计方式，注定其延迟队列只能支持特定延迟时间的特点；</li>
+<li>因为Rocketmq并不是为延迟任务而生，所以它无法删除/取消一个定时任务；</li>
+<li>生产一个延迟消息和生产一个普通消息的过程是一致的，因此新增一个延迟消息无非就是像broker进行消息投递，如果网络稳定，其时间消耗稳定;</li>
+<li><code>MessageQueue</code>的天然有序，保证队列头的消息一定是最先到期的，所以到期任务的检索时间稳定；</li>
+<li>消息的查找只可根据msgId查找或者消息key查找，msgId中包含消息的物理偏移量（类似MySql的主键）可直接定位消息，而key的查找是根据key的hashCode查找索引文件获得，可能或出现查出多条的情况，需要客户端自己根据key再次过滤，除了在控制台很少在Consumer端使用key发起查询。</li>
+</ul>
+<p>个人认为虽然Rocketmq具备延迟的功能，但其主要目的是为了实现“至少投递一次”语义，因为一个延迟消息处理完成会被Rocketmq落盘两次，就只是因为topic和queueId不同，如果Rocketmq只用来处理延迟消息，那么其存储的数据量延迟消息的两倍。所以如果延迟消息量不是很大并且不需要灵活的延迟时间的话，Rocketmq不失为一种好的选择。</p>
+<h3 id="DelayQueue"><a href="#DelayQueue" class="headerlink" title="DelayQueue"></a>DelayQueue</h3><p>在JDK中带有定时/延迟特性的两个类：<code>DelayQueue</code>和<code>ScheduledThreadPoolExecutor</code>。这两个类名起的很好，见名知意。我们从这两个类的数据结构入手看下JDK这两个自带类如何实现任务的规划。</p>
+<p><code>DelayQueue</code>内部使用<code>PriorityQueue</code>来存储定时/延时任务，相当于是<code>PriorityQueue</code>的一种使用场景，主要特性是当队列为空或任务时间未到期时可让拉取线程进行等待。</p>
+<p><code>PriorityQueue</code>使用<a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E5%A0%86" target="_blank" rel="external"><code>二叉堆</code></a>来存储数据，这里不去深究<code>二叉堆</code>的定义，其特性是根节点一定是整个堆中最大/最小的点，这点是比较符合优先队列的特性，<code>PriorityQueue</code>的根节点<code>queue[0]</code>是最小的节点，称为<code>最小堆</code>。PS：<code>二叉堆</code>是<a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E6%A0%91#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank" rel="external"><code>完全二叉树</code></a>或者是近似完全二叉树。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>完全二叉树</th>
+<th>满二叉树</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总节点k</td>
+<td>$$2^{h-1}&lt;= k &lt;= 2^{h}-1$$</td>
+<td>$$2^{h}-1$$</td>
+</tr>
+<tr>
+<td>树高h</td>
+<td>$$h=log_{2}k+1$$</td>
+<td>$$h=log_{2}(k+1)$$</td>
+</tr>
+</tbody>
+</table>
+<p><code>PriorityQueue</code>用数组来实现<code>二叉堆</code>，<code>queue[n]</code>节点的两个子节点存储在<code>queue[2*n+1]</code>和<code>queue[2*(n+1)]</code>，使用指定的<code>Comparator</code>或节点本身实现比较接口<code>Comparable</code>来排序。站在<code>DelayQueue</code>的角色来看，<code>PriorityQueue</code>的排序关键字是到期时间，比较器<code>Comparator/Comparable</code>比较的就是延迟时间的大小。</p>
+<p><code>PriorityQueue</code>关键操作的平均时间复杂度：增加<code>O(log(n))</code>，查找<code>O(n)</code>，删除=查找+移除<code>O(n) + O(log(n))</code>，到期任务检索<code>O(1)</code>。PS：就<code>二叉堆</code>本身而言还有堆合并等操作，而且不同构造方式的时间复杂度也不相同，但不是这里的关注重点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// PriorityQueue</span></div><div class="line">	<span class="comment">/**</span></div><div class="line">	* 队列</div><div class="line">	*/</div><div class="line">	<span class="keyword">transient</span> Object[] queue; </div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 队列中元素的数量。同时用来记录下一个元素的index。</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 排序使用的比较器，可以不设置，默认使用元素的自然排序</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> E&gt; comparator;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">        <span class="comment">// omit check</span></div><div class="line">        <span class="comment">// 元素在数组中的index</span></div><div class="line">        <span class="keyword">int</span> i = size;</div><div class="line">        <span class="comment">// omit grow Capacity</span></div><div class="line">        size = i + <span class="number">1</span>;</div><div class="line">        <span class="keyword">if</span> (i == <span class="number">0</span>)</div><div class="line">            queue[<span class="number">0</span>] = e;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        	<span class="comment">// 构造堆结构</span></div><div class="line">            siftUp(i, e);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUp</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</div><div class="line">    	<span class="comment">// 是自定义比较器</span></div><div class="line">        <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</div><div class="line">            siftUpUsingComparator(k, x);</div><div class="line">        <span class="keyword">else</span></div><div class="line">            siftUpComparable(k, x);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUpUsingComparator</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</div><div class="line">        	<span class="comment">// 按照存储规则找到自己的父节点</span></div><div class="line">            <span class="keyword">int</span> parent = (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</div><div class="line">            Object e = queue[parent];</div><div class="line">            <span class="comment">// 如果待插入节点不小于父节点，说明位置正确，不再继续向上比较</span></div><div class="line">            <span class="comment">// 最差循环次数为堆的高度</span></div><div class="line">            <span class="keyword">if</span> (comparator.compare(x, (E) e) &gt;= <span class="number">0</span>)</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="comment">// 否则将父节点放在当前位置，继续向上比较</span></div><div class="line">            queue[k] = e;</div><div class="line">            k = parent;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 进入队列</span></div><div class="line">        queue[k] = x;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	<span class="comment">/**</span></div><div class="line">	* 查找指定的节点</div><div class="line">	*/</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (o != <span class="keyword">null</span>) &#123;</div><div class="line">        	<span class="comment">// 因为实际存储结构为数组，所以此时需要进行遍历</span></div><div class="line">        	<span class="comment">// 因此时间复杂度为O(n)</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)</div><div class="line">                <span class="keyword">if</span> (o.equals(queue[i]))</div><div class="line">                    <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>在JDK中使用<code>ScheduledThreadPoolExecutor</code>同样使用了<code>最小堆</code>来规划任务，但与<code>PriorityQueue</code>不同，<code>ScheduledThreadPoolExecutor</code>对任务元素进行了优化，让任务本身持有自己在数组中的index，这样将取消操作时间复杂度降到了O(1)，但如果<code>removeOnCancel</code>参数配置为true时，取消操作会引起删除操作，此时就增加了堆的维护。该配置默认为false，这延迟了垃圾回收，会导致无谓的内存占用，前提是任务存在极大可能在开始前被取消。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ScheduledThreadPoolExecutor内部类</span></div><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledFutureTask</span>&lt;<span class="title">V</span>&gt;</span></div><div class="line">            <span class="keyword">extends</span> <span class="title">FutureTask</span>&lt;<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">RunnableScheduledFuture</span>&lt;<span class="title">V</span>&gt; &#123;</div><div class="line"></div><div class="line">    <span class="comment">/** 延迟时间，单位：纳秒 */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">long</span> time;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 任务的重复时间，单位：纳秒。</div><div class="line">     * 正数表明固定速率执行。</div><div class="line">     * 负数说明固定延时时间执行。</div><div class="line">     * 0说明该任务不需重复。</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> period;</div><div class="line"></div><div class="line">    <span class="comment">/** 任务本身，可通过reExecutePeriodic方法重新入队 */</span></div><div class="line">    RunnableScheduledFuture&lt;V&gt; outerTask = <span class="keyword">this</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 任务在延迟队列中的index，用来支持快速取消任务。</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> heapIndex;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DelayedWorkQueue</span> <span class="keyword">extends</span> <span class="title">AbstractQueue</span>&lt;<span class="title">Runnable</span>&gt;</span></div><div class="line">        <span class="keyword">implements</span> <span class="title">BlockingQueue</span>&lt;<span class="title">Runnable</span>&gt; &#123;</div><div class="line">	<span class="comment">// 数组初识长度</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</div><div class="line">	<span class="comment">// 任务数组</span></div><div class="line">    <span class="keyword">private</span> RunnableScheduledFuture&lt;?&gt;[] queue =</div><div class="line">        <span class="keyword">new</span> RunnableScheduledFuture&lt;?&gt;[INITIAL_CAPACITY];</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line"></div><div class="line">    <span class="comment">// 队列中元素的数量。同时用来记录下一个元素的index。</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * leader是指等待在queue上的第一个线程，该线程等待时间为第一个任务到期的时间，</div><div class="line">     * 其余的等待线程无限期等待，直到leader把其唤醒。此处为Leader-Follower模式，目的是减少不必要的等待时间。</div><div class="line">     * 更多释义参见远吗注释。</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> Thread leader = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 当队列头部任务变得可用或者一个新线程称为leader是会在该条件上发出信号。</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition available = lock.newCondition();</div><div class="line"></div><div class="line">    <span class="comment">// 对数组的增加删除操作同PriorityQueue相似</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="TimeWheel"><a href="#TimeWheel" class="headerlink" title="TimeWheel"></a>TimeWheel</h3><p>以上两种实现方式有一个共同点，他们并没有按照预想将任务和延迟时间分离，接下来我们要讨论的时间轮就是按照这个思路来实现任务的规划，看一下时间轮如何来存储和存储/规划任务。</p>
+<p>网上盗图来直观感受下时间轮。<br><img src="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/timeWheel.png" alt="timerWheel.png" width="500"></p>
+<p>上图展示的一个多层时间轮，红线部分表示任务随时间流逝迁移的过程，直到最后被执行。</p>
+<p>时间轮是对时钟的一个模拟，在时间轮中有以下几点需要注意：</p>
+<ol>
+<li>Tick，一次时间推进，每次推进会检查/执行超时任务。</li>
+<li>TickDuration，时间轮推进的最小单元，每隔TickDuration会有一次Tick，它决定了时间轮的精确程度。</li>
+<li>Bucket（TicksPerWheel），上图中的每一隔就是一个Bucket，表示一个时间轮可以有多少个Tick，它是存储任务的最小单元。</li>
+<li>上层时间轮的TickDuration是下层时间轮的表示时间的最大范围，即：父TickDuration = 子TickDuration * 子Bucket梳理</li>
+</ol>
+<p>Netty和Kafka使用时间轮来管理超时任务，因为具体场景不同实现也不同。</p>
+<h4 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h4><p>Netty的时间轮用来管理网络连接的超时，实际应用过程中网络超时时间一般不会很长，Netty采用单时间轮来规划超时任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashedWheelTimer</span> <span class="keyword">implements</span> <span class="title">Timer</span> </span>&#123;</div><div class="line">	<span class="comment">// 默认 100ms</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> tickDuration;</div><div class="line">	<span class="comment">// Bucket，使用数组实现，默认 512</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> HashedWheelBucket[] wheel;</div><div class="line">	<span class="comment">// 待加入时间轮的任务</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;HashedWheelTimeout&gt; timeouts = PlatformDependent.newMpscQueue();</div><div class="line">	<span class="comment">// 被取消的任务</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;HashedWheelTimeout&gt; cancelledTimeouts = PlatformDependent.newMpscQueue();</div><div class="line"></div><div class="line">    <span class="comment">// 新增一个任务</span></div><div class="line">	<span class="function"><span class="keyword">public</span> Timeout <span class="title">newTimeout</span><span class="params">(TimerTask task, <span class="keyword">long</span> delay, TimeUnit unit)</span> </span>&#123;</div><div class="line">        <span class="comment">// 计算超时时间</span></div><div class="line">        <span class="keyword">long</span> deadline = System.nanoTime() + unit.toNanos(delay) - startTime;</div><div class="line">        <span class="comment">// 构建任务</span></div><div class="line">        HashedWheelTimeout timeout = <span class="keyword">new</span> HashedWheelTimeout(<span class="keyword">this</span>, task, deadline);</div><div class="line">        <span class="comment">// 添加到 timeouts 链表</span></div><div class="line">        timeouts.add(timeout);</div><div class="line">        <span class="keyword">return</span> timeout;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// Bucket用双向链表组织数据</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">HashedWheelBucket</span> </span>&#123;</div><div class="line">        <span class="comment">// Used for the linked-list datastructure</span></div><div class="line">        <span class="keyword">private</span> HashedWheelTimeout head;</div><div class="line">        <span class="keyword">private</span> HashedWheelTimeout tail;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 超时任务结构</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">HashedWheelTimeout</span> <span class="keyword">implements</span> <span class="title">Timeout</span> </span>&#123;</div><div class="line">    	<span class="comment">// 任务本身</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">final</span> TimerTask task;</div><div class="line">        <span class="comment">// 超时时间</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> deadline;</div><div class="line">        <span class="comment">// 剩余轮询次数</span></div><div class="line">        <span class="keyword">long</span> remainingRounds;</div><div class="line">        <span class="comment">// 被添加到的Bucket</span></div><div class="line">        HashedWheelBucket bucket;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面是Netty时间轮主要的数据结构，从源码中我们可以看出Netty为提升效率废了不少心思，比如：<code>PlatformDependent.newMpscQueue()</code>来特定解决多生产单消费的场景，有兴趣的可以看下，这不是本文重点。</p>
+<p>前面我们说了，Netty是单时间轮，当规划的任务时间超过一圈怎么办呢？我们看到超时任务<code>HashedWheelTimeout</code>中有一个<code>remainingRounds</code>字段，这个字段记录了该任务在被遍历多少次时可以被过期，任务每被遍历一次该字段值减1，当其值不大于0时，表示可以被过期。</p>
+<p>Netty使用<code>数组 + 双向链表</code>的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个Tick。我们来看下Netty版的时间轮对任务规划的时间复杂度。</p>
+<ul>
+<li><p>添加任务</p>
+<p>  通过<code>newTimeout</code>方法新增任务，Netty仅仅把任务放到<code>timeouts</code>链表的队尾，时间相对稳定，可看作O(1)。</p>
+</li>
+<li><p>取消任务</p>
+<p>  取消是<code>HashedWheelTimeout</code>任务本身提供的，在调用<code>HashedWheelTimeout#cancel()</code>方法后，Netty仅仅修改了任务状态并把任务放到了<code>cancelledTimeouts</code>链表的队尾，时间相对稳定，可看作O(1)。</p>
+</li>
+<li><p>删除任务</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 当前任务被规划到的Bucket，如果不存在说明尚未被规划，直接忽略</span></div><div class="line">    HashedWheelBucket bucket = <span class="keyword">this</span>.bucket;</div><div class="line">    <span class="keyword">if</span> (bucket != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">// 从bucket的链表中移除</span></div><div class="line">        bucket.remove(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  外部不暴露该操作，发生在过期任务时，由<code>HashedWheelTimeout</code>任务本身提供，因为任务本身有记录当前的Bucket，所以删除操作等于是链表的一个删除操作，时间相对稳定，可看作O(1)。</p>
+</li>
+<li><p>查找任务</p>
+<p>  不存在该场景。</p>
+</li>
+<li><p>过期任务</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 时间推进线程</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">long</span> tick;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">        	<span class="comment">// 获取本次过期时间</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">long</span> deadline = waitForNextTick();</div><div class="line">            <span class="keyword">if</span> (deadline &gt; <span class="number">0</span>) &#123;</div><div class="line">            	<span class="comment">// 本次Bucket位置</span></div><div class="line">                <span class="keyword">int</span> idx = (<span class="keyword">int</span>) (tick &amp; mask);</div><div class="line">                <span class="comment">// 将 cancelledTimeouts 中任务从Bucket中删除</span></div><div class="line">                processCancelledTasks();</div><div class="line"></div><div class="line">                HashedWheelBucket bucket = wheel[idx];</div><div class="line">                <span class="comment">// 将 timeouts 中的任务添加到对应的Bucket中</span></div><div class="line">                transferTimeoutsToBuckets();</div><div class="line">                <span class="comment">// 遍历当前Bucket，执行当前Bucket中的过期任务</span></div><div class="line">                bucket.expireTimeouts(deadline);</div><div class="line">                <span class="comment">// 记录嘀嗒次数</span></div><div class="line">                tick++;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">while</span> (WORKER_STATE_UPDATER.get(HashedWheelTimer.<span class="keyword">this</span>) == WORKER_STATE_STARTED);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  时间的推进是独立的一个线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历<code>timeouts</code>、<code>cancelledTimeouts</code>与<code>bucket</code>链表，在遍历<code>timeouts</code>时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
+</li>
+</ul>
+<p>我们上面有说到取消任务时，只是将任务放在了超时链表中，在下次发生时间推进时才会真正将被取消的任务从队列移除，这就导致空间的浪费，GC回收会至少延迟一个推进间隔（TickDuration）。</p>
+<p>如今Netty在网络通信中的霸主地位不必多言，虽然Netty中时间轮的实现不是最好的但一定是满足了Netty这个特定场景的性能需要，即：没有最好的技术，只有适合的技术。这一点对平时开发设计也有借鉴意义。</p>
+<h4 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h4><p>Kafka也使用<code>数组 + 双向链表</code>的方式来组织时间轮(<code>Timer.scala</code>)，只是有多个数组来表示多层时间轮而已，所以其对任务的增加/删除/取消操作实际也就是对双向链表的增删操作，时间复杂度与其一致，其到期任务的过程下面我们与Netty做比较来看。</p>
+<p>上面关于Netty实现的一些比较蛇皮的地方，在Kafka中均得到了解决，并且Kafka中使用JDK中的<code>DelayQueue</code>来帮助做时间推进，使得一个线程可以轻松管理错层时间轮的时间推进。</p>
+<p>我们先来看他规避了Netty中哪些不太合适的地方：</p>
+<ol>
+<li><p>Netty单层时间轮规划超过一轮的任务时使用<code>remainingRounds</code>来做控制，这就导致在一次推进中，当前Bucket下的任务并不是全部都是过期的，而Kafka使用多层时间轮，一个Bucket被某次推进选中，它下挂的任务行为完全一致，处理起来相对简单，Kafka目前也是由推进线程来遍历到期任务，但它也可以方便的使用fork/join方式来进一步提高处理效率。</p>
+</li>
+<li><p>Kafka虽然也由推进线程遍历到期Bucket下的任务，但任务的执行却交给专门的线程池来执行，自己仅将该Bucket下的所有任务重新走一遍添加逻辑，以便决定任务是交给线程池执行还是下降到下层时间轮。</p>
+</li>
+</ol>
+<p>Kafka既然是多层时间轮，那他是如何来推进每个时间轮的时间呢？Kafka在时间推进层面跳过了时间轮这一层，直接规划到时间轮下的Bucket，Kafka将所有Bucket放在<code>DelayQueue</code>中来简化时间推进的操作，这样多个时间轮的推进任务只需要一个线程便可完成！</p>
+<p>我们之前讲<code>DelayQueue</code>不太适合任务规划，但Kafka时间轮中的Bucket数量并不会很多，在数量不多的情况下<code>DelayQueue</code>性能还是不错的（应该是满足了Kafka的性能需求），所以此处选择了<code>DelayQueue</code>来实现时间的推进。还是应了这句话：没有最好的技术，只有适合的技术。</p>
+<p>Kafka的时间轮实现更契合我对超时中心的认知，超时中心只关心时间是否到期并进行回调通知，并不关心和执行任务的情况，Kafka明确了角色分工，所以在海量数据下会更高效。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>文章拖的时间太久了，还有两个与定时任务相关的开源项目没来得及看，大家自行看下里面怎么实现定时功能的吧。</p>
+<ul>
+<li><p><a href="https://github.com/quartz-scheduler/quartz" target="_blank" rel="external">Quartz Scheduler</a></p>
+</li>
+<li><p><a href="https://github.com/elasticjob" target="_blank" rel="external">当当任务调度</a></p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章前后花了一个月的休息时间来做调研和整理，虽然文中有贴出部分源代码，但代码作者的巧妙构思完全不能被表达，还是建议去看源码。</p>
+<p>正所谓：纸上得来终觉浅，绝知此事要躬行。</p>
+<p>下面给出代码版本：</p>
+<ul>
+<li><p>Rocketmq release-4.5.0</p>
+</li>
+<li><p>Netty 4.1</p>
+</li>
+<li><p>Kafka 2.2</p>
+</li>
+<li><p>JDK 1.8.0_74</p>
+</li>
+</ul>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://zhuanlan.zhihu.com/p/35583711" target="_blank" rel="external">如何让快递更”快”？菜鸟自研定时任务调度引擎首次公开</a><br><a href="https://blog.csdn.net/chunlongyu/article/details/52971748" target="_blank" rel="external">TimingWheel本质与DelayedOperationPurgatory核心结构</a><br><a href="https://segmentfault.com/a/1190000005348993" target="_blank" rel="external">Kafka技术内幕样章 层级时间轮</a><br><a href="https://blog.csdn.net/u013256816/article/details/80697456" target="_blank" rel="external">Kafka解惑之时间轮（TimingWheel）</a><br><a href="https://juejin.im/post/5b5e52ecf265da0f716c3203" target="_blank" rel="external">你真的了解延迟队列吗</a><br><a href="http://novoland.github.io/%E5%B9%B6%E5%8F%91/2014/07/26/%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Timer%EF%BC%89%E7%9A%84%E5%AE%9E%E7%8E%B0.html" target="_blank" rel="external">定时器（Timer）的实现</a><br><a href="https://visualgo.net/zh/heap" target="_blank" rel="external">二叉堆动画展示</a><br><a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E6%A0%91#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%B1%BB%E5%9E%8B" target="_blank" rel="external">二叉树</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/架构/" rel="tag"># 架构</a>
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/延迟队列/" rel="tag"># 延迟队列</a>
+          
+            <a href="/tags/Rocketmq/" rel="tag"># Rocketmq</a>
+          
+            <a href="/tags/TimeWheel/" rel="tag"># TimeWheel</a>
+          
+            <a href="/tags/DelayQueue/" rel="tag"># DelayQueue</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/23/rocketmq-深入消费源码/" rel="next" title="rocketmq-深入消费源码">
+                <i class="fa fa-chevron-left"></i> rocketmq-深入消费源码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Childe-Chen" target="_blank" title="github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解刨延迟-定时任务"><span class="nav-number">1.1.</span> <span class="nav-text">解刨延迟/定时任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rocketmq延迟队列实现"><span class="nav-number">2.</span> <span class="nav-text">Rocketmq延迟队列实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DelayQueue"><span class="nav-number">3.</span> <span class="nav-text">DelayQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TimeWheel"><span class="nav-number">4.</span> <span class="nav-text">TimeWheel</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Netty"><span class="nav-number">4.1.</span> <span class="nav-text">Netty</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Kafka"><span class="nav-number">4.2.</span> <span class="nav-text">Kafka</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'childe';
+      var disqus_identifier = '2019/03/18/笔记-由rocketmq延时队列思考任务规划/';
+
+      var disqus_title = "思考延时队列";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+  
+
+
+  
+
+</body>
+</html>
