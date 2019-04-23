@@ -107,7 +107,7 @@
 以上场景下需要有一个相对平台化的服务来满足，而不必每个项目自己做定时任务去进行轮询。">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/rmqDelayQueue.png">
 <meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1555587096/blog/delayTimer/timeWheel.png">
-<meta property="og:updated_time" content="2019-04-18T11:47:57.174Z">
+<meta property="og:updated_time" content="2019-04-23T11:55:14.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="思考延时队列">
 <meta name="twitter:description" content="背景项目中存在以下场景需要延迟触发一些事件：
@@ -531,6 +531,7 @@
 <p>Kafka既然是多层时间轮，那他是如何来推进每个时间轮的时间呢？Kafka在时间推进层面跳过了时间轮这一层，直接规划到时间轮下的Bucket，Kafka将所有Bucket放在<code>DelayQueue</code>中来简化时间推进的操作，这样多个时间轮的推进任务只需要一个线程便可完成！</p>
 <p>我们之前讲<code>DelayQueue</code>不太适合任务规划，但Kafka时间轮中的Bucket数量并不会很多，在数量不多的情况下<code>DelayQueue</code>性能还是不错的（应该是满足了Kafka的性能需求），所以此处选择了<code>DelayQueue</code>来实现时间的推进。还是应了这句话：没有最好的技术，只有适合的技术。</p>
 <p>Kafka的时间轮实现更契合我对超时中心的认知，超时中心只关心时间是否到期并进行回调通知，并不关心和执行任务的情况，Kafka明确了角色分工，所以在海量数据下会更高效。</p>
+<p>这里不再贴出源码分析，如果前面几种实现一一看过的话，看Kafka的实现就很容易。</p>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>文章拖的时间太久了，还有两个与定时任务相关的开源项目没来得及看，大家自行看下里面怎么实现定时功能的吧。</p>
 <ul>
 <li><p><a href="https://github.com/quartz-scheduler/quartz" target="_blank" rel="external">Quartz Scheduler</a></p>
