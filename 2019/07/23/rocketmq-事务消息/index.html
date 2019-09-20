@@ -1,0 +1,1125 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="架构,JAVA,MQ,rocketmq,CAP," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言之前有转载过一篇关于分布式事务最终一致的MQ实现的文章，当时也是碰到了分布式事务的情形，最后按照文章的思路利用rmq实现了数据的最终一致。不太清楚分布式事务的，可以先看下这边文章了解下。
+PS：本篇默认你已经了解rmq的一些基础并看过部分源代码，建议在看该篇时，先看下官方的文档RocketMQ事务消息。
+牵涉到的分布式的话题一般都会提到CAP，从知乎上打捞来一份比较好解释。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rocketmq-事务消息">
+<meta property="og:url" content="http://yoursite.com/2019/07/23/rocketmq-事务消息/index.html">
+<meta property="og:site_name" content="凡隐的博客">
+<meta property="og:description" content="前言之前有转载过一篇关于分布式事务最终一致的MQ实现的文章，当时也是碰到了分布式事务的情形，最后按照文章的思路利用rmq实现了数据的最终一致。不太清楚分布式事务的，可以先看下这边文章了解下。
+PS：本篇默认你已经了解rmq的一些基础并看过部分源代码，建议在看该篇时，先看下官方的文档RocketMQ事务消息。
+牵涉到的分布式的话题一般都会提到CAP，从知乎上打捞来一份比较好解释。">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1568900534/blog/mq/%E6%9C%AC%E5%9C%B0%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/childe/image/upload/v1568900535/blog/mq/rmq%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E6%A8%A1%E5%9E%8B.jpg">
+<meta property="og:updated_time" content="2019-09-20T08:06:58.843Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rocketmq-事务消息">
+<meta name="twitter:description" content="前言之前有转载过一篇关于分布式事务最终一致的MQ实现的文章，当时也是碰到了分布式事务的情形，最后按照文章的思路利用rmq实现了数据的最终一致。不太清楚分布式事务的，可以先看下这边文章了解下。
+PS：本篇默认你已经了解rmq的一些基础并看过部分源代码，建议在看该篇时，先看下官方的文档RocketMQ事务消息。
+牵涉到的分布式的话题一般都会提到CAP，从知乎上打捞来一份比较好解释。">
+<meta name="twitter:image" content="https://res.cloudinary.com/childe/image/upload/v1568900534/blog/mq/%E6%9C%AC%E5%9C%B0%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/23/rocketmq-事务消息/"/>
+
+
+
+
+
+  <title> rocketmq-事务消息 | 凡隐的博客 </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">凡隐的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">平凡的世界</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/23/rocketmq-事务消息/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="childe.chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="凡隐的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                rocketmq-事务消息
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-23T20:09:47+08:00">
+                2019-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/23/rocketmq-事务消息/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/23/rocketmq-事务消息/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/07/23/rocketmq-事务消息/" class="leancloud_visitors" data-flag-title="rocketmq-事务消息">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前有转载过一篇关于<a href="https://blog.csdn.net/myjcxd/article/details/52994565" target="_blank" rel="external">分布式事务最终一致的MQ实现</a>的文章，当时也是碰到了分布式事务的情形，最后按照文章的思路利用rmq实现了数据的最终一致。不太清楚分布式事务的，可以先看下这边文章了解下。</p>
+<p>PS：本篇默认你已经了解rmq的一些基础并看过部分源代码，建议在看该篇时，先看下官方的文档<a href="https://github.com/apache/rocketmq/blob/master/docs/cn/design.md#5-%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF" target="_blank" rel="external">RocketMQ事务消息</a>。</p>
+<p>牵涉到的分布式的话题一般都会提到CAP，从知乎上打捞来一份比较好解释。<br><a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">P 意指分区容忍性。 所谓分区指的是网络分区的意思。详细一点解释，比如你有A B两台服务器，它们之间是有通信的，突然，不知道为什么，它们之间的网络链接断掉了。</div><div class="line">好了，那么现在本来AB在同一个网络现在发生了网络分区，变成了A所在的A网络和B所在的B网络。所谓的分区容忍性，就是说一个数据服务的多台服务器在发生了上述情况的时候，</div><div class="line">依然能继续提供服务。所以显而易见的，P是大前提，如果P发生了，咱们的数据服务直接不服务了，还谈个毛的可用性和一致性呢。因此CAP要解释成，当P发生的时候，A和C只能而选一。</div><div class="line">举个简单的例子，A服务器B服务器同步数据，现在A B之间网络断掉了，那么现在发来A一个写入请求，但是B却没有相关的请求，显然，如果A不写，保持一致性，那么我们就失去了A的服务，</div><div class="line">但是如果A写了，跟B的数据就不一致了，我们自然就丧失了一致性。这里设计就涉及到架构师的选择了。注意这里的一致性是强一致性，意思是AB的数据时刻都是同步的，</div><div class="line">如果我们放弃了强一致性，不代表我们的数据就是一定是不一致的了，我们可以让A先写入本地，等到通信恢复了再同步给B，这就是所谓的最终一致性，长远的看我们的数据还是一致的，</div><div class="line">我们只是在某一个时间窗口里数据不一致罢了。如果这个时间窗口小过了用户逻辑处理的时间。那么其实对于用户来说根本毛都感觉不到。</div><div class="line">最终一致性有个很有意思的协议叫gossip就跟传八卦一个意思，我就把我收到里信息里我本地没有的部分加到我本地，再把这个信息发出去，那么长远的看，网络时好时坏，</div><div class="line">但是最终所有人都会有所有的信息。因此我们还是能够保证数据的最终一致性的。综上，CAP应该描述成，当发生网络分区的时候，如果我们要继续服务，那么强一致性和可用性只能2选1。</div></pre></td></tr></table></figure>
+<h3 id="事务消息之前的实现"><a href="#事务消息之前的实现" class="headerlink" title="事务消息之前的实现"></a>事务消息之前的实现</h3><p>rmq不提供事务消息之前，通过“本地事务存根+rmq消息语义”来实现事务的最终一致性。</p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1568900534/blog/mq/%E6%9C%AC%E5%9C%B0%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4.jpg" alt="本地最终一致"></p>
+<p>如上图，其实就是每个涉及到分布式事务的应用自己要有一张表来存储需要发送的消息，保证消息一定可以在本地事务完成后可以被发送到broker端。然后依赖“至少消费一次”的rmq语义来确保消息的投递，当然，消费端需要做幂等设计。</p>
+<p>这么做除了各个业务段冗余一张表和一个兜底任务外，也无不妥。</p>
+<h3 id="rmq实现"><a href="#rmq实现" class="headerlink" title="rmq实现"></a>rmq实现</h3><p>事务消息的主要目标：确保本地事务执行完成后，一定会有通知到broker端。要达成这个目标，broker就需要知道每个在执行的事务，并且能在事务超时未发送结束消息时主动去问询事务执行的情况，核对完事务执行情况后再决定是否将事务完成消息推送给consumer。那rmq怎么收集执行的本地事务呢？这个当然需要事务本身在开启前进行上报。简单来讲事务消息就是要实现<code>预约-履约-回查</code>的场景。</p>
+<p><img src="https://res.cloudinary.com/childe/image/upload/v1568900535/blog/mq/rmq%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E6%A8%A1%E5%9E%8B.jpg" alt="rmq事务消息模型"></p>
+<p>rmq事务消息围绕着两个topic展开<code>RMQ_SYS_TRANS_HALF_TOPIC</code>（half_topic）和<code>RMQ_SYS_TRANS_OP_HALF_TOPIC</code>(op_half_topic）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">`RMQ_SYS_TRANS_HALF_TOPIC`用来记录一个事务；</div><div class="line">`RMQ_SYS_TRANS_OP_HALF_TOPIC`用来记录事务的执行状态。</div><div class="line">这两个topic均为rmq的系统topic。</div></pre></td></tr></table></figure>
+<p>结合上图，描述下事务消息的一般流程：</p>
+<ol>
+<li><p>发送开启事务消息（half消息）。</p>
+</li>
+<li><p>服务端响应消息响应写入结果。该步骤中会默认将目标topic和queueId进行替换，源topic和queueId当作属性值记到消息体中，half消息对生产和消费方均不可见。</p>
+</li>
+<li><p>根据发送结果执行本地事务，并发送（异步发送）本地事务执行的状态。</p>
+</li>
+<li><p>根据本地事务状态执行Commit或者Rollback。如果是Commit，就取出half消息，新建消息，并拷贝half消息的内容，同时把topic和queueId设置为half消息属性值中的topic和queueId，即：还原源消息，然后将新建的消息进行存储并在<code>op_half_topic</code>创建操作记录，此时，消费方可以看到并消费事务消息。</p>
+</li>
+</ol>
+<p>PS：改变消息topic是rmq的常用方法，延时消息也是靠这种方式实现。</p>
+<h4 id="Producer"><a href="#Producer" class="headerlink" title="Producer"></a>Producer</h4><p>rmq在生产Client中使用模版消息封装了事务开启消息及实务完结消息的发送，开发者只需要实现自己本地事务和定义事务消息数据结构即可（<code>DefaultMQProducerImpl#sendMessageInTransaction</code>）。</p>
+<p>事务消息存在三种状态：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> LocalTransactionState &#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">     * 本地事务执行成功</div><div class="line">     */</div><div class="line">    COMMIT_MESSAGE,</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 本地事务回滚</div><div class="line">     */</div><div class="line">    ROLLBACK_MESSAGE,</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 本地事务状态未知</div><div class="line">     * 该种状态下，broker会按照配置来检查事务的执行状态</div><div class="line">     */</div><div class="line">    UNKNOW,</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>至于状态对应的场景，自己撸下代码吧，比较简单。</p>
+<h4 id="Broker"><a href="#Broker" class="headerlink" title="Broker"></a>Broker</h4><p>Broker端对Producer事务响应的处理代码在<code>EndTransactionProcessor</code>中，逻辑也比较简单。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">OperationResult result = <span class="keyword">new</span> OperationResult();</div><div class="line"><span class="keyword">if</span> (MessageSysFlag.TRANSACTION_COMMIT_TYPE == requestHeader.getCommitOrRollback()) &#123;</div><div class="line">    <span class="comment">// 查询half消息</span></div><div class="line">    result = <span class="keyword">this</span>.brokerController.getTransactionalMessageService().commitMessage(requestHeader);</div><div class="line">    <span class="keyword">if</span> (result.getResponseCode() == ResponseCode.SUCCESS) &#123;</div><div class="line">        <span class="comment">// 检查消息与生产方提交的消息信息是否一致</span></div><div class="line">        RemotingCommand res = checkPrepareMessage(result.getPrepareMessage(), requestHeader);</div><div class="line">        <span class="keyword">if</span> (res.getCode() == ResponseCode.SUCCESS) &#123;</div><div class="line">            <span class="comment">// 制作新的事务消息，将half消息拷贝到新建的消息（topic等信息写成源信息）</span></div><div class="line">            MessageExtBrokerInner msgInner = endMessageTransaction(result.getPrepareMessage());</div><div class="line">            <span class="comment">// 消息投递到源目标topic</span></div><div class="line">            RemotingCommand sendResult = sendFinalMessage(msgInner);</div><div class="line">            <span class="keyword">if</span> (sendResult.getCode() == ResponseCode.SUCCESS) &#123;</div><div class="line">                <span class="comment">// 创建删除half消息的操作消息</span></div><div class="line">                <span class="keyword">this</span>.brokerController.getTransactionalMessageService().deletePrepareMessage(result.getPrepareMessage());</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> sendResult;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (MessageSysFlag.TRANSACTION_ROLLBACK_TYPE == requestHeader.getCommitOrRollback()) &#123;</div><div class="line">    <span class="comment">// 查询half消息</span></div><div class="line">    result = <span class="keyword">this</span>.brokerController.getTransactionalMessageService().rollbackMessage(requestHeader);</div><div class="line">    <span class="keyword">if</span> (result.getResponseCode() == ResponseCode.SUCCESS) &#123;</div><div class="line">        RemotingCommand res = checkPrepareMessage(result.getPrepareMessage(), requestHeader);</div><div class="line">        <span class="keyword">if</span> (res.getCode() == ResponseCode.SUCCESS) &#123;</div><div class="line">            <span class="comment">// 创建删除half消息的操作消息</span></div><div class="line">            <span class="keyword">this</span>.brokerController.getTransactionalMessageService().deletePrepareMessage(result.getPrepareMessage());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> res;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不管事务结束消息成功与否，总会记录一条操作消息（<code>RMQ_SYS_TRANS_OP_HALF_TOPIC</code>(op_half_topic）），这个topic究竟有什么用呢？<br>我们知道rmq对文件是连续写随机读的，这样就意味着我们不可能想操作数据库那样可以update/delete一条记录，所以rmq在处理事务消息的<code>消息补偿-回查</code>逻辑时就利用<code>RMQ_SYS_TRANS_HALF_TOPIC</code>（half_topic）和<code>RMQ_SYS_TRANS_OP_HALF_TOPIC</code>(op_half_topic）这两个topic来判断哪些消息处理完成了，哪些消息需要发起回查。</p>
+<p>在broker启动时，会创建一个任务（消费者）来定时消费这两个topic，具体消费代码在<code>TransactionalMessageServiceImpl#check()</code>中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div></pre></td><td class="code"><pre><div class="line">String topic = MixAll.RMQ_SYS_TRANS_HALF_TOPIC;</div><div class="line"><span class="comment">// 获取半消息队列，只有1个</span></div><div class="line">Set&lt;MessageQueue&gt; msgQueues = transactionalMessageBridge.fetchMessageQueues(topic);</div><div class="line"><span class="keyword">for</span> (MessageQueue messageQueue : msgQueues) &#123;</div><div class="line">    <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">    <span class="comment">// 获取半消息队列对应的操作记录队列</span></div><div class="line">    MessageQueue opQueue = getOpQueue(messageQueue);</div><div class="line">    <span class="comment">// 获取两个队列的消费进度</span></div><div class="line">    <span class="keyword">long</span> halfOffset = transactionalMessageBridge.fetchConsumeOffset(messageQueue);</div><div class="line">    <span class="keyword">long</span> opOffset = transactionalMessageBridge.fetchConsumeOffset(opQueue);</div><div class="line">    </div><div class="line">    List&lt;Long&gt; doneOpOffset = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    HashMap&lt;Long, Long&gt; removeMap = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    <span class="comment">// 从操作队列中取出32个</span></div><div class="line">    <span class="comment">// 如果操作操作记录中的halfoffset比消费进度还小，表示该消息已经处理（removeMap），否则表示该消息需要在本次处理完成（doneOpOffset）</span></div><div class="line">    PullResult pullResult = fillOpRemoveMap(removeMap, opQueue, opOffset, halfOffset, doneOpOffset);</div><div class="line"></div><div class="line">    <span class="comment">// single thread</span></div><div class="line">    <span class="keyword">int</span> getMessageNullCount = <span class="number">1</span>;</div><div class="line">    <span class="keyword">long</span> newOffset = halfOffset;</div><div class="line">    <span class="keyword">long</span> i = halfOffset;</div><div class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">        <span class="comment">// 超过一次检查的耗时，结束本次检查，等待下次调度</span></div><div class="line">        <span class="keyword">if</span> (System.currentTimeMillis() - startTime &gt; MAX_PROCESS_TIME_LIMIT) &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (removeMap.containsKey(i)) &#123;</div><div class="line">            <span class="comment">// 如果消息已经被处理过，跳过进行下一个</span></div><div class="line">            removeMap.remove(i);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 获取半消息</span></div><div class="line">            GetResult getResult = getHalfMsg(messageQueue, i);</div><div class="line">            MessageExt msgExt = getResult.getMsg();</div><div class="line">            <span class="keyword">if</span> (msgExt == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// 如果半消息获取为null次数超过 MAX_RETRY_COUNT_WHEN_HALF_NULL=1，终止本次检查</span></div><div class="line">                <span class="keyword">if</span> (getMessageNullCount++ &gt; MAX_RETRY_COUNT_WHEN_HALF_NULL) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="comment">// 如果没有拉到新消息，终止本次检查</span></div><div class="line">                <span class="keyword">if</span> (getResult.getPullResult().getPullStatus() == PullStatus.NO_NEW_MSG) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="comment">// 没有明确的失败原因，重试该偏移量的消息</span></div><div class="line">                    i = getResult.getPullResult().getNextBeginOffset();</div><div class="line">                    newOffset = i;</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 消息是否已经超过最大检查次数 || 消息所在的文件已经超过系统配置的保留时间（默认72小时）</span></div><div class="line">            <span class="keyword">if</span> (needDiscard(msgExt, transactionCheckMax) || needSkip(msgExt)) &#123;</div><div class="line">                listener.resolveDiscardMsg(msgExt);</div><div class="line">                newOffset = i + <span class="number">1</span>;</div><div class="line">                i++;</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 如果检查任务开始的时间小于消息存储的时间，不必再继续本次检查任务</span></div><div class="line">            <span class="comment">// 可能事务尚未完成，不必多余检查</span></div><div class="line">            <span class="keyword">if</span> (msgExt.getStoreTimestamp() &gt;= startTime) &#123;</div><div class="line">                log.debug(<span class="string">"Fresh stored. the miss offset=&#123;&#125;, check it later, store=&#123;&#125;"</span>, i,</div><div class="line">                    <span class="keyword">new</span> Date(msgExt.getStoreTimestamp()));</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 从时间差来看事务是否需要发起检查</span></div><div class="line">            <span class="keyword">long</span> valueOfCurrentMinusBorn = System.currentTimeMillis() - msgExt.getBornTimestamp();</div><div class="line">            <span class="keyword">long</span> checkImmunityTime = transactionTimeout;</div><div class="line">            <span class="comment">// 消息本身是否设置了事务超时回查时间</span></div><div class="line">            String checkImmunityTimeStr = msgExt.getUserProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != checkImmunityTimeStr) &#123;</div><div class="line">                <span class="comment">// 如果消息自己设置有固定的检查时间</span></div><div class="line">                checkImmunityTime = getImmunityTime(checkImmunityTimeStr, transactionTimeout);</div><div class="line">                <span class="keyword">if</span> (valueOfCurrentMinusBorn &lt; checkImmunityTime) &#123;</div><div class="line">                    <span class="comment">// 如果事务消息尚未到检查时间，先检查该条消息的源消息是否被删除（removeMap）</span></div><div class="line">                    <span class="comment">// 如果没有被删除，就将消息重新投递到半队列，等待下次检查，并将消费进度向前推进</span></div><div class="line">                    <span class="keyword">if</span> (checkPrepareQueueOffset(removeMap, doneOpOffset, msgExt)) &#123;</div><div class="line">                        newOffset = i + <span class="number">1</span>;</div><div class="line">                        i++;</div><div class="line">                        <span class="keyword">continue</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 说明消息为新消息，不必再继续本次检查任务</span></div><div class="line">                <span class="keyword">if</span> ((<span class="number">0</span> &lt;= valueOfCurrentMinusBorn) &amp;&amp; (valueOfCurrentMinusBorn &lt; checkImmunityTime)) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            List&lt;MessageExt&gt; opMsg = pullResult.getMsgFoundList();</div><div class="line">            <span class="comment">// valueOfCurrentMinusBorn &lt;= -1 是什么场景时出现？？？</span></div><div class="line">            <span class="keyword">boolean</span> isNeedCheck = (opMsg == <span class="keyword">null</span> &amp;&amp; valueOfCurrentMinusBorn &gt; checkImmunityTime)</div><div class="line">                || (opMsg != <span class="keyword">null</span> &amp;&amp; (opMsg.get(opMsg.size() - <span class="number">1</span>).getBornTimestamp() - startTime &gt; transactionTimeout))</div><div class="line">                || (valueOfCurrentMinusBorn &lt;= -<span class="number">1</span>);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (isNeedCheck) &#123;</div><div class="line">                <span class="comment">// 将消息重新投递到half队列</span></div><div class="line">                <span class="keyword">if</span> (!putBackHalfMsgQueue(msgExt, i)) &#123;</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="comment">// 异步向客户端发起检查命令</span></div><div class="line">                listener.resolveHalfMsg(msgExt);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 取出操作队列数据，继续检查</span></div><div class="line">                pullResult = fillOpRemoveMap(removeMap, opQueue, pullResult.getNextBeginOffset(), halfOffset, doneOpOffset);</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        newOffset = i + <span class="number">1</span>;</div><div class="line">        <span class="comment">// 将消费进度向前推进</span></div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 计算并更新队列的消费进度</span></div><div class="line">    <span class="keyword">if</span> (newOffset != halfOffset) &#123;</div><div class="line">        transactionalMessageBridge.updateConsumeOffset(messageQueue, newOffset);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">long</span> newOpOffset = calculateOpOffset(doneOpOffset, opOffset);</div><div class="line">    <span class="keyword">if</span> (newOpOffset != opOffset) &#123;</div><div class="line">        transactionalMessageBridge.updateConsumeOffset(opQueue, newOpOffset);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这段代码便是补偿逻辑的核心了，看懂这块代码，整个事务消息的处理也就基本明白的差不多了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在看这段代码时我有一个疑问：</p>
+<ol>
+<li>为什么消息回查时，要重新提交一条消息到half队列呢？</li>
+</ol>
+<p>自己思考的答案：</p>
+<ol>
+<li>因为rmq顺序写，同时消费进度需要向前推进，不能够因为某个消息有问题影响消息的处理（单线程处理），基于rmq的底层实现和特性，提交一条新的消息除了占用一些存储空间外，处理问题的复杂度和时间消耗均能得到保证。</li>
+</ol>
+<p>小生不才，以上如有描述有误的地方还望各位不吝赐教 !^_^！</p>
+<p>源代码版本：release-4.5.0 贴出的源代码会有所删减</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.zhihu.com/question/64778723/answer/224266038" target="_blank" rel="external">CAP</a><br><a href="https://github.com/seata/seata" target="_blank" rel="external">seata</a><br><a href="https://github.com/apache/rocketmq/blob/master/docs/cn/RocketMQ_Example.md#6-消息事务样例" target="_blank" rel="external">消息事务样例</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/架构/" rel="tag"># 架构</a>
+          
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
+          
+            <a href="/tags/MQ/" rel="tag"># MQ</a>
+          
+            <a href="/tags/rocketmq/" rel="tag"># rocketmq</a>
+          
+            <a href="/tags/CAP/" rel="tag"># CAP</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/18/笔记-由rocketmq延时队列思考任务规划/" rel="next" title="思考延时队列">
+                <i class="fa fa-chevron-left"></i> 思考延时队列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://res.cloudinary.com/childe/image/upload/v1535291056/1_myjcxd.png"
+               alt="childe.chen" />
+          <p class="site-author-name" itemprop="name">childe.chen</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/myjcxd" target="_blank" title="csdn博客">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn博客
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Childe-Chen" target="_blank" title="github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务消息之前的实现"><span class="nav-number">2.</span> <span class="nav-text">事务消息之前的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rmq实现"><span class="nav-number">3.</span> <span class="nav-text">rmq实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Producer"><span class="nav-number">3.1.</span> <span class="nav-text">Producer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Broker"><span class="nav-number">3.2.</span> <span class="nav-text">Broker</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">childe.chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info powered-by">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261718599'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261718599' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'childe';
+      var disqus_identifier = '2019/07/23/rocketmq-事务消息/';
+
+      var disqus_title = "rocketmq-事务消息";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("E5piYXRh8kh2s871eaOiaWDy-gzGzoHsz", "sQ49rdQJm3HKGSWP726nAo2j");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+  
+
+
+  
+
+</body>
+</html>
